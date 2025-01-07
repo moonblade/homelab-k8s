@@ -9,6 +9,6 @@ create-git-secret:
 kuztomize-flux-sirius:
 	kubectl apply -k clusters/sirius/bootstrap/flux-system
 
-make-secret:
-	FOO?=secret.yaml; cat $(FOO) | kubeseal --format=yaml --cert secrets/kubeseal-public-key.pem > secret-sealed.yaml
+secret-sealed:
+	cat secrets/secret.yaml | kubeseal --format=yaml --cert secrets/kubeseal-public-key.pem > secret-sealed.yaml
 
