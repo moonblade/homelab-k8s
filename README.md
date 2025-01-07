@@ -14,7 +14,9 @@ Once thats done it looks for any changes in `clusters/sirius/bootstap` folder, s
 No git repo's were being observed, so added `gotk-sync.yaml` which adds bootstrap folder to flux to keep track of, anything further can be tracked with that.
 Accidentally created sealed secrets with command line and had to do a bit of work to remove it, since flux was recreating it again, and couldnt' figure out flux delete command immediately. Chatgpt led me wrong a couple times.
 Tried setting up external-dns to test, but it needed dependancies and I didn't get sealed secrets working. So instead tried with nginx app, and that wasn't showing up, realized it went to a different namespace. Happy that apps and monitoring was working need to setup infrastructure stuff now.
-Also need to add initial git repo secret as makefile
+Added git pat as secret and added it to makefile. Since sealed secrets wasn't coming up again, made a dummy change to push and that fixed it. External dns should work now even if nothing is configured on it.
+
+Saved kubeseal private and public keys in secret, public doesn't necessarily need to be in it, but eh better safe than sorry.
 
 - Jan 6 2025
 
