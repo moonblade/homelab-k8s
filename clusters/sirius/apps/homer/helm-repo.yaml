@@ -5,4 +5,4 @@ metadata:
   namespace: homer
 spec:
   interval: 1h0m0s
-  url: https://bananaops.github.io/homer-k8s/
+  url: https://djjudas21.github.io/charts/
