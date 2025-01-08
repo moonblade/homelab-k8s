@@ -18,6 +18,8 @@ Added git pat as secret and added it to makefile. Since sealed secrets wasn't co
 
 Saved kubeseal private and public keys in secret, public doesn't necessarily need to be in it, but eh better safe than sorry.
 
+Added dns endpoints, but doesn't seem to be updating online, will need to check tomorrow to see why
+
 - Jan 6 2025
 
 Setup gotk-components.yaml, didn't connect it to cluster yet, or rather, it wasn't working because ip was wrong. Fixed ip on nixos config and restarted to fix cluster then this started working.
