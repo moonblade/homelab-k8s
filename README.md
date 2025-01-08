@@ -6,8 +6,23 @@ Be able to setup kubernetes entirely from manifests.
 
 Once thats done it looks for any changes in `clusters/sirius/bootstap` folder, so anything that needs to be added needs to have the stub added here.
 
+## Initial setup of cluster
+
+```bash
+make kuztomize-flux-sirius
+make create-git-secret
+make create-sealed-secret-key
+sleep 5
+make kuztomize-flux-sirius
+
+```
+
 
 ## Logs
+
+- Jan 8, 2025
+
+Sigh, had to setup clsuter again. so need to make sure to put down the steps to do it properly from scratch.
 
 - Jan 7 2025
 
