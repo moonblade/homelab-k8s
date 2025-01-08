@@ -17,3 +17,10 @@ spec:
     crds: Create
   upgrade:
     crds: CreateReplace
+  values:
+    configmap:
+      config:
+        enabled: true
+        externalConfig: true
+        externalConfigMap: "homer-assets"
+        externalConfigMapNamespace: "homer"
