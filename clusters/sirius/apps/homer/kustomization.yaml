@@ -8,5 +8,5 @@ configMapGenerator:
 resources:
   - ./deploy.yaml
   - ./service.yaml
-  # - ./ing.yaml
+  - ./ingress.yaml
 
