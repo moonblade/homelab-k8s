@@ -26,6 +26,8 @@ Sigh, had to setup clsuter again. so need to make sure to put down the steps to 
 
 After banging my head against the wall to make homer work with helm chart, the values were only possible in line, which I did not want, I wanted it to come from a differnet config.yaml file. Eventually just gave up and used jd's method of deploy and svc instead and creating the config with kustomize.
 
+I have no clue how certmanager or clusterissuer works, I've used it and its always been magic to me, right now I'm stealing code from jd to connect clusterissuer to cloudflare to get certs and dns from there and magically have ingress work? no clue. will see what happens. How does letsencrypt and cloudflare interact? no clue. I need to read up on it.
+
 - Jan 7 2025
 
 No git repo's were being observed, so added `gotk-sync.yaml` which adds bootstrap folder to flux to keep track of, anything further can be tracked with that.
