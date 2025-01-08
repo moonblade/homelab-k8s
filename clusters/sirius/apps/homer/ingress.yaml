@@ -13,7 +13,7 @@ spec:
     - homer.local
     secretName: homer-cert
   rules:
-  - host: homer.local
+  - host: homer.moonblade.work
     http:
       paths:
       - path: /
