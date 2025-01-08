@@ -24,6 +24,8 @@ make kuztomize-flux-sirius
 
 Sigh, had to setup clsuter again. so need to make sure to put down the steps to do it properly from scratch.
 
+After banging my head against the wall to make homer work with helm chart, the values were only possible in line, which I did not want, I wanted it to come from a differnet config.yaml file. Eventually just gave up and used jd's method of deploy and svc instead and creating the config with kustomize.
+
 - Jan 7 2025
 
 No git repo's were being observed, so added `gotk-sync.yaml` which adds bootstrap folder to flux to keep track of, anything further can be tracked with that.
