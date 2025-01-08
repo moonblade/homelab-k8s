@@ -10,7 +10,7 @@ kuztomize-flux-sirius:
 	kubectl apply -k clusters/sirius/bootstrap/flux-system
 
 create-sealed-secret-key:
-	kubectl -n flux-system create secret generic sealed-secrets-key --from-file=tls.crt=./secrets/kubeseal-public-key.crt --from-file=tls.key=./secrets/kubeseal-private-key.key
+	kubectl -n flux-system create secret tls sealed-secrets-key --cert ./secrets/kubeseal-public-key.crt --key ./secrets/kubeseal-private-key.key
 
 secret-sealed:
 	cat secrets/secret.yaml | kubeseal --format=yaml --cert secrets/kubeseal-public-key.pem > secret-sealed.yaml
