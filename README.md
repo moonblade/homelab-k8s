@@ -20,6 +20,11 @@ make kuztomize-flux-sirius
 
 ## Logs
 
+- Jan 9, 2025
+
+After fighting with cilium for a long while and getting entire cluster evaporated whenever I try to get cilium to work, gave up for now and disabled cilium. Will come back to cilium when I have more time to debug it.
+I'm trying to get ingress to work now. Got ingress class to be default. Now need to make ingress automatically give certificates.
+
 - Jan 8, 2025
 
 Sigh, had to setup clsuter again. so need to make sure to put down the steps to do it properly from scratch.
