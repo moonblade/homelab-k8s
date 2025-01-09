@@ -6,6 +6,9 @@ metadata:
 spec:
   values:
     controller:
+      ingressClassResource:
+        name: nginx
+        default: true
       service:
         ipFamilyPolicy: PreferDualStack
         ipFamilies:
