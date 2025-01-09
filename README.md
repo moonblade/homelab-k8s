@@ -25,6 +25,10 @@ make kuztomize-flux-sirius
 After fighting with cilium for a long while and getting entire cluster evaporated whenever I try to get cilium to work, gave up for now and disabled cilium. Will come back to cilium when I have more time to debug it.
 I'm trying to get ingress to work now. Got ingress class to be default. Now need to make ingress automatically give certificates.
 
+Note to self, when stealing code, READ THROUGH THE FUCKING CODE to see if your values are correct. Any external-dns was using wrong filter, so it pretty much didn't care about any of my ingresses. So it wasn't creating shit. Now its fixed and tada my entries are auto added in cloudflare directly. Neat.
+
+Adding dns entries for athena and sirius (proxmox vm and the nixos vm with k3s on it. so that I'll be able to use kubectl commands outside) in `./clusters/sirius/infra/external-dns/dnsendpoints.yaml`
+
 - Jan 8, 2025
 
 Sigh, had to setup clsuter again. so need to make sure to put down the steps to do it properly from scratch.
