@@ -6,7 +6,7 @@ metadata:
 spec:
   values:
     ipv6:
-      enabled: true
+      enabled: false
     cluster:
       name: sirius
     operator:
