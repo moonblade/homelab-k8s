@@ -12,9 +12,11 @@ spec:
     solvers:
     - dns01:
         cloudflare:
+          email: mnishamk1995@gmail.com
           apiTokenSecretRef:
             name: cloudflare-api-token
             key: api-token
       selector:
         dnsZones:
-        - 'moonblade.work'
+          - moonblade.work
+          - sirius.moonblade.work
