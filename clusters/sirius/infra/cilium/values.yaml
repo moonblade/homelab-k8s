@@ -17,7 +17,7 @@ spec:
         clusterPoolIPv6PodCIDRList:
         - 2001:cafe:42::/96
         clusterPoolIPv4PodCIDRList:
-        - 10.43.0.0/16
+        - 10.42.0.0/16
         clusterPoolIPv6MaskSize: 112
 
     enableIPv6Masquerade: true
