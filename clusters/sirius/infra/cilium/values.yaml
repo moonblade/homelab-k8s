@@ -13,7 +13,7 @@ spec:
       mode: kubernetes
       operator:
         clusterPoolIPv4PodCIDRList:
-        - 10.43.0.0/16
+        - 10.42.0.0/16
 
     k8sServiceHost: 192.168.1.150
     k8sServicePort: 6443
