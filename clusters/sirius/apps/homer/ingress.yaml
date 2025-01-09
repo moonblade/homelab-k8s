@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - homer.local
+    - homer.sirius.moonblade.work
     secretName: homer-cert
   rules:
-  - host: homer.moonblade.work
+  - host: homer.sirius.moonblade.work
     http:
       paths:
       - path: /
