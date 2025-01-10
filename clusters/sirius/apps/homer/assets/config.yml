@@ -31,10 +31,6 @@ services:
     items:
       - name: "Athena"
         icon: "fas fa-server"
-        subtitle: "Athena Management"
+        subtitle: "Proxmox UI"
         url: "https://athena.moonblade.work:8006"
-      - name: "Sirius"
-        icon: "fas fa-globe"
-        subtitle: "Sirius Overview"
-        url: "https://sirius.moonblade.work"
 
