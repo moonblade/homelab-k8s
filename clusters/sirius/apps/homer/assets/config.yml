@@ -6,6 +6,7 @@ connectivityCheck: true
 defaults:
   layout: columns
   colorTheme: auto
+  target: "_blank"
 theme: default
 
 services:
