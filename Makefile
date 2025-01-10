@@ -14,4 +14,5 @@ create-sealed-secret-key:
 
 secret-sealed:
 	# cat secrets/secret.yaml | kubeseal --format=yaml --cert secrets/kubeseal-public-key.crt > secret-sealed.yaml
-	cat secrets/secret.yaml | kubeseal --controller-name=sealed-secrets --controller-namespace=flux-system -o yaml
+	# cat secrets/secret.yaml | kubeseal --controller-name=sealed-secrets --controller-namespace=flux-system -o yaml
+	cat secrets/secret.yaml | kubeseal
