@@ -20,6 +20,10 @@ make kuztomize-flux-sirius
 
 ## Logs
 
+- Jan 10, 2025
+
+Added homer items for the things that already exist. Cert manager is still not proper. Will need to debug it today hopefully.
+
 - Jan 9, 2025
 
 After fighting with cilium for a long while and getting entire cluster evaporated whenever I try to get cilium to work, gave up for now and disabled cilium. Will come back to cilium when I have more time to debug it.
