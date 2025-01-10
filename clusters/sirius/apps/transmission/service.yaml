@@ -4,14 +4,17 @@ metadata:
   name: transmission
 spec:
   ports:
-    - port: 9091
-      targetPort: 9091
+    - name: http
+      port: 9091
+      targetPort: http
       protocol: TCP
-    - port: 51413
-      targetPort: 51413
+    - name: rpc
+      port: 51413
+      targetPort: rpc
       protocol: TCP
-    - port: 51413
-      targetPort: 51413
+    - name: rpc-udp
+      port: 51413
+      targetPort: rpc-udp
       protocol: UDP
   selector:
     app: transmission

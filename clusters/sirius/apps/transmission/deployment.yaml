@@ -16,9 +16,14 @@ spec:
         - name: transmission
           image: lscr.io/linuxserver/transmission
           ports:
-            - containerPort: 9091
-            - containerPort: 51413
-            - containerPort: 51413
+            - name: http
+              containerPort: 9091
+              protocol: TCP
+            - name: rpc
+              containerPort: 51413
+              protocol: TCP
+            - name: rpc-udp
+              containerPort: 51413
               protocol: UDP
           env:
             - name: PUID
