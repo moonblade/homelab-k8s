@@ -19,6 +19,7 @@ spec:
             - containerPort: 9091
             - containerPort: 51413
             - containerPort: 51413
+              protocol: UDP
           env:
             - name: PUID
               value: "1000"
