@@ -17,12 +17,23 @@ make kuztomize-flux-sirius
 
 ```
 
+## Homer
+
+Dashboard for everything on the cluster. Available here [Homer](homer.sirius.moonblade.work)
+
+## Transmission
+
+Transmission for downloading my audiobooks. Available here [Transmission](transmission.sirius.moonblade.work)
 
 ## Logs
 
 - Jan 10, 2025
 
 Added homer items for the things that already exist. Cert manager is still not proper. Will need to debug it today hopefully.
+
+Finally starting on moving stuff from rpi to here.
+Starting with transmission.
+Now that I have nfs access to the connected drive from proxmox to the cluster, I can download stuff.
 
 - Jan 9, 2025
 

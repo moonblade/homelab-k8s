@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+  annotations:
+    cert-manager.io/cluster-issuer: default-clusterissuer
+  name: transmission-ingress
+spec:
+  tls:
+  - hosts:
+    - transmission.sirius.moonblade.work
+    secretName: transmission-cert
+  rules:
+  - host: transmission.sirius.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: transmission
+            port:
+              name: http
