@@ -25,6 +25,11 @@ services:
         icon: "fas fa-home"
         subtitle: "Homer Dashboard"
         url: "https://homer.sirius.moonblade.work"
+      - name: "Transmission"
+        icon: "fas fa-download"
+        subtitle: "Transmission Web Interface"
+        url: "https://transmission.sirius.moonblade.work"
+
 
   - name: "Misc"
     icon: "fas fa-box"
