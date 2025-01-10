@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transmission
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transmission
+  template:
+    metadata:
+      labels:
+        app: transmission
+    spec:
+      containers:
+        - name: transmission
+          image: lscr.io/linuxserver/transmission
+          ports:
+            - containerPort: 9091
+            - containerPort: 51413
+            - containerPort: 51413
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Kolkata"
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: transmission-secret
+                  key: USER
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: transmission-secret
+                  key: PASS
+          volumeMounts:
+            - name: transmission-data
+              mountPath: /config
+              subPath: config
+            - name: transmission-data
+              mountPath: /downloads
+              subPath: downloads
+      volumes:
+        - name: transmission-data
+          persistentVolumeClaim:
+            claimName: transmission-pvc
