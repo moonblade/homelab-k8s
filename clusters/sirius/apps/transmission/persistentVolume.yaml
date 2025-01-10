@@ -4,7 +4,7 @@ metadata:
   name: transmission-pv
 spec:
   capacity:
-    storage: 1Ti
+    storage: 700Gi
   accessModes:
     - ReadWriteMany
   nfs:
