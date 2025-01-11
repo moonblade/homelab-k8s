@@ -58,15 +58,15 @@ spec:
           mountPath: /data
         - name: plex-config
           mountPath: /config
-        - name: rpi-plex-data
-          mountPath: /rpidata
+        # - name: rpi-plex-data
+        #   mountPath: /rpidata
       volumes:
       - name: plex-data
         persistentVolumeClaim:
           claimName: plex-data-pvc
-      - name: rpi-plex-data
-        persistentVolumeClaim:
-          claimName: rpi-plex-data-pvc
+      # - name: rpi-plex-data
+      #   persistentVolumeClaim:
+      #     claimName: rpi-plex-data-pvc
       - name: plex-config
         persistentVolumeClaim:
           claimName: plex-config-pvc
