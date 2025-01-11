@@ -27,6 +27,11 @@ Transmission for downloading my audiobooks. Available here [Transmission](transm
 
 ## Logs
 
+- Jan 11, 2025
+
+Since drives are fucked, trying out transmission and flux on athena without any external drives. 
+Will try and write a sorter for it if possible.
+
 - Jan 10, 2025
 
 Added homer items for the things that already exist. Cert manager is still not proper. Will need to debug it today hopefully.
