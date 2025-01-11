@@ -26,3 +26,5 @@ spec:
   selector:
     matchLabels:
       type: rpi-plex-data
+  volumeMode: Filesystem
+  volumeName: rpi-plex-data-pv
