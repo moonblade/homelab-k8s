@@ -55,8 +55,13 @@ spec:
           value: "Asia/Kolkata"
         volumeMounts:
         - name: plex-data
+          mountPath: /data
+        - name: plex-config
           mountPath: /config
       volumes:
       - name: plex-data
         persistentVolumeClaim:
-          claimName: plex-pvc
+          claimName: plex-data-pvc
+      - name: plex-config
+        persistentVolumeClaim:
+          claimName: plex-config-pvc
