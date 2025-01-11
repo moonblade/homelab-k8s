@@ -29,7 +29,10 @@ services:
         icon: "fas fa-download"
         subtitle: "Transmission Web Interface"
         url: "https://transmission.sirius.moonblade.work"
-
+      - name: "Plex"
+        icon: "fas fa-play-circle"
+        subtitle: "Plex Media Server"
+        url: "https://plex.sirius.moonblade.work"
 
   - name: "Misc"
     icon: "fas fa-box"
