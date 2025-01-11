@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rpi-plex-data-pv
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: ubuntuts.moonblade.work
+    path: /home/moonblade/Downloads/external
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rpi-plex-data-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Ti
+
