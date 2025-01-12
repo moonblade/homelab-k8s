@@ -49,6 +49,8 @@ spec:
             - name: transmission-data
               mountPath: /downloads
               subPath: downloads
+      securityContext:
+        fsGroup: 1000
       volumes:
         - name: transmission-data
           persistentVolumeClaim:
