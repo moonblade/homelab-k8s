@@ -51,6 +51,7 @@ spec:
               subPath: downloads
       securityContext:
         fsGroup: 1000
+        runAsUser: 1000
       volumes:
         - name: transmission-data
           persistentVolumeClaim:
