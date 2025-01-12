@@ -49,13 +49,13 @@ spec:
             - name: transmission-data
               mountPath: /downloads
               subPath: downloads
-      securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
-        runAsGroup: 1000
-        capabilities:
-          add:
-            - SYS_ADMIN
+          securityContext:
+            fsGroup: 1000
+            runAsUser: 1000
+            runAsGroup: 1000
+            capabilities:
+              add:
+                - SYS_ADMIN
       volumes:
         - name: transmission-data
           persistentVolumeClaim:
