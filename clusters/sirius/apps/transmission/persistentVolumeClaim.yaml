@@ -8,6 +8,4 @@ spec:
   resources:
     requests:
       storage: 700Gi
-  selector:
-    matchLabels:
-      type: transmission
+  storageClassName: longhorn-static
