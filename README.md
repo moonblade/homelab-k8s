@@ -27,47 +27,59 @@ Transmission for downloading my audiobooks. Available here [Transmission](transm
 
 ## Logs
 
-- Jan 11, 2025
+- Jan 6, 2025  
 
-Since drives are fucked, trying out transmission and flux on athena without any external drives. 
-Will try and write a sorter for it if possible.
+Setup gotk-components.yaml, didn't connect it to cluster yet, or rather, it wasn't working because IP was wrong. Fixed IP on NixOS config and restarted to fix cluster, then this started working.
 
-- Jan 10, 2025
+- Jan 7, 2025  
 
-Added homer items for the things that already exist. Cert manager is still not proper. Will need to debug it today hopefully.
+No git repos were being observed, so added `gotk-sync.yaml` which adds the bootstrap folder to Flux to keep track of. Anything further can be tracked with that.  
+Accidentally created sealed secrets with command line and had to do a bit of work to remove it since Flux was recreating it again, and I couldn't figure out the Flux delete command immediately. ChatGPT led me wrong a couple of times.  
 
-Finally starting on moving stuff from rpi to here.
-Starting with transmission.
-Now that I have nfs access to the connected drive from proxmox to the cluster, I can download stuff.
+Tried setting up external-dns to test, but it needed dependencies, and I didn't get sealed secrets working. So instead, I tried with the nginx app, and that wasn't showing up. Realized it went to a different namespace.  
 
-- Jan 9, 2025
+Happy that apps and monitoring were working—need to set up infrastructure stuff now.  
+Added Git PAT as a secret and included it in the Makefile. Since sealed secrets weren't coming up again, I made a dummy change to push, and that fixed it. External DNS should work now even if nothing is configured on it.  
 
-After fighting with cilium for a long while and getting entire cluster evaporated whenever I try to get cilium to work, gave up for now and disabled cilium. Will come back to cilium when I have more time to debug it.
-I'm trying to get ingress to work now. Got ingress class to be default. Now need to make ingress automatically give certificates.
+Saved kubeseal private and public keys in secret. The public key doesn't necessarily need to be in it, but better safe than sorry.  
 
-Note to self, when stealing code, READ THROUGH THE FUCKING CODE to see if your values are correct. Any external-dns was using wrong filter, so it pretty much didn't care about any of my ingresses. So it wasn't creating shit. Now its fixed and tada my entries are auto added in cloudflare directly. Neat.
+Added DNS endpoints, but they don't seem to be updating online. Will need to check tomorrow to see why.
 
-Adding dns entries for athena and sirius (proxmox vm and the nixos vm with k3s on it. so that I'll be able to use kubectl commands outside) in `./clusters/sirius/infra/external-dns/dnsendpoints.yaml`
+- Jan 8, 2025  
 
-- Jan 8, 2025
+Sigh. Had to set up the cluster again, so I need to make sure to put down the steps to do it properly from scratch.  
 
-Sigh, had to setup clsuter again. so need to make sure to put down the steps to do it properly from scratch.
+After banging my head against the wall to make Homer work with the Helm chart, I realized the values were only possible inline, which I didn't want—I wanted them to come from a different `config.yaml` file. Eventually, I just gave up and used JD's method of deploy and service instead, creating the config with Kustomize.  
 
-After banging my head against the wall to make homer work with helm chart, the values were only possible in line, which I did not want, I wanted it to come from a differnet config.yaml file. Eventually just gave up and used jd's method of deploy and svc instead and creating the config with kustomize.
+I have no clue how CertManager or ClusterIssuer works. I've used it, and it's always been magic to me. Right now, I'm stealing code from JD to connect ClusterIssuer to Cloudflare to get certs and DNS from there and magically have ingress work? No clue. Will see what happens.  
 
-I have no clue how certmanager or clusterissuer works, I've used it and its always been magic to me, right now I'm stealing code from jd to connect clusterissuer to cloudflare to get certs and dns from there and magically have ingress work? no clue. will see what happens. How does letsencrypt and cloudflare interact? no clue. I need to read up on it.
+How do Let's Encrypt and Cloudflare interact? No clue. I need to read up on it.
 
-- Jan 7 2025
+- Jan 9, 2025  
 
-No git repo's were being observed, so added `gotk-sync.yaml` which adds bootstrap folder to flux to keep track of, anything further can be tracked with that.
-Accidentally created sealed secrets with command line and had to do a bit of work to remove it, since flux was recreating it again, and couldnt' figure out flux delete command immediately. Chatgpt led me wrong a couple times.
-Tried setting up external-dns to test, but it needed dependancies and I didn't get sealed secrets working. So instead tried with nginx app, and that wasn't showing up, realized it went to a different namespace. Happy that apps and monitoring was working need to setup infrastructure stuff now.
-Added git pat as secret and added it to makefile. Since sealed secrets wasn't coming up again, made a dummy change to push and that fixed it. External dns should work now even if nothing is configured on it.
+After fighting with Cilium for a long while and having the entire cluster evaporate whenever I tried to get Cilium to work, I gave up for now and disabled Cilium. Will come back to it when I have more time to debug.  
 
-Saved kubeseal private and public keys in secret, public doesn't necessarily need to be in it, but eh better safe than sorry.
+I'm trying to get ingress to work now. Got the ingress class to be default. Now need to make ingress automatically give certificates.  
 
-Added dns endpoints, but doesn't seem to be updating online, will need to check tomorrow to see why
+Note to self: When stealing code, READ THROUGH THE CODE to ensure your values are correct.  
 
-- Jan 6 2025
+Any external-dns was using the wrong filter, so it pretty much didn't care about any of my ingresses. It wasn't creating anything. Now it's fixed, and tada! My entries are auto-added in Cloudflare directly. Neat.  
 
-Setup gotk-components.yaml, didn't connect it to cluster yet, or rather, it wasn't working because ip was wrong. Fixed ip on nixos config and restarted to fix cluster then this started working.
+Adding DNS entries for Athena and Sirius (Proxmox VM and the NixOS VM with K3s on it, so that I'll be able to use `kubectl` commands outside) in `./clusters/sirius/infra/external-dns/dnsendpoints.yaml`.
+
+- Jan 10, 2025  
+
+Added Homer items for the things that already exist. Cert Manager is still not proper. Will need to debug it today, hopefully.  
+
+Finally starting on moving stuff from the Raspberry Pi to here. Starting with Transmission.  
+Now that I have NFS access to the connected drive from Proxmox to the cluster, I can download stuff.
+
+- Jan 11, 2025  
+
+Since drives are messed up, I'm trying out Transmission and Flux on Athena without any external drives.  
+Will try and write a sorter for it if possible. Nope file permissions are a bitch, they kicked my ass up and down the curb, so I gave up on it for now.
+Will need to retry with long horn, hopefully that allows sharing.
+
+- Jan 13, 2025
+
+Got new hard disk setup, so gonna try to use longhorn to use it to provision storage for everything else. Setup longhorn infra.
