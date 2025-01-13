@@ -8,4 +8,4 @@ spec:
     ingress:
       host: longhorn.sirius.moonblade.work
     defaultSettings:
-      backupTarget: file:///mnt/external
+      defaultDataPath: /mnt/external/longhorn
