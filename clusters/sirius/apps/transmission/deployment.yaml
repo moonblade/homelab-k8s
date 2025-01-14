@@ -58,5 +58,8 @@ spec:
                 - SYS_ADMIN
       volumes:
         - name: transmission-data
-          persistentVolumeClaim:
-            claimName: transmission-pvc
+          hostPath:
+            path: /mnt/external/transmission
+            type: DirectoryOrCreate
+          # persistentVolumeClaim:
+            # claimName: transmission-pvc
