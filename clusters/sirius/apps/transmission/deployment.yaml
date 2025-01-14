@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: transmission
+  labels:
+    app: transmission
 spec:
   replicas: 1
   selector:
@@ -13,53 +15,30 @@ spec:
         app: transmission
     spec:
       containers:
-        - name: transmission
-          image: lscr.io/linuxserver/transmission
-          ports:
-            - name: http
-              containerPort: 9091
-              protocol: TCP
-            - name: rpc
-              containerPort: 51413
-              protocol: TCP
-            - name: rpc-udp
-              containerPort: 51413
-              protocol: UDP
-          env:
-            - name: PUID
-              value: "1000"
-            - name: PGID
-              value: "1000"
-            - name: TZ
-              value: "Asia/Kolkata"
-            - name: USER
-              valueFrom:
-                secretKeyRef:
-                  name: transmission-secret
-                  key: USER
-            - name: PASS
-              valueFrom:
-                secretKeyRef:
-                  name: transmission-secret
-                  key: PASS
-          volumeMounts:
-            - name: transmission-data
-              mountPath: /config
-              subPath: config
-            - name: transmission-data
-              mountPath: /downloads
-              subPath: downloads
-          securityContext:
-            fsGroup: 1000
-            runAsUser: 1000
-            runAsGroup: 1000
-            capabilities:
-              add:
-                - SYS_ADMIN
+      - name: transmission
+        image: linuxserver/transmission:latest
+        ports:
+        - name: web
+          containerPort: 9091
+          protocol: TCP
+        - name: torrent
+          containerPort: 51413
+          protocol: TCP
+        - name: torrent-udp
+          containerPort: 51413
+          protocol: UDP
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: data
+          mountPath: /downloads
       volumes:
-        - name: transmission-data
-          hostPath:
-            path: /mnt/external/transmission
-            type: DirectoryOrCreate
-          # persistentVolumeClaim:
-            # claimName: transmission-pvc
+      - name: config
+        hostPath:
+          path: /mnt/external/transmission/config
+          type: DirectoryOrCreate
+      - name: data
+        hostPath:
+          path: /mnt/external/transmission/data
+          type: DirectoryOrCreate
+
