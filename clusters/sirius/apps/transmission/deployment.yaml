@@ -32,6 +32,8 @@ spec:
           mountPath: /config
         - name: data
           mountPath: /downloads
+        - name: watch
+          mountPath: /watch
         env:
         - name: PUID
           value: "1001"
@@ -47,5 +49,8 @@ spec:
       - name: data
         hostPath:
           path: /mnt/external/transmission/data
+          type: DirectoryOrCreate
+        hostPath:
+          path: /mnt/external/transmission/watch
           type: DirectoryOrCreate
 
