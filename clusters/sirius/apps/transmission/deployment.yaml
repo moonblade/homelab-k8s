@@ -32,6 +32,13 @@ spec:
           mountPath: /config
         - name: data
           mountPath: /downloads
+        env:
+        - name: PUID
+          value: "1001"
+        - name: PGID
+          value: "1001"
+        - name: UMASK
+          value: "022"
       volumes:
       - name: config
         hostPath:
