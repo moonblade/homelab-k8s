@@ -83,3 +83,12 @@ Will need to retry with long horn, hopefully that allows sharing.
 - Jan 13, 2025
 
 Got new hard disk setup, so gonna try to use longhorn to use it to provision storage for everything else. Setup longhorn infra.
+
+- Jan 15, 2025
+
+I'm remote and either the drive died or its no longer connected. Well crap.
+
+So pivoted to fixing certmanager cert instead. Reinstalling certmanager got me challenges crd, which wasn't present earlier, but the challenge was pending.
+Apparently token got revoked? so created a new token and gave that to cluster issuer then it was still pending because challenge wasn't completed because it was trying with ipv6 and getting permission denied.
+Exasperated ended up setting ipv6 off in nixos instead. That solved cert side but now site wasn't loading. Sigh.
+Rebooted machine and now it seems to be working
