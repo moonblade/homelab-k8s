@@ -19,4 +19,3 @@ spec:
       selector:
         dnsZones:
           - moonblade.work
-          - sirius.moonblade.work
