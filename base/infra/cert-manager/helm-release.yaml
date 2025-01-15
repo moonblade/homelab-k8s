@@ -17,3 +17,8 @@ spec:
       interval: 1m
   values:
     installCRDs: true
+    podDnsPolicy: "None"  # Disable DNS policy to use custom DNS config
+    podDnsConfig:
+      nameservers:
+        - 8.8.8.8  # Use Google DNS (IPv4)
+        - 1.1.1.1  # Use Cloudflare DNS (IPv4)
