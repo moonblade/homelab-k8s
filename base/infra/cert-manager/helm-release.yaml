@@ -17,3 +17,5 @@ spec:
       interval: 1m
   values:
     installCRDs: true
+    extraArgs:
+      - --dns01-prefer-ipv4
