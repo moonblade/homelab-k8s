@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: expensetracker
+    app.kubernetes.io/name: expensetracker
+  name: expensetracker
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: expensetracker
+      app.kubernetes.io/name: expensetracker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: expensetracker
+        app.kubernetes.io/name: expensetracker
+    spec:
+      containers:
+      - image: ghcr.io/moonblade/expense-tracker:2af498c
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          tcpSocket:
+            port: 9000
+          timeoutSeconds: 1
+        name: expensetracker
+        ports:
+        - containerPort: 9000
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          tcpSocket:
+            port: 9000
+          timeoutSeconds: 1
+        startupProbe:
+          failureThreshold: 30
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          tcpSocket:
+            port: 9000
+          timeoutSeconds: 1
