@@ -47,3 +47,5 @@ spec:
           tcpSocket:
             port: 9000
           timeoutSeconds: 1
+      imagePullSecrets:
+        - name: expense-tracker-image-pull
