@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/instance: expensetracker
+    app.kubernetes.io/name: expensetracker
+  annotations:
+   cert-manager.io/cluster-issuer: default-clusterissuer
+  name: expensetracker-ingress
+spec:
+  tls:
+  - hosts:
+    - expense-tracker.sirius.moonblade.work
+    secretName: expensetracker-cert
+  rules:
+  - host: expense-tracker.sirius.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: expensetracker
+            port:
+              name: http

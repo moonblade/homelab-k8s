@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations: null
+  labels:
+    app.kubernetes.io/instance: expensetracker
+    app.kubernetes.io/name: expensetracker
+    app.kubernetes.io/service: expensetracker
+  name: expensetracker
+spec:
+  ports:
+  - name: http
+    port: 9000
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/instance: expensetracker
+    app.kubernetes.io/name: expensetracker
+  type: ClusterIP
