@@ -11,12 +11,15 @@ theme: default
 
 services:
   - name: "Raspberry Pi"
-    icon: "fas fa-microchip" # Alternative icon
+    icon: "fas fa-microchip"
     items:
       - name: "Torrent"
         icon: "fas fa-download"
         subtitle: "Transmission Web Interface"
         url: "http://ubuntu.tailab18b.ts.net:9091/transmission/web/"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Sirius"
     icon: "fas fa-star"
@@ -25,18 +28,30 @@ services:
         icon: "fas fa-home"
         subtitle: "Homer Dashboard"
         url: "https://homer.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Transmission"
         icon: "fas fa-download"
         subtitle: "Transmission Web Interface"
         url: "https://transmission.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Plex"
         icon: "fas fa-play-circle"
         subtitle: "Plex Media Server"
         url: "https://plex.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Expense Tracker Configuration"
-        icon: "fas fa-wallet" # Appropriate icon
+        icon: "fas fa-wallet"
         subtitle: "Manage expenses with ease"
         url: "https://expense-tracker.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Misc"
     icon: "fas fa-box"
@@ -45,4 +60,6 @@ services:
         icon: "fas fa-server"
         subtitle: "Proxmox UI"
         url: "https://athena.moonblade.work:8006"
-
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
