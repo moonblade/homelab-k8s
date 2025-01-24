@@ -18,7 +18,7 @@ spec:
       - name: transmission
         image: linuxserver/transmission:latest
         ports:
-        - name: web
+        - name: http
           containerPort: 9091
           protocol: TCP
         - name: torrent
