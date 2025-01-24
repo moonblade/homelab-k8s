@@ -41,17 +41,33 @@ spec:
           value: "1001"
         - name: UMASK
           value: "022"
+        livenessProbe:
+          exec:
+            command:
+            - test
+            - -d
+            - /downloads
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - test
+            - -d
+            - /downloads
+          initialDelaySeconds: 10
+          periodSeconds: 10
       volumes:
       - name: config
-        hostPath:
+        nfs:
+          server: 192.168.1.128
           path: /mnt/external/transmission/config
-          type: DirectoryOrCreate
       - name: data
-        hostPath:
+        nfs:
+          server: 192.168.1.128
           path: /mnt/external/transmission/data
-          type: DirectoryOrCreate
       - name: watch
-        hostPath:
+        nfs:
+          server: 192.168.1.128
           path: /mnt/external/transmission/watch
-          type: DirectoryOrCreate
 
