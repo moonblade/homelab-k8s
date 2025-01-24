@@ -4,18 +4,6 @@ metadata:
   name: kubernetes-dashboard
   namespace: kubernetes-dashboard
 spec:
-  interval: 5m
-  chart:
-    spec:
-      chart: kubernetes-dashboard
-      version: '5.10.1'
-      sourceRef:
-        kind: HelmRepository
-        name: kubernetes-dashboard
-        namespace: kubernetes-dashboard
-      interval: 1m
-  install:
-    disableWait: true
   values:
     protocolHttp: true
     service:
