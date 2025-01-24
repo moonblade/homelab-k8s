@@ -56,6 +56,22 @@ spec:
         securityContext:
           runAsUser: 1001
           runAsGroup: 1001
+        readinessProbe:
+          exec:
+            command:
+            - test
+            - -d
+            - /data/complete
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - test
+            - -d
+            - /data/complete
+          initialDelaySeconds: 10
+          periodSeconds: 30
       volumes:
       - name: plex-config
         hostPath:
