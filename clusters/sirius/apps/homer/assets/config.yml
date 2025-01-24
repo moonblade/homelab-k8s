@@ -1,4 +1,4 @@
-title: "App dashboard"
+title: "Apps"
 subtitle: "Homer"
 logo: "https://static.vecteezy.com/system/resources/previews/002/412/550/large_2x/premium-athena-the-goddess-black-icon-logo-illustration-design-vector.jpg" # Updated logo URL
 columns: "3"
@@ -10,13 +10,13 @@ defaults:
 theme: default
 
 services:
-  - name: "Raspberry Pi"
-    icon: "fas fa-microchip"
+  - name: "Admin"
+    icon: "fas fa-network-wired"
     items:
-      - name: "Torrent"
-        icon: "fas fa-download"
-        subtitle: "Transmission Web Interface"
-        url: "http://ubuntu.tailab18b.ts.net:9091/transmission/web/"
+      - name: "Weave"
+        logo: "https://avatars.githubusercontent.com/u/9976052?s=200&v=4"
+        subtitle: "Weave GitOps"
+        url: "https://weave.sirius.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
@@ -24,13 +24,6 @@ services:
   - name: "Sirius"
     icon: "fas fa-star"
     items:
-      # - name: "Homer"
-      #   icon: "fas fa-home"
-      #   subtitle: "Homer Dashboard"
-      #   url: "https://homer.sirius.moonblade.work"
-      #   type: Ping
-      #   method: "HEAD"
-      #   mode: "no-cors"
       - name: "Transmission"
         icon: "fas fa-download"
         subtitle: "Transmission Web Interface"
@@ -63,3 +56,15 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+
+  - name: "Raspberry Pi"
+    icon: "fas fa-microchip"
+    items:
+      - name: "Torrent"
+        icon: "fas fa-download"
+        subtitle: "Transmission Web Interface"
+        url: "http://ubuntu.tailab18b.ts.net:9091/transmission/web/"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+
