@@ -31,13 +31,13 @@ services:
       #   type: Ping
       #   method: "HEAD"
       #   mode: "no-cors"
-      # - name: "Transmission"
-      #   icon: "fas fa-download"
-      #   subtitle: "Transmission Web Interface"
-      #   url: "https://transmission.sirius.moonblade.work"
-      #   type: Ping
-      #   method: "HEAD"
-      #   mode: "no-cors"
+      - name: "Transmission"
+        icon: "fas fa-download"
+        subtitle: "Transmission Web Interface"
+        url: "https://transmission.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Plex"
         icon: "fas fa-play-circle"
         subtitle: "Plex Media Server"
