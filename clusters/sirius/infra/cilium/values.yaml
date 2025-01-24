@@ -4,46 +4,34 @@ metadata:
   name: cilium
   namespace: kube-system
 spec:
-  interval: 5m
-  chart:
-    spec:
-      chart: cilium
-      version: '1.13.2' # Match base version
-      sourceRef:
-        kind: HelmRepository
-        name: cilium
-        namespace: kube-system
-      interval: 1m
   values:
     ipv6:
-      enabled: true
+      enabled: false
     cluster:
       name: sirius
     operator:
       replicas: 1
-      clusterPoolIPv4PodCIDRList:
-        - 10.42.0.0/16 # Match k3s --cluster-cidr
-      clusterPoolIPv6PodCIDRList:
-        - 2001:cafe:42::/96 # Match k3s --cluster-cidr
-      clusterPoolIPv6MaskSize: 112
     ipam:
       mode: kubernetes
-    enableIPv6Masquerade: true
+      operator:
+        clusterPoolIPv6PodCIDRList:
+        - 2001:cafe:42::/96::/112
+        clusterPoolIPv4PodCIDRList:
+        - 10.43.0.0/16
+        clusterPoolIPv6MaskSize: 112
+
+    # enableIPv6Masquerade: true
+
     k8sServiceHost: 192.168.1.150
     k8sServicePort: 6443
+
     hubble:
-      relay:
-        enabled: true
       ui:
-        enabled: true
         ingress:
           enabled: true
-          annotations:
-            cert-manager.io/cluster-issuer: default-clusterissuer
           hosts:
-            - hubble.sirius.moonblade.work
+          - hubble.sirius.moonblade.work
           tls:
-            - secretName: hubble-tls
-              hosts:
-                - hubble.sirius.moonblade.work
-
+          - secretName: hubble-tls
+            hosts:
+            - hubble.sirius.moonblade.work
