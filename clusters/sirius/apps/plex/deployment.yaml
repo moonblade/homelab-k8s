@@ -19,7 +19,7 @@ spec:
       - name: plex
         image: plexinc/pms-docker:latest
         ports:
-        - name: plex-tcp-32400
+        - name: http
           containerPort: 32400
           protocol: TCP
         - name: plex-tcp-3005
@@ -28,29 +28,11 @@ spec:
         - name: plex-tcp-8324
           containerPort: 8324
           protocol: TCP
-        # - name: plex-tcp-32469
-        #   containerPort: 32469
-        #   protocol: TCP
-        # - name: plex-udp-1900
-        #   containerPort: 1900
-        #   protocol: UDP
-        # - name: plex-udp-32410
-        #   containerPort: 32410
-        #   protocol: UDP
-        # - name: plex-udp-32412
-        #   containerPort: 32412
-        #   protocol: UDP
-        # - name: plex-udp-32413
-        #   containerPort: 32413
-        #   protocol: UDP
-        # - name: plex-udp-32414
-        #   containerPort: 32414
-        #   protocol: UDP
         env:
         - name: PLEX_UID
-          value: "1000"
+          value: "1001"
         - name: PLEX_GID
-          value: "1000"
+          value: "1001"
         - name: TZ
           value: "Asia/Kolkata"
         volumeMounts:
@@ -58,16 +40,13 @@ spec:
           mountPath: /data
         - name: plex-config
           mountPath: /config
-        - name: rpi-plex-data
-          mountPath: /rpidata
       volumes:
       - name: plex-data
-        persistentVolumeClaim:
-          claimName: plex-data-pvc
-      - name: rpi-plex-data
-        persistentVolumeClaim:
-          claimName: rpi-plex-data-pvc
-        optional: true
+        hostPath:
+          path: /mnt/external/transmission/data/complete
+          type: DirectoryOrCreate
       - name: plex-config
-        persistentVolumeClaim:
-          claimName: plex-config-pvc
+        hostPath:
+          path: /mnt/external/plex/config
+          type: DirectoryOrCreate
+
