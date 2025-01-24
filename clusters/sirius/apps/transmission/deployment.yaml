@@ -41,6 +41,14 @@ spec:
           value: "1001"
         - name: UMASK
           value: "022"
+        livenessProbe:
+          exec:
+            command:
+            - test
+            - -d
+            - /downloads/complete
+          initialDelaySeconds: 10
+          periodSeconds: 30
       volumes:
       - name: config
         hostPath:
