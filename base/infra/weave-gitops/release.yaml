@@ -38,7 +38,7 @@ spec:
       # brew tap weaveworks/tap
       # brew install weaveworks/tap/gitops
       # echo -n $PASSWORD | gitops get bcrypt-hash
-      passwordHash: "$2a$10$ZpzICC6PFcePbSACksY5CO.0zwenOIyUuVY8oYdQ5NYf9Fb1Hz7i6"
+      passwordHash: "$2a$10$OISgl44ZAck5wlw5Fu4Ysey7IVRjzQXU8pCAHzfqh2d6F4/ZxIVhG"
 
     ingress:
       enabled: true
