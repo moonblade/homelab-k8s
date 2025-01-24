@@ -92,3 +92,18 @@ So pivoted to fixing certmanager cert instead. Reinstalling certmanager got me c
 Apparently token got revoked? so created a new token and gave that to cluster issuer then it was still pending because challenge wasn't completed because it was trying with ipv6 and getting permission denied.
 Exasperated ended up setting ipv6 off in nixos instead. That solved cert side but now site wasn't loading. Sigh.
 Rebooted machine and now it seems to be working
+
+- Jan 23, 2025
+
+Spent a long time and make ipv6 work on both athena and sirius nixos. Having a few false starts and a few network freeze outs, but got there in the end. And it didn't help with the challenges problem at all. So thats still unsolved.
+
+I was unable to access homer, then realized it was because I had an /etc/hosts entry for homer, that was why it wasn't working. Removed it and it started working fine. Sigh.
+
+- Jan 24, 2025
+
+Setup *Weave* to have some visibility into the cluster, had some issues with setting password, but reboot got it working. :shrug:
+
+Made a script to auto connect or disconnect hard disk based on its avialability, so now it should work at least when its avaialable. Will see what happens if not. Transmission works now with hostpath instead.
+
+
+
