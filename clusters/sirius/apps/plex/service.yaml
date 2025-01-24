@@ -8,17 +8,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: plex-tcp-32400
+  - name: http
     port: 32400
-    targetPort: plex-tcp-32400
-    protocol: TCP
-  - name: plex-tcp-3005
-    port: 3005
-    targetPort: plex-tcp-3005
-    protocol: TCP
-  - name: plex-tcp-8324
-    port: 8324
-    targetPort: plex-tcp-8324
+    targetPort: http
     protocol: TCP
   selector:
     app: plex
