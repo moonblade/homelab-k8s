@@ -8,18 +8,17 @@ spec:
   chart:
     spec:
       chart: kubernetes-dashboard
-      version: '5.10.1'
+      version: '*'
       sourceRef:
         kind: HelmRepository
         name: kubernetes-dashboard
-        namespace: kubernetes-dashboard
+        namespace: flux-system
       interval: 1m
   install:
-    # Avoid waiting for resources to be ready on first install
     disableWait: true
   values:
     protocolHttp: true
     service:
       type: ClusterIP
     ingress:
-      enabled: true
+      enabled: false
