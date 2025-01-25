@@ -15,14 +15,13 @@ spec:
         name: cilium
         namespace: kube-system
       interval: 1m
-  # values:
-  #   hubble:
-  #     relay:
-  #       enabled: true
-  #     ui:
-  #       ingress:
-  #         enabled: true
-  #         annotations:
-  #           cert-manager.io/cluster-issuer: default-clusterissuer
-  #
-  #       enabled: true
+  values:
+    hubble:
+      relay:
+        enabled: true
+      ui:
+        ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: default-clusterissuer
+        enabled: true

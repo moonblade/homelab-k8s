@@ -7,12 +7,12 @@ spec:
   values:
     # ipv6:
     #   enabled: true
-    # cluster:
-    #   name: sirius
-    # operator:
-    #   replicas: 1
+    cluster:
+      name: sirius
+    operator:
+      replicas: 1
     ipam:
-    #   mode: kubernetes
+      mode: kubernetes
       operator:
         clusterPoolIPv4PodCIDRList:
           - 10.42.0.0/16
@@ -22,16 +22,16 @@ spec:
     #
     # # enableIPv6Masquerade: true
     #
-    # k8sServiceHost: 192.168.1.150
-    # k8sServicePort: 6443
-    #
-    # hubble:
-    #   ui:
-    #     ingress:
-    #       enabled: true
-    #       hosts:
-    #       - hubble.sirius.moonblade.work
-    #       tls:
-    #       - secretName: hubble-tls
-    #         hosts:
-    #         - hubble.sirius.moonblade.work
+    k8sServiceHost: 192.168.1.150
+    k8sServicePort: 6443
+
+    hubble:
+      ui:
+        ingress:
+          enabled: true
+          hosts:
+          - hubble.sirius.moonblade.work
+          tls:
+          - secretName: hubble-tls
+            hosts:
+            - hubble.sirius.moonblade.work
