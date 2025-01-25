@@ -46,6 +46,8 @@ spec:
         env:
         - name: ALLOWED_NETWORKS
           value: 192.168.0.0/16,10.0.0.0/8
+        - name: PLEX_CLAIM
+          value: claim-JHewYm15ZFBHgpxAVeCP
         - name: PLEX_UID
           value: "1001"
         - name: PLEX_GID
