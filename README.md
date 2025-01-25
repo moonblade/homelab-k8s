@@ -105,5 +105,8 @@ Setup *Weave* to have some visibility into the cluster, had some issues with set
 
 Made a script to auto connect or disconnect hard disk based on its avialability, so now it should work at least when its avaialable. Will see what happens if not. Transmission works now with hostpath instead.
 
+- Jan 25, 2025
 
+Got plex working. Finally. Needed to add a plex claim code to add the server to existing user. And a few issues with http port name.
+But now it works. I need to add agents, but eh, basics are there.
 
