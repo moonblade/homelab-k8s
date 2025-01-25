@@ -67,16 +67,16 @@ spec:
           exec:
             command:
             - test
-            - -d
-            - /data/complete
+            - -f
+            - /data/DONOTDELETE
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           exec:
             command:
             - test
-            - -d
-            - /data/complete
+            - -f
+            - /data/DONOTDELETE
           initialDelaySeconds: 10
           periodSeconds: 30
       volumes:
