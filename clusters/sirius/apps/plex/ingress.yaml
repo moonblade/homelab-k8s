@@ -20,4 +20,4 @@ spec:
           service:
             name: plex
             port:
-              name: plex-tcp-32400
+              name: http
