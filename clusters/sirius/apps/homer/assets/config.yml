@@ -50,7 +50,7 @@ services:
     icon: "fas fa-box"
     items:
       - name: "Athena"
-        icon: "fas fa-server"
+        logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
         subtitle: "Proxmox UI"
         url: "https://athena.moonblade.work:8006"
         type: Ping
