@@ -32,7 +32,7 @@ services:
         method: "HEAD"
         mode: "no-cors"
       - name: "Plex"
-        icon: "fas fa-play-circle"
+        logo: "https://static.cdnlogo.com/logos/p/96/plex.svg"
         subtitle: "Plex Media Server"
         url: "https://plex.sirius.moonblade.work"
         type: Ping
