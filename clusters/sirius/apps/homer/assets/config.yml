@@ -25,7 +25,7 @@ services:
     icon: "fas fa-star"
     items:
       - name: "Transmission"
-        icon: "fas fa-download"
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Transmission_Icon.svg/120px-Transmission_Icon.svg.png"
         subtitle: "Transmission Web Interface"
         url: "https://transmission.sirius.moonblade.work"
         type: Ping
