@@ -14,5 +14,5 @@ spec:
         name: firefly-iii
         namespace: firefly
   values:
-    storage:
+    spec:
       accessModes: ReadWriteOnce
