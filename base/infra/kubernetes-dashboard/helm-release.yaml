@@ -21,4 +21,4 @@ spec:
     service:
       type: ClusterIP
     ingress:
-      enabled: false
+      enabled: true
