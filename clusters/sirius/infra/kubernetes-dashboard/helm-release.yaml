@@ -5,12 +5,11 @@ metadata:
   namespace: kubernetes-dashboard
 spec:
   values:
-    protocolHttp: true
-    service:
-      type: ClusterIP
-    ingress:
-      enabled: true
-      annotations:
-        cert-manager.io/cluster-issuer: default-clusterissuer
-      hosts:
-        - dashboard.sirius.moonblade.work
+    app:
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          cert-manager.io/cluster-issuer: default-clusterissuer
+        hosts:
+          - dashboard.sirius.moonblade.work
