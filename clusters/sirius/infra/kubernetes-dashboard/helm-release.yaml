@@ -9,7 +9,7 @@ spec:
       ingress:
         enabled: true
         ingressClassName: nginx
-        annotations:
-          cert-manager.io/cluster-issuer: default-clusterissuer
+        issuer:
+          name: cluster
         hosts:
           - dashboard.sirius.moonblade.work
