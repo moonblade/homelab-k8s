@@ -7,5 +7,6 @@ spec:
   values:
     ingress:
       host: longhorn.sirius.moonblade.work
+      tls: true
     defaultSettings:
       defaultDataPath: /mnt/external/longhorn
