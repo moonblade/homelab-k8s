@@ -24,7 +24,7 @@ spec:
       enabled: true
       annotations:
         cert-manager.io/cluster-issuer: default-clusterissuer
-      host: longhorn.local
+      host: longhorn.sirius.moonblade.work
       tls: true
       tlsSecret: longhorn-tls
     csi:
