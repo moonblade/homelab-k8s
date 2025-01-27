@@ -11,13 +11,6 @@ spec:
     ingress:
       enabled: true
       annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: /
-      paths:
-        - path: /
-          pathType: Prefix
+        cert-manager.io/cluster-issuer: default-clusterissuer
       hosts:
         - dashboard.sirius.moonblade.work
-      tls:
-        - secretName: kubernetes-dashboard-tls
-          hosts:
-            - dashboard.sirius.moonblade.work
