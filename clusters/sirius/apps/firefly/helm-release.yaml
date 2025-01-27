@@ -8,11 +8,8 @@ spec:
   chart:
     spec:
       chart: firefly-iii-stack
-      version: "*"
+      version: "1.8.2"
       sourceRef:
         kind: HelmRepository
         name: firefly-iii
         namespace: firefly
-  values:
-    spec:
-      accessModes: ReadWriteOnce
