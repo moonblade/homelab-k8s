@@ -13,9 +13,9 @@ spec:
         kind: HelmRepository
         name: firefly-iii
         namespace: firefly
-values:
-  firefly-iii:
-    persistence:
-      enabled: true
-      storageClass: local-path
-      size: 1Gi
+  values:
+    firefly-iii:
+      persistence:
+        enabled: true
+        storageClass: local-path
+        size: 1Gi
