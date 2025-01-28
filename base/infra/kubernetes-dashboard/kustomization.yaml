@@ -4,3 +4,7 @@ namespace: kubernetes-dashboard
 resources:
   - helm-repo.yaml
   - helm-release.yaml
+  - sa.yaml
+  - clusterrolebinding.yaml
+  - token.yaml
+
