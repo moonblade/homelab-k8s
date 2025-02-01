@@ -16,3 +16,9 @@ secret-sealed:
 	# cat secrets/secret.yaml | kubeseal --format=yaml --cert secrets/kubeseal-public-key.crt > secret-sealed.yaml
 	# cat secrets/secret.yaml | kubeseal --controller-name=sealed-secrets --controller-namespace=flux-system -o yaml
 	cat secrets/secret.yaml | kubeseal
+
+dashboard-token:
+	@kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath="{.data.token}" | base64 -d
+
+cilium:
+	cilium install --set cluster.name=sirius --set operator.replicas=1 --set ipam.mode=kubernetes --set operator.clusterPoolIPv4PodCIDRList="10.42.0.0/16" --set k8sServiceHost=192.168.1.150 --set k8sServicePort=6443
