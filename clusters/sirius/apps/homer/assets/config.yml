@@ -38,6 +38,13 @@ services:
   - name: "Sirius"
     icon: "fas fa-star"
     items:
+      - name: "Expense Tracker Configuration"
+        icon: "fas fa-wallet"
+        subtitle: "Manage expenses with ease"
+        url: "https://expense-tracker.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Transmission"
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Transmission_Icon.svg/120px-Transmission_Icon.svg.png"
         subtitle: "Transmission Web Interface"
@@ -49,13 +56,6 @@ services:
         logo: "https://static.cdnlogo.com/logos/p/96/plex.svg"
         subtitle: "Plex Media Server"
         url: "https://plex.sirius.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Expense Tracker Configuration"
-        icon: "fas fa-wallet"
-        subtitle: "Manage expenses with ease"
-        url: "https://expense-tracker.sirius.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
