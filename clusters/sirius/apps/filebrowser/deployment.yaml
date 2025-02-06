@@ -32,7 +32,7 @@ spec:
             type: DirectoryOrCreate
         - name: database
           hostPath:
-            path: /mnt/config/filebrowser/database.db
+            path: /mnt/secondary/config/filebrowser/database.db
             type: FileOrCreate
       securityContext:
         fsGroup: 1001 # Ensures that the volume is accessible by the container user.
