@@ -45,16 +45,16 @@ spec:
           exec:
             command:
             - test
-            - -d
-            - /downloads/complete
+            - -f
+            - /downloads/complete/DONOTDELETE
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           exec:
             command:
             - test
-            - -d
-            - /downloads/complete
+            - -f
+            - /downloads/complete/DONOTDELETE
           initialDelaySeconds: 10
           periodSeconds: 30
       volumes:
