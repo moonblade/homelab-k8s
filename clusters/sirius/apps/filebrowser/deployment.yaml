@@ -21,9 +21,7 @@ spec:
             - name: storage
               mountPath: /srv
             - name: database
-              mountPath: /database.db
-            - name: config
-              mountPath: /.filebrowser.json
+              mountPath: /database
           securityContext:
             runAsUser: 1001
             runAsGroup: 1001
@@ -34,12 +32,8 @@ spec:
             type: DirectoryOrCreate
         - name: database
           hostPath:
-            path: /mnt/config/filebrowser/filebrowser.db
-            type: FileOrCreate
-        - name: config
-          hostPath:
-            path: /mnt/config/filebrowser/.filebrowser.json
-            type: FileOrCreate
+            path: /mnt/config/filebrowser
+            type: DirectoryOrCreate
       securityContext:
         fsGroup: 1001 # Ensures that the volume is accessible by the container user.
         # This is crucial for handling files owned by both root and user 1001
