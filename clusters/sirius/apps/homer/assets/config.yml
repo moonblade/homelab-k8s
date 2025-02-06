@@ -27,6 +27,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Longhorn"
+        logo: "https://longhorn.io/img/logos/longhorn-icon-white.png"
+        subtitle: "Longhorn UI"
+        url: "https://longhorn.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Sirius"
     icon: "fas fa-star"
@@ -49,6 +56,13 @@ services:
         icon: "fas fa-wallet"
         subtitle: "Manage expenses with ease"
         url: "https://expense-tracker.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "File Browser"
+        logo: "https://avatars.githubusercontent.com/u/35781395?s=48&v=4"
+        subtitle: "File Browser"
+        url: "https://browse.sirius.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
