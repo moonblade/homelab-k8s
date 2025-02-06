@@ -60,14 +60,14 @@ spec:
       volumes:
       - name: config
         hostPath:
-          path: /mnt/external/transmission/config
+          path: /mnt/secondary/transmission/config
           type: DirectoryOrCreate
       - name: data
         hostPath:
-          path: /mnt/external/transmission/data
+          path: /mnt/secondary/transmission/data
           type: DirectoryOrCreate
       - name: watch
         hostPath:
-          path: /mnt/external/transmission/watch
+          path: /mnt/secondary/transmission/watch
           type: DirectoryOrCreate
 

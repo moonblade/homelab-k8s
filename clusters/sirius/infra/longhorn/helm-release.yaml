@@ -9,4 +9,4 @@ spec:
       host: longhorn.sirius.moonblade.work
       tls: true
     defaultSettings:
-      defaultDataPath: /mnt/external/longhorn
+      defaultDataPath: /mnt/secondary/longhorn
