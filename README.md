@@ -110,3 +110,6 @@ Made a script to auto connect or disconnect hard disk based on its avialability,
 Got plex working. Finally. Needed to add a plex claim code to add the server to existing user. And a few issues with http port name.
 But now it works. I need to add agents, but eh, basics are there.
 
+- Feb 6, 2025
+
+Bought another hard disk, 2.5 inch this time and moved everything there instead. Need to buy another enclosure that is always on for the 3.5 inch one.
