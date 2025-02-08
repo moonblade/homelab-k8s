@@ -66,6 +66,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Feeder"
+        logo: "https://img.icons8.com/?size=100&id=qpuOQzhOVZ0a&format=png&color=000000"
+        subtitle: "Feeder"
+        url: "https://feeder.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Misc"
     icon: "fas fa-box"
