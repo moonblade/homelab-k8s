@@ -19,7 +19,7 @@ spec:
             - containerPort: 9000
           volumeMounts:
             - name: feed-volume
-              mountPath: /feed
+              mountPath: /feeds
           envFrom:
             - secretRef:
                 name: feeder-env-secret
