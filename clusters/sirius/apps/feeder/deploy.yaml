@@ -26,6 +26,8 @@ spec:
           env:
             - name: UPDATE_FREQUENCY_SECONDS
               value: "900"
+            - name: FEEDURL
+              value: "http://filebrowser/api/public/dl/-ZyX3mJU"
       volumes:
         - name: feed-volume
           hostPath:
