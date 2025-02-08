@@ -15,7 +15,7 @@ create-sealed-secret-key:
 secret-sealed:
 	# cat secrets/secret.yaml | kubeseal --format=yaml --cert secrets/kubeseal-public-key.crt > secret-sealed.yaml
 	# cat secrets/secret.yaml | kubeseal --controller-name=sealed-secrets --controller-namespace=flux-system -o yaml
-	cat secrets/secret.yaml | kubeseal
+	cat secrets/secret.yaml | kubeseal -o yaml
 
 dashboard-token:
 	@kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath="{.data.token}" | base64 -d
