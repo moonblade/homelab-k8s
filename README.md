@@ -115,3 +115,7 @@ But now it works. I need to add agents, but eh, basics are there.
 Bought another hard disk, 2.5 inch this time and moved everything there instead. Need to buy another enclosure that is always on for the 3.5 inch one.
 
 Adding filebrowser to interact with files on the machine more easily
+
+- Feb 8, 2025
+
+Moved my feeder that checks Royal road and wandering inn updates and sends it to my kindle over to the cluster. Had to rewrite it from scratch to be more dockerish and fully pythonic. But worth it.
