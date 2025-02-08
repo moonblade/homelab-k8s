@@ -28,7 +28,8 @@ spec:
               value: "900"
       volumes:
         - name: feed-volume
-          persistentVolumeClaim:
-            claimName: feeder-pvc
+          hostPath:
+            path: /mnt/secondary/feeder/
+            type: DirectoryOrCreate
       imagePullSecrets:
         - name: feeder-image-pull

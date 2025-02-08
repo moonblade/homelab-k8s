@@ -5,7 +5,6 @@ resources:
   - ./deploy.yaml
   - ./feeder-env-sealed-secret.yaml
   - ./image-pull-secret.yaml
-  - ./pvc.yaml
   - ./service.yaml
   - ./ingress.yaml
 
