@@ -20,8 +20,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: audiobookbay-config
-            - secretRef:
-                name: audiobookbay-secrets
+          env:
+            - name: DL_PASSWORD
+              value: ""
+            - name: DL_USERNAME
+              value: ""
           readinessProbe:
             exec:
               command:
