@@ -8,7 +8,7 @@ spec:
   tls:
   - hosts:
     - prowlarr.sirius.moonblade.work
-    secretName: readarr-cert
+    secretName: prowlarr-cert
   rules:
   - host: prowlarr.sirius.moonblade.work
     http:
