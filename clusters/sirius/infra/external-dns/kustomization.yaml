@@ -5,3 +5,4 @@ resources:
 - secret-sealed.yaml
 - ../../../../base/infra/external-dns
 - ./dnsendpoints.yaml
+- ./certificates.yaml
