@@ -31,6 +31,8 @@ spec:
               mountPath: /audiobooks
             - name: downloads
               mountPath: /downloads
+            - name: initscript
+              mountPath: /custom-cont-init.d
           readinessProbe:
             exec:
               command:
@@ -66,4 +68,8 @@ spec:
         - name: downloads
           hostPath:
             path: /mnt/secondary/transmission/data/complete # Correct ingest path
-            type: Directory
+            type: DirectoryOrCreate
+        - name: initscript
+          hostPath:
+            path: /mnt/secondary/beets/config/scripts
+            type: DirectoryOrCreate
