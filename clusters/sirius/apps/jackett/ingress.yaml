@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jackett-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: default-clusterissuer # Or your cluster issuer
+spec:
+  tls:
+    - hosts:
+        - jackett.sirius.moonblade.work # Use subdomain of existing host
+      secretName: jackett-cert # Replace with your certificate secret name
+  rules:
+    - host: jackett.sirius.moonblade.work # Use subdomain of existing host
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jackett
+                port:
+                  name: http

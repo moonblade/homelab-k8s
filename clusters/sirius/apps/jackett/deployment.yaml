@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jackett
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jackett
+  template:
+    metadata:
+      labels:
+        app: jackett
+    spec:
+      containers:
+        - name: jackett
+          image: lscr.io/linuxserver/jackett:latest
+          ports:
+            - containerPort: 9117
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: Etc/UTC
+            - name: AUTO_UPDATE
+              value: "true"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+      readinessProbe:
+        exec:
+          command:
+          - test
+          - -f
+          - /config/DONOTDELETE
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      livenessProbe:
+        exec:
+          command:
+          - test
+          - -f
+          - /config/DONOTDELETE
+        initialDelaySeconds: 10
+        periodSeconds: 30
+      volumes:
+        - name: config
+          hostPath:
+            path: /mnt/secondary/jackett/config
+            type: DirectoryOrCreate
+        - name: downloads 
+          hostPath:
+            path: /mnt/secondary/jackett/downloads
+            type: Directory
+
