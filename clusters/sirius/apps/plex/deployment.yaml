@@ -92,6 +92,6 @@ spec:
           type: DirectoryOrCreate
       - name: plex-media
         hostPath:
-          path: /mnt/secondary/transmission/data/complete
+          path: /mnt/secondary/readarr/books
           type: DirectoryOrCreate
 
