@@ -4,7 +4,7 @@ metadata:
   name: audiobookbay-config
 data:
   DOWNLOAD_CLIENT: transmission
-  DL_HOST: transmission.sirius.moonblade.work
+  DL_HOST: transmission
   DL_PORT: "443"
   DL_CATEGORY: abb-downloader
   SAVE_PATH_BASE: /downloads
