@@ -19,5 +19,5 @@ spec:
               service:
                 name: beets
                 port:
-                  number: http
+                  name: http
 
