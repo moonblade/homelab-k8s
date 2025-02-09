@@ -77,17 +77,17 @@ services:
   - name: "Arr Suite"
     icon: "fas fa-film"
     items:
-      - name: "Prowlarr"
-        logo: "https://docs.linuxserver.io/assets/icon.svg"
-        subtitle: "Manage your indexers"
-        url: "https://prowlarr.sirius.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
       - name: "Readarr"
         logo: "https://readarr.com/img/logo.png"
         subtitle: "Auto download books"
         url: "https://readarr.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Prowlarr"
+        logo: "https://docs.linuxserver.io/assets/icon.svg"
+        subtitle: "Manage your indexers"
+        url: "https://prowlarr.sirius.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
