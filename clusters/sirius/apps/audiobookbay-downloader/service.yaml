@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: audiobookbay-downloader
+spec:
+  selector:
+    app: audiobookbay-downloader
+  ports:
+    - protocol: TCP
+      port: 5078
+      targetPort: 5078
+      name: http
+  type: ClusterIP

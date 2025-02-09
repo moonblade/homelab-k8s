@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/instance: audiobookbay-downloader
+    app.kubernetes.io/name: audiobookbay-downloader
+  annotations:
+   cert-manager.io/cluster-issuer: default-clusterissuer
+  name: audiobookbay-ingress
+spec:
+  tls:
+  - hosts:
+    - abb.sirius.moonblade.work
+    secretName: audiobookbay-cert
+  rules:
+  - host: abb.sirius.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: audiobookbay-downloader
+            port:
+              name: http
