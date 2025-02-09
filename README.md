@@ -123,3 +123,5 @@ Moved my feeder that checks Royal road and wandering inn updates and sends it to
 - Feb 9, 2025
 
 Setup readarr, prowlarr and jackett for audiobookbay. Finally wired it up with plex so now audiobook downloading is easier.
+
+Update: Just my luck, readarr metadata sucks ass, half the things I want isn't on it, so trying to setup manual audiobook downloader + beets.
