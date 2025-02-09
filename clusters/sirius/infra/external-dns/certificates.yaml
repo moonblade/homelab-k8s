@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: sirius-tls
   issuerRef:
-    name: letsencrypt-prod
+    name: default-clusterissuer
     kind: ClusterIssuer
   commonName: sirius.moonblade.work
   dnsNames:
@@ -18,7 +18,7 @@ metadata:
 spec:
   secretName: athena-tls
   issuerRef:
-    name: letsencrypt-prod
+    name: default-clusterissuer
     kind: ClusterIssuer
   commonName: athena.moonblade.work
   dnsNames:
