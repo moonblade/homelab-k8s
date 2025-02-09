@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: beets-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: default-clusterissuer
+spec:
+  tls:
+    - hosts:
+        - beets.sirius.moonblade.work # Replace with your host
+      secretName: beets-cert # Replace with your certificate secret name
+  rules:
+    - host: beets.sirius.moonblade.work # Replace with your host
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: beets
+                port:
+                  number: http
+
