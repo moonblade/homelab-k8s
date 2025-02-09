@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: readarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: readarr
+  template:
+    metadata:
+      labels:
+        app: readarr
+    spec:
+      containers:
+        - name: readarr
+          image: lscr.io/linuxserver/readarr:develop
+          ports:
+            - containerPort: 8787
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads # This is where Readarr *monitors* for completed downloads
+            - name: books
+              mountPath: /books
+          env:
+            - name: PUID
+              value: "1000" # Replace with your user ID
+            - name: PGID
+              value: "1000" # Replace with your group ID
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: config
+          hostPath:
+            path: /mnt/secondary/readarr/config
+            type: DirectoryOrCreate
+        - name: downloads  # This path should match what Transmission uses for completed downloads!
+          hostPath:
+            path: /mnt/secondary/transmission/data/complete # Matches your requirement!
+            type: Directory
+        - name: books
+          hostPath:
+            path: /mnt/secondary/readarr/books # Your ebook/audiobook library location
+            type: DirectoryOrCreate
+
