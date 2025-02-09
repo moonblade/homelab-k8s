@@ -119,3 +119,7 @@ Adding filebrowser to interact with files on the machine more easily
 - Feb 8, 2025
 
 Moved my feeder that checks Royal road and wandering inn updates and sends it to my kindle over to the cluster. Had to rewrite it from scratch to be more dockerish and fully pythonic. But worth it.
+
+- Feb 9, 2025
+
+Setup readarr, prowlarr and jackett for audiobookbay. Finally wired it up with plex so now audiobook downloading is easier.
