@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: feeder
-          image: ghcr.io/moonblade/feeder:1618d5f
+          image: ghcr.io/moonblade/feeder:67c9fe7
           ports:
             - containerPort: 9000
           volumeMounts:
