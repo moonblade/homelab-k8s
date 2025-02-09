@@ -73,6 +73,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Readarr"
+        logo: "https://readarr.com/img/logo.png"
+        subtitle: "Auto download books"
+        url: "https://readarr.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Misc"
     icon: "fas fa-box"
