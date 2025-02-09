@@ -38,7 +38,7 @@ services:
   - name: "Sirius"
     icon: "fas fa-star"
     items:
-      - name: "Expense Tracker Configuration"
+      - name: "Expense Tracker"
         icon: "fas fa-wallet"
         subtitle: "Manage expenses with ease"
         url: "https://expense-tracker.sirius.moonblade.work"
