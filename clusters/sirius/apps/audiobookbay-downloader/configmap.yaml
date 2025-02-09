@@ -5,6 +5,6 @@ metadata:
 data:
   DOWNLOAD_CLIENT: transmission
   DL_HOST: transmission
-  DL_PORT: "443"
+  DL_PORT: "9091"
   DL_CATEGORY: abb-downloader
   SAVE_PATH_BASE: /downloads
