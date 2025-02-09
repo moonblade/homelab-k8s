@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audiobookbay-downloader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: audiobookbay-downloader
+  template:
+    metadata:
+      labels:
+        app: audiobookbay-downloader
+    spec:
+      containers:
+        - name: audiobookbay-downloader
+          image: ghcr.io/jamesry96/audiobookbay-automated:latest
+          ports:
+            - containerPort: 5078
+          envFrom:
+            - configMapRef:
+                name: audiobookbay-config
+            - secretRef:
+                name: audiobookbay-secrets
+          readinessProbe:
+            exec:
+              command:
+                - test
+                - -f
+                - /downloads/DONOTDELETE
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - test
+                - -f
+                - /downloads/DONOTDELETE
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          volumeMounts:
+            - name: downloads
+              mountPath: /downloads
+      volumes:
+        - name: downloads
+          hostPath:
+            path: /mnt/secondary/transmission/data/complete
+            type: DirectoryOrCreate
