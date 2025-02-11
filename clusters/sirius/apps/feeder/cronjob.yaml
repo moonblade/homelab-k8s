@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: feeder-executor
+spec:
+  schedule: "*/15 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: feeder-executor
+              image: curlimages/curl:latest
+              command:
+                - curl
+                - -X
+                - POST
+                - http://feeder/execute
+          restartPolicy: OnFailure
