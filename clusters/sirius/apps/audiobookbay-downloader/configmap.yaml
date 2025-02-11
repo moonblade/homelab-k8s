@@ -3,8 +3,5 @@ kind: ConfigMap
 metadata:
   name: audiobookbay-config
 data:
-  DOWNLOAD_CLIENT: transmission
-  DL_HOST: transmission
-  DL_PORT: "9091"
-  DL_CATEGORY: abb-downloader
-  SAVE_PATH_BASE: /downloads
+  JACKETT_API_URL: http://jackett/api/v2.0/indexers/audiobookbay/results
+  TRANSMISSION_URL: http://transmission/transmission/rpc

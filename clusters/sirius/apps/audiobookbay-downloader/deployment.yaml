@@ -14,17 +14,14 @@ spec:
     spec:
       containers:
         - name: audiobookbay-downloader
-          image: ghcr.io/jamesry96/audiobookbay-automated:latest
+          image: ghcr.io/moonblade/audiobookbay-downloader:12bd619
           ports:
             - containerPort: 5078
           envFrom:
+            - secretRef:
+                name: audiobookbay-secrets
             - configMapRef:
                 name: audiobookbay-config
-          env:
-            - name: DL_PASSWORD
-              value: ""
-            - name: DL_USERNAME
-              value: ""
           readinessProbe:
             exec:
               command:
