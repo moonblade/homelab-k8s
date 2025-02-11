@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: audiobookbay-config
 data:
-  JACKETT_API_URL: http://jackett/api/v2.0/indexers/audiobookbay/results
-  TRANSMISSION_URL: http://transmission/transmission/rpc
+  JACKETT_API_URL: https://jackett.sirius.moonblade.work/api/v2.0/indexers/audiobookbay/results
+  TRANSMISSION_URL: https://transmission.sirius.moonblade.work/transmission/rpc
