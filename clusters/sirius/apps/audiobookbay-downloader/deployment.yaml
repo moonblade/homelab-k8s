@@ -19,7 +19,7 @@ spec:
             - containerPort: 5078
           envFrom:
             - secretRef:
-                name: audiobookbay-secrets
+                name: audiobookbay-secret
             - configMapRef:
                 name: audiobookbay-config
           readinessProbe:
