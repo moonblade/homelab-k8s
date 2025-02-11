@@ -8,5 +8,5 @@ resources:
   - ./ingress.yaml
   - ./transmission.yaml
   - ./jackett.yaml
-  - ./secret.yaml
+  - ./secret-sealed.yaml
 
