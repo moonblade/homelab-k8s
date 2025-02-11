@@ -16,7 +16,7 @@ spec:
         - name: audiobookbay-downloader
           image: ghcr.io/moonblade/audiobookbay-downloader:12bd619
           ports:
-            - containerPort: 5078
+            - containerPort: 9000
           envFrom:
             - secretRef:
                 name: audiobookbay-secret
