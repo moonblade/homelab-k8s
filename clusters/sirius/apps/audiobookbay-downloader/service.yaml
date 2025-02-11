@@ -7,7 +7,7 @@ spec:
     app: audiobookbay-downloader
   ports:
     - protocol: TCP
-      port: 5078
-      targetPort: 5078
+      port: 80
+      targetPort: 9000
       name: http
   type: ClusterIP
