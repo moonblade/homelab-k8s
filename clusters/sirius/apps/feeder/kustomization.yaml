@@ -8,4 +8,4 @@ resources:
   - ./service.yaml
   - ./ingress.yaml
   - ./filebrowser.yaml
-
+  - ./cronjob.yaml
