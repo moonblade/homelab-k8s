@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: settings-override
 data:
-  ratio-limit: "2.0"
-  ratio-limit-enabled: "true"
-  idle-seeding-limit: "10080"
-  idle-seeding-limit-enabled: "true"
+  ratio-limit: 2.0
+  ratio-limit-enabled: true
+  idle-seeding-limit: 10080
+  idle-seeding-limit-enabled: true
