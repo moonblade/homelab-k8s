@@ -65,9 +65,9 @@ spec:
           mountPath: /watch
         env:
         - name: PUID
-          value: "1001"
+          value: "1000"
         - name: PGID
-          value: "1001"
+          value: "1000"
         - name: UMASK
           value: "022"
       volumes:
