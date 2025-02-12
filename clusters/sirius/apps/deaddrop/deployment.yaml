@@ -26,17 +26,46 @@ spec:
           - |
             SETTINGS_FILE="/config/settings.json"
             
-            # If settings.json doesn't exist, skip modification
             if [ ! -f "$SETTINGS_FILE" ]; then
               echo "settings.json not found, skipping modification."
               exit 0
             fi
 
             echo "Modifying settings.json with values from ConfigMap..."
+            
+            echo "=== Current settings.json content ==="
+            cat "$SETTINGS_FILE"
+            echo "===================================="
+
             for key in $(env | awk -F= '{print $1}'); do
               value=$(eval echo \$$key)
-              sed -i "s/\"$key\": [^,]*/\"$key\": $value/" "$SETTINGS_FILE"
+
+              echo "Processing key: $key"
+              echo "Original value from ConfigMap: $value"
+
+              # Ensure value is properly formatted for JSON
+              case "$value" in
+                true|false) ;;
+                ''|*[!0-9]*) value="\"$value\"" ;;  # Quote strings
+              esac
+
+              echo "Formatted value for JSON: $value"
+
+              # Use jq to safely modify JSON
+              jq --arg key "$key" --argjson value "$value" '.[$key] = $value' "$SETTINGS_FILE" > "/tmp/settings.json"
+              
+              if [ $? -ne 0 ]; then
+                echo "Error updating settings.json with key: $key"
+              else
+                echo "Successfully updated $key in settings.json"
+                mv /tmp/settings.json "$SETTINGS_FILE"
+              fi
             done
+
+            echo "=== Updated settings.json content ==="
+            cat "$SETTINGS_FILE"
+            echo "===================================="
+            
             echo "Settings updated."
         volumeMounts:
           - name: config
