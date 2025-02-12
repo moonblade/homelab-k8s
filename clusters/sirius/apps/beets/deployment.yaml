@@ -17,7 +17,7 @@ spec:
         - name: beets
           image: lscr.io/linuxserver/beets:latest
           ports:
-            - containerPort: 8337
+            - containerPort: 80
           env:
             - name: PUID
               value: "1000"
