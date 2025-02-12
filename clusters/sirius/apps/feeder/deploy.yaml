@@ -28,22 +28,6 @@ spec:
               value: "900"
             - name: FEEDURL
               value: "http://filebrowser/api/public/dl/-ZyX3mJU"
-      readinessProbe:
-        exec:
-          command:
-          - test
-          - -f
-          - /feeds/DONOTDELETE
-        initialDelaySeconds: 5
-        periodSeconds: 10
-      livenessProbe:
-        exec:
-          command:
-          - test
-          - -f
-          - /feeds/DONOTDELETE
-        initialDelaySeconds: 10
-        periodSeconds: 30
       volumes:
         - name: feed-volume
           hostPath:

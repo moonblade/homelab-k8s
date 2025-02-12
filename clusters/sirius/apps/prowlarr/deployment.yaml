@@ -34,22 +34,6 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-      readinessProbe:
-        exec:
-          command:
-          - test
-          - -f
-          - /config/DONOTDELETE
-        initialDelaySeconds: 5
-        periodSeconds: 10
-      livenessProbe:
-        exec:
-          command:
-          - test
-          - -f
-          - /config/DONOTDELETE
-        initialDelaySeconds: 10
-        periodSeconds: 30
       volumes:
         - name: config
           hostPath:

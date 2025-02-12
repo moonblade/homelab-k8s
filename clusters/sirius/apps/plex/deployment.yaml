@@ -65,22 +65,6 @@ spec:
           mountPath: /data
         securityContext:
           privileged: true
-        readinessProbe:
-          exec:
-            command:
-            - test
-            - -f
-            - /data/DONOTDELETE
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          exec:
-            command:
-            - test
-            - -f
-            - /data/DONOTDELETE
-          initialDelaySeconds: 10
-          periodSeconds: 30
       volumes:
       - name: plex-config
         hostPath:
