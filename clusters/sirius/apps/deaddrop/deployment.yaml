@@ -40,7 +40,7 @@ spec:
             echo "===================================="
 
             for key in $(env | awk -F= '{print $1}'); do
-              value=$(eval echo \$$key)
+              value=$(printenv "$key")
 
               echo "Processing key: $key"
               echo "Original value from ConfigMap: $value"
