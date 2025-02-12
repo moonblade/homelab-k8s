@@ -7,7 +7,7 @@ spec:
     app: beets
   ports:
     - protocol: TCP
-      port: 8337
+      port: 80
       targetPort: 8337
       name: http
   type: ClusterIP
