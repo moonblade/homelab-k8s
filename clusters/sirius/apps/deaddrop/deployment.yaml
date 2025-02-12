@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deaddrop
+  labels:
+    app: deaddrop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deaddrop
+  template:
+    metadata:
+      labels:
+        app: deaddrop
+    spec:
+      containers:
+      - name: deaddrop
+        image: linuxserver/transmission:latest
+        ports:
+        - name: http
+          containerPort: 9091
+          protocol: TCP
+        - name: torrent
+          containerPort: 51413
+          protocol: TCP
+        - name: torrent-udp
+          containerPort: 51413
+          protocol: UDP
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: data
+          mountPath: /downloads
+        - name: watch
+          mountPath: /watch
+        env:
+        - name: PUID
+          value: "1001"
+        - name: PGID
+          value: "1001"
+        - name: UMASK
+          value: "022"
+        readinessProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /downloads/complete/DONOTDELETE
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /downloads/complete/DONOTDELETE
+          initialDelaySeconds: 10
+          periodSeconds: 30
+      envFrom:
+        - secretRef:
+            name: deaddrop-secret
+      volumes:
+      - name: config
+        hostPath:
+          path: /mnt/secondary/deaddrop/config
+          type: DirectoryOrCreate
+      - name: data
+        hostPath:
+          path: /mnt/secondary/deaddrop/data
+          type: DirectoryOrCreate
+      - name: watch
+        hostPath:
+          path: /mnt/secondary/deaddrop/watch
+          type: DirectoryOrCreate
+

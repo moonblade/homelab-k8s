@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/instance: deaddrop
+    app.kubernetes.io/name: deaddrop
+  annotations:
+    cert-manager.io/cluster-issuer: default-clusterissuer
+  name: deaddrop-ingress
+spec:
+  tls:
+  - hosts:
+    - deaddrop.sirius.moonblade.work
+    secretName: deaddrop-cert
+  rules:
+  - host: deaddrop.sirius.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deaddrop
+            port:
+              name: http
