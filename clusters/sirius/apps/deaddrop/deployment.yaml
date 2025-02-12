@@ -14,6 +14,33 @@ spec:
       labels:
         app: deaddrop
     spec:
+      initContainers:
+      - name: settings-editor
+        image: busybox
+        envFrom:
+          - configMapRef:
+              name: settings-override
+        command:
+          - sh
+          - -c
+          - |
+            SETTINGS_FILE="/config/settings.json"
+            
+            # If settings.json doesn't exist, skip modification
+            if [ ! -f "$SETTINGS_FILE" ]; then
+              echo "settings.json not found, skipping modification."
+              exit 0
+            fi
+
+            echo "Modifying settings.json with values from ConfigMap..."
+            for key in $(env | awk -F= '{print $1}'); do
+              value=$(eval echo \$$key)
+              sed -i "s/\"$key\": [^,]*/\"$key\": $value/" "$SETTINGS_FILE"
+            done
+            echo "Settings updated."
+        volumeMounts:
+          - name: transmission-config
+            mountPath: /config
       containers:
       - name: deaddrop
         image: linuxserver/transmission:latest
@@ -60,28 +87,6 @@ spec:
             - /downloads/complete/DONOTDELETE
           initialDelaySeconds: 10
           periodSeconds: 30
-      - name: settings-editor
-        image: busybox
-        envFrom:
-          - configMapRef:
-              name: settings-override
-        volumeMounts:
-        - name: config
-          mountPath: /config
-        command:
-          - sh
-          - -c
-          - |
-            while [ ! -f /config/settings.json ]; do
-              echo "Waiting for settings.json to be created..."
-              sleep 5
-            done
-            echo "Modifying settings.json with values from ConfigMap..."
-            for key in $(env | awk -F= '{print $1}'); do
-              value=$(eval echo \$$key)
-              sed -i "s/\"$key\": [^,]*/\"$key\": $value/" /config/settings.json
-            done
-            echo "Settings updated."
       volumes:
       - name: config
         hostPath:
