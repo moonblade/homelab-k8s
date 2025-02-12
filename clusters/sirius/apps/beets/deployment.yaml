@@ -38,7 +38,7 @@ spec:
               mountPath: /custom-cont-init.d/install-deps.sh
               subPath: install-deps.sh
             - name: config-yaml
-              mountPath: /config/config.yaml
+              mountPath: /config/beets/config.yaml
               subPath: config.yaml
       volumes:
         - name: config
