@@ -71,8 +71,8 @@ data:
                 downloads:
                     name: "Downloads"
                     path: "/downloads"
-                    autotag: auto
-                    # autotag: no # no | "preview" | "import" | "auto"
+                    # autotag: auto
+                    autotag: no # no | "preview" | "import" | "auto"
                     # autotag controls what should happen with newly added album folders.
                     # no: do nothing
                     # "preview": fetch data but do not import (recommended)
