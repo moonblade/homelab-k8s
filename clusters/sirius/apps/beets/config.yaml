@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: config
+  name: config-yaml
 data:
   config.yaml: |
     plugins: audible copyartifacts edit fromfilename scrub web
