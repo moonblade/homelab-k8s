@@ -65,6 +65,9 @@ spec:
         envFrom:
           - configMapRef:
               name: settings-override
+        volumeMounts:
+        - name: config
+          mountPath: /config
         command:
           - sh
           - -c
