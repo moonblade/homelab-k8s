@@ -7,3 +7,4 @@ resources:
   - ./ingress.yaml
   - ./install-deps.yaml
   - ./config.yaml
+  - ./entrypoint.yaml
