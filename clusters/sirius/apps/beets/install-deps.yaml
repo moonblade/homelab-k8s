@@ -6,4 +6,4 @@ metadata:
 data:
   install-deps.sh: |
     #!/bin/sh
-    pip install --no-cache-dir beets-audible beets-copyartifacts3 flask
+    pip install --no-cache-dir beets-audible beets-copyartifacts3 flask flask-cors
