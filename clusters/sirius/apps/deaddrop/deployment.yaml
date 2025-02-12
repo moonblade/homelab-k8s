@@ -34,6 +34,9 @@ spec:
           mountPath: /downloads
         - name: watch
           mountPath: /watch
+        envFrom:
+          - secretRef:
+              name: deaddrop-secret
         env:
         - name: PUID
           value: "1001"
@@ -57,9 +60,6 @@ spec:
             - /downloads/complete/DONOTDELETE
           initialDelaySeconds: 10
           periodSeconds: 30
-      envFrom:
-        - secretRef:
-            name: deaddrop-secret
       volumes:
       - name: config
         hostPath:
