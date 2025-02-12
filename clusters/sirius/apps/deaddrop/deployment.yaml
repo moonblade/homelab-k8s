@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
       - name: settings-editor
-        image: busybox
+        image: alpine
         envFrom:
           - configMapRef:
               name: settings-override
@@ -24,6 +24,8 @@ spec:
           - sh
           - -c
           - |
+            apk add --no-cache jq
+
             SETTINGS_FILE="/config/settings.json"
             
             if [ ! -f "$SETTINGS_FILE" ]; then
