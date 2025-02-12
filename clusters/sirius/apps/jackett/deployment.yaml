@@ -31,22 +31,6 @@ spec:
               mountPath: /config
             - name: downloads
               mountPath: /downloads
-      readinessProbe:
-        exec:
-          command:
-          - test
-          - -f
-          - /config/DONOTDELETE
-        initialDelaySeconds: 5
-        periodSeconds: 10
-      livenessProbe:
-        exec:
-          command:
-          - test
-          - -f
-          - /config/DONOTDELETE
-        initialDelaySeconds: 10
-        periodSeconds: 30
       volumes:
         - name: config
           hostPath:
