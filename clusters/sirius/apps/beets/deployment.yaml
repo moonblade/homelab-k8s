@@ -45,7 +45,7 @@ spec:
             type: DirectoryOrCreate
         - name: audiobooks
           hostPath:
-            path: /mnt/secondary/readarr/books
+            path: /mnt/secondary/audiobooks
             type: DirectoryOrCreate
         - name: downloads
           hostPath:
