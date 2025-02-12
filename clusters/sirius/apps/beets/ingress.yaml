@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - beets.sirius.moonblade.work # Replace with your host
-      secretName: beets-cert # Replace with your certificate secret name
+        - beets.sirius.moonblade.work
+      secretName: beets-cert
   rules:
-    - host: beets.sirius.moonblade.work # Replace with your host
+    - host: beets.sirius.moonblade.work
       http:
         paths:
           - path: /
