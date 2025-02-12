@@ -17,7 +17,7 @@ spec:
         - name: beets
           # image: lscr.io/linuxserver/beets:latest
           image: pspitzner/beets-flask:stable
-          command: ["/bin/sh", "/entrypoint.sh"]
+          command: ["/bin/sh", "/entrypoint-new.sh"]
           ports:
             - containerPort: 80
             - containerPort: 5001
@@ -42,8 +42,8 @@ spec:
               mountPath: /config/beets/config.yaml
               subPath: config.yaml
             - name: entrypoint-script
-              mountPath: /entrypoint.sh
-              subPath: entrypoint.sh
+              mountPath: /entrypoint-new.sh
+              subPath: entrypoint-new.sh
       volumes:
         - name: config
           hostPath:

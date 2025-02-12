@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: entrypoint-script
 data:
-  entrypoint.sh: |
+  entrypoint-new.sh: |
     #!/bin/sh
     pip install --no-cache-dir beets-audible beets-copyartifacts3 flask flask-cors
 
