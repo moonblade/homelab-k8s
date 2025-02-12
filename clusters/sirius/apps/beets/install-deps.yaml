@@ -1,0 +1,9 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: install-deps-config
+data:
+  install-deps.sh: |
+    #!/bin/sh
+    pip install --no-cache-dir beets-audible beets-copyartifacts3 flask

@@ -31,38 +31,29 @@ spec:
               mountPath: /audiobooks
             - name: downloads
               mountPath: /downloads
-            - name: initscript
-              mountPath: /custom-cont-init.d
-          readinessProbe:
-            exec:
-              command:
-                - test
-                - -f
-                - /config/DONOTDELETE  # Correct path for test file
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            exec:
-              command:
-                - test
-                - -f
-                - /config/DONOTDELETE  # Correct path for test file
-            initialDelaySeconds: 10
-            periodSeconds: 30
+            - name: custom-init
+              mountPath: /custom-cont-init.d/install-deps.sh
+              subPath: install-deps.sh
+            - name: configYaml
+              mountPath: /config/config.yaml
+              subPath: config.yaml
       volumes:
         - name: config
           hostPath:
-            path: /mnt/secondary/beets/config # Correct config path
+            path: /mnt/secondary/beets/config
             type: DirectoryOrCreate
         - name: audiobooks
           hostPath:
-            path: /mnt/secondary/readarr/books # Correct music path
+            path: /mnt/secondary/readarr/books
             type: DirectoryOrCreate
         - name: downloads
           hostPath:
-            path: /mnt/secondary/transmission/data/complete # Correct ingest path
+            path: /mnt/secondary/transmission/data
             type: DirectoryOrCreate
-        - name: initscript
-          hostPath:
-            path: /mnt/secondary/beets/config/scripts
-            type: DirectoryOrCreate
+        - name: custom-init
+          configMap:
+            name: install-deps-config
+            defaultMode: 0755
+        - name: configYaml
+          configMap:
+            name: configYaml
