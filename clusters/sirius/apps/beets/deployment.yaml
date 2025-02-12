@@ -40,6 +40,9 @@ spec:
             - name: entrypoint-script
               mountPath: /entrypoint-new.sh
               subPath: entrypoint-new.sh
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
       volumes:
         - name: config
           hostPath:
