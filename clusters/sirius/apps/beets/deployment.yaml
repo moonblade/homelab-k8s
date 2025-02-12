@@ -41,6 +41,9 @@ spec:
             - name: config-yaml
               mountPath: /config/beets/config.yaml
               subPath: config.yaml
+            - name: config-yaml
+              mountPath: /config/beets-flask/config.yaml
+              subPath: gui-config.yaml
             - name: entrypoint-script
               mountPath: /entrypoint-new.sh
               subPath: entrypoint-new.sh
