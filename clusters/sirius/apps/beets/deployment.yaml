@@ -34,7 +34,7 @@ spec:
             - name: custom-init
               mountPath: /custom-cont-init.d/install-deps.sh
               subPath: install-deps.sh
-            - name: configYaml
+            - name: config-yaml
               mountPath: /config/config.yaml
               subPath: config.yaml
       volumes:
@@ -54,6 +54,6 @@ spec:
           configMap:
             name: install-deps-config
             defaultMode: 0755
-        - name: configYaml
+        - name: config-yaml
           configMap:
-            name: configYaml
+            name: config-yaml
