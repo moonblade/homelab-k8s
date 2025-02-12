@@ -53,14 +53,18 @@ spec:
 
               echo "Formatted value for JSON: $value"
 
-              # Use jq to safely modify JSON
-              jq --arg key "$key" --argjson value "$value" '.[$key] = $value' "$SETTINGS_FILE" > "/tmp/settings.json"
-              
-              if [ $? -ne 0 ]; then
-                echo "Error updating settings.json with key: $key"
+              # Check if the key exists in settings.json before modifying
+              if jq --exit-status "has(\"$key\")" "$SETTINGS_FILE"; then
+                jq --arg key "$key" --argjson value "$value" '.[$key] = $value' "$SETTINGS_FILE" > "/tmp/settings.json"
+                
+                if [ $? -ne 0 ]; then
+                  echo "Error updating settings.json with key: $key"
+                else
+                  echo "Successfully updated $key in settings.json"
+                  mv /tmp/settings.json "$SETTINGS_FILE"
+                fi
               else
-                echo "Successfully updated $key in settings.json"
-                mv /tmp/settings.json "$SETTINGS_FILE"
+                echo "Skipping $key as it is not present in settings.json"
               fi
             done
 
