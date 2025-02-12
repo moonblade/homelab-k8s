@@ -7,9 +7,5 @@ data:
     #!/bin/sh
     pip install --no-cache-dir beets-audible beets-copyartifacts3 flask flask-cors
 
-    # Extract the original entrypoint and args from /proc/1/cmdline
-    orig_entrypoint=$(cat /proc/1/cmdline | tr '\0' ' ' | awk '{print $1}')
-    orig_args=$(cat /proc/1/cmdline | tr '\0' ' ' | cut -d ' ' -f2-)
-
-    # Execute the original entrypoint with its arguments
-    exec "$orig_entrypoint" $orig_args
+    # Original entrypoint
+    ./entrypoint_fix_permissions.sh && su beetle -c ./entrypoint.sh
