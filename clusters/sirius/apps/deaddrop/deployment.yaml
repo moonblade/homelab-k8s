@@ -39,7 +39,7 @@ spec:
             done
             echo "Settings updated."
         volumeMounts:
-          - name: transmission-config
+          - name: config
             mountPath: /config
       containers:
       - name: deaddrop
