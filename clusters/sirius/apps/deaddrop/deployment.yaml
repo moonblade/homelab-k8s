@@ -60,6 +60,25 @@ spec:
             - /downloads/complete/DONOTDELETE
           initialDelaySeconds: 10
           periodSeconds: 30
+      - name: settings-editor
+        image: busybox
+        envFrom:
+          - configMapRef:
+              name: settings-override
+        command:
+          - sh
+          - -c
+          - |
+            while [ ! -f /config/settings.json ]; do
+              echo "Waiting for settings.json to be created..."
+              sleep 5
+            done
+            echo "Modifying settings.json with values from ConfigMap..."
+            for key in $(env | awk -F= '{print $1}'); do
+              value=$(eval echo \$$key)
+              sed -i "s/\"$key\": [^,]*/\"$key\": $value/" /config/settings.json
+            done
+            echo "Settings updated."
       volumes:
       - name: config
         hostPath:
