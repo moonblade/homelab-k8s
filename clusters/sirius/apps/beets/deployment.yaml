@@ -15,9 +15,11 @@ spec:
     spec:
       containers:
         - name: beets
-          image: lscr.io/linuxserver/beets:latest
+          # image: lscr.io/linuxserver/beets:latest
+          image: pspitzner/beets-flask:stable
           ports:
             - containerPort: 80
+            - containerPort: 5001
           env:
             - name: PUID
               value: "1000"
