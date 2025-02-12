@@ -16,7 +16,7 @@ spec:
       containers:
         - name: beets
           # image: lscr.io/linuxserver/beets:latest
-          image: pspitzner/beets-flask:stable
+          image: ghcr.io/pspitzner/beets-flask:sha-96360da
           command: ["/bin/sh", "/entrypoint-new.sh"]
           ports:
             - containerPort: 80
