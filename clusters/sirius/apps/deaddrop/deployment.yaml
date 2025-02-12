@@ -27,43 +27,21 @@ spec:
             apk add --no-cache jq
 
             SETTINGS_FILE="/config/settings.json"
-            
+            OVERRIDE_FILE="/settings-override.json"
+            TEMP_FILE="/tmp/merged-settings.json"
+
             if [ ! -f "$SETTINGS_FILE" ]; then
-              echo "settings.json not found, skipping modification."
-              exit 0
+              echo "settings.json not found, ignoring..."
+            else
+              echo "Merging settings-override.json into existing settings.json..."
+              jq -s '.[0] * .[1]' "$SETTINGS_FILE" "$OVERRIDE_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$SETTINGS_FILE"
             fi
-
-            echo "Modifying settings.json with values from ConfigMap..."
-            for key in $(env | awk -F= '{print $1}'); do
-              value=$(printenv "$key")
-
-              echo "Processing key: $key"
-              echo "Original value from ConfigMap: $value"
-
-              # Ensure value is properly formatted for JSON
-              case "$value" in
-                true|false) ;;
-                ''|*[!0-9]*) value="\"$value\"" ;;  # Quote strings
-              esac
-
-              echo "Formatted value for JSON: $value"
-
-              # Check if the key exists in settings.json before modifying
-              if jq --exit-status "has(\"$key\")" "$SETTINGS_FILE"; then
-                jq --arg key "$key" --argjson value "$value" '.[$key] = $value' "$SETTINGS_FILE" > "/tmp/settings.json"
-                
-                if [ $? -ne 0 ]; then
-                  echo "Error updating settings.json with key: $key"
-                else
-                  mv /tmp/settings.json "$SETTINGS_FILE"
-                fi
-              fi
-            done
-
-            cat "$SETTINGS_FILE"
         volumeMounts:
           - name: config
             mountPath: /config
+          - name: settings-override
+            mountPath: /settings-override.json
+            subPath: settings-override.json
       containers:
       - name: deaddrop
         image: linuxserver/transmission:latest
@@ -123,4 +101,6 @@ spec:
         hostPath:
           path: /mnt/secondary/deaddrop/watch
           type: DirectoryOrCreate
-
+      - name: settings-override
+        configMap:
+          name: settings-override
