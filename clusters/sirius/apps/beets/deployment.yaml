@@ -4,6 +4,7 @@ metadata:
   name: beets
 spec:
   replicas: 1
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: beets
