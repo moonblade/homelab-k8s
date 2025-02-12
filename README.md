@@ -125,3 +125,8 @@ Moved my feeder that checks Royal road and wandering inn updates and sends it to
 Setup readarr, prowlarr and jackett for audiobookbay. Finally wired it up with plex so now audiobook downloading is easier.
 
 Update: Just my luck, readarr metadata sucks ass, half the things I want isn't on it, so trying to setup manual audiobook downloader + beets.
+
+- Feb 12, 2025
+
+Added beets configuration into yamls, and trying beets flask for better ui instead. Hopefully able to import and ideally auto import with that.
+Removed unneeded crap like readarr and all that were not being used at all.
