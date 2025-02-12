@@ -6,6 +6,7 @@ metadata:
     app: transmission
 spec:
   replicas: 1
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: transmission
@@ -14,6 +15,34 @@ spec:
       labels:
         app: transmission
     spec:
+      initContainers:
+      - name: settings-editor
+        image: alpine
+        envFrom:
+          - configMapRef:
+              name: settings-override
+        command:
+          - sh
+          - -c
+          - |
+            apk add --no-cache jq
+
+            SETTINGS_FILE="/config/settings.json"
+            OVERRIDE_FILE="/settings-override.json"
+            TEMP_FILE="/tmp/merged-settings.json"
+
+            if [ ! -f "$SETTINGS_FILE" ]; then
+              echo "settings.json not found, ignoring..."
+            else
+              echo "Merging settings-override.json into existing settings.json..."
+              jq -s '.[0] * .[1]' "$SETTINGS_FILE" "$OVERRIDE_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$SETTINGS_FILE"
+            fi
+        volumeMounts:
+          - name: config
+            mountPath: /config
+          - name: settings-override
+            mountPath: /settings-override.json
+            subPath: settings-override.json
       containers:
       - name: transmission
         image: linuxserver/transmission:latest
@@ -70,4 +99,6 @@ spec:
         hostPath:
           path: /mnt/secondary/transmission/watch
           type: DirectoryOrCreate
-
+      - name: settings-override
+        configMap:
+          name: settings-override
