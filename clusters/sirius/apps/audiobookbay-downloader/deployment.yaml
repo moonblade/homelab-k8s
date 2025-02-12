@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: audiobookbay-downloader
-          image: ghcr.io/moonblade/audiobookbay-downloader:1f84211
+          image: ghcr.io/moonblade/audiobookbay-downloader:37a92ce
           ports:
             - containerPort: 9000
           envFrom:
