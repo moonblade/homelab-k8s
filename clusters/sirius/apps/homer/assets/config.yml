@@ -13,6 +13,13 @@ services:
   - name: "Admin"
     icon: "fas fa-network-wired"
     items:
+      - name: "Athena"
+        logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
+        subtitle: "Proxmox UI"
+        url: "https://athena.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Weave"
         logo: "https://avatars.githubusercontent.com/u/9976052?s=200&v=4"
         subtitle: "Weave GitOps"
@@ -120,17 +127,17 @@ services:
         method: "HEAD"
         mode: "no-cors"
 
-  - name: "Misc"
-    icon: "fas fa-box"
-    items:
-      - name: "Athena"
-        logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
-        subtitle: "Proxmox UI"
-        url: "https://athena.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-
+  # - name: "Misc"
+  #   icon: "fas fa-box"
+  #   items:
+  #     - name: "Athena"
+  #       logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
+  #       subtitle: "Proxmox UI"
+  #       url: "https://athena.moonblade.work"
+  #       type: Ping
+  #       method: "HEAD"
+  #       mode: "no-cors"
+  #
   # - name: "Raspberry Pi"
   #   icon: "fas fa-microchip"
   #   items:
