@@ -61,6 +61,8 @@ spec:
           mountPath: /config
         - name: plex-media
           mountPath: /data
+        - name: plex-uncategorized
+          mountPath: /uncategorized
         securityContext:
           privileged: true
       volumes:
@@ -72,4 +74,9 @@ spec:
         hostPath:
           path: /mnt/secondary/audiobooks
           type: DirectoryOrCreate
+      - name: plex-uncategorized
+        hostPath:
+          path: /mnt/secondary/downloads/complete
+          type: DirectoryOrCreate
+
 
