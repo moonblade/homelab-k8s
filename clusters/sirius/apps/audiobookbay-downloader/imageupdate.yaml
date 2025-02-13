@@ -1,7 +1,7 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: audiobookbay-image-repo
+  name: audiobookbay-downloader
 spec:
   image: ghcr.io/moonblade/audiobookbay-downloader
   interval: 5m
@@ -9,14 +9,38 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: my-app-policy
-  namespace: flux-system
+  name: audiobookbay-downloader
 spec:
   imageRepositoryRef:
-    name: my-app-image
+    name: audiobookbay-downloader
   filterTags:
     pattern: '^[a-fA-F0-9]{7}-(?(ts)[0-9]+)$'
     extract: '$ts'
   policy:
     numerical:
       order: desc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: audiobookbay-downloader
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        name: fluxcdbot
+        email: fluxcdbot@users.noreply.github.com
+      messageTemplate: "Automated image update: {{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}"
+    push:
+      branch: main
+  update:
+    path: ./clusters/sirius/apps/audiobookbay-downloader/deployment.yaml
+    strategy: Setters
