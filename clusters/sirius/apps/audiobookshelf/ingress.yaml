@@ -28,12 +28,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: default-clusterissuer
     external-dns.alpha.kubernetes.io/hostname: "audiobook.moonblade.work"
-    # external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 spec:
-  # tls:
-  # - hosts:
-  #   - audiobook.moonblade.work
-  #   secretName: audiobook-outer-cert
   rules:
   - host: audiobook.moonblade.work
     http:
