@@ -105,6 +105,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Audiobookshelf"
+        logo: "https://www.audiobookshelf.org/Logo.png"
+        subtitle: "Audiobookshelf"
+        url: "https://audiobookshelf.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       # - name: "Beets"
       #   logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/beets-icon.png"
       #   subtitle: "Manage your audiobook library"
