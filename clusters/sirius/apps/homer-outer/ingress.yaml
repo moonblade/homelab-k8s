@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: homer-outer
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "homer.moonblade.work"
+    external-dns.alpha.kubernetes.io/hostname: ""
 spec:
   rules:
   - host: homer.moonblade.work
@@ -37,7 +37,7 @@ kind: Ingress
 metadata:
   name: homer-outer-second
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "moonblade.work"
+    external-dns.alpha.kubernetes.io/hostname: ""
 spec:
   rules:
   - host: moonblade.work
