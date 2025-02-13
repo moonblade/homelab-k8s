@@ -43,7 +43,7 @@ spec:
       volumes:
         - name: config
           hostPath:
-            path: /mnt/secondary/beets/config
+            path: /mnt/secondary/config/beets
             type: DirectoryOrCreate
         - name: audiobooks
           hostPath:
