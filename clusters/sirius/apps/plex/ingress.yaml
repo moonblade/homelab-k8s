@@ -28,6 +28,8 @@ metadata:
   name: plex-outer
   annotations:
     external-dns.alpha.kubernetes.io/hostname: ""
+  labels:
+    external-dns-exclude: "true"
 spec:
   rules:
   - host: plex.moonblade.work
