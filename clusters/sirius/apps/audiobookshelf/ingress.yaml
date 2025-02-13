@@ -25,13 +25,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: audiobookshelf-outer
-  annotations:
-    cert-manager.io/cluster-issuer: default-clusterissuer
+  # annotations:
+    # cert-manager.io/cluster-issuer: default-clusterissuer
 spec:
-  tls:
-  - hosts:
-    - audiobook.cf.moonblade.work
-    secretName: audiobookshelf-outer-cert
+  # tls:
+  # - hosts:
+    # - audiobook.cf.moonblade.work
+    # secretName: audiobookshelf-outer-cert
   rules:
   - host: audiobook.cf.moonblade.work
     http:
