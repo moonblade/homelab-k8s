@@ -130,3 +130,7 @@ Update: Just my luck, readarr metadata sucks ass, half the things I want isn't o
 
 Added beets configuration into yamls, and trying beets flask for better ui instead. Hopefully able to import and ideally auto import with that.
 Removed unneeded crap like readarr and all that were not being used at all.
+
+- Feb 13, 2025
+
+Used "latest" as image name in audiobookbay-downloader, and use flux image updater to get the latest one as required and auto update
