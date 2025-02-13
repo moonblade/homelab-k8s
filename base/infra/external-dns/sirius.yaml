@@ -33,5 +33,6 @@ spec:
         - --domain-filter=moonblade.work
         - --policy=upsert-only
         - --provider=cloudflare
+        - --label-filter=external-dns-exclude notin (true)
       securityContext:
         fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes token files
