@@ -71,7 +71,7 @@ spec:
         - --source=ingress
         - --source=crd
         - --source=service
-        - --domain-filter=moonblade.work
+        - --domain-filter=sirius.moonblade.work
         - --policy=upsert-only
         - --provider=cloudflare
       securityContext:
