@@ -12,6 +12,34 @@ spec:
       labels:
         app: jackett
     spec:
+      initContainers:
+      - name: settings-editor
+        image: alpine
+        envFrom:
+          - configMapRef:
+              name: settings-override
+        command:
+          - sh
+          - -c
+          - |
+            apk add --no-cache jq
+
+            SETTINGS_FILE="/config/Jackett/ServerConfig.json"
+            OVERRIDE_FILE="/settings-override.json"
+            TEMP_FILE="/tmp/merged-settings.json"
+
+            if [ ! -f "$SETTINGS_FILE" ]; then
+              echo "settings.json not found, ignoring..."
+            else
+              echo "Merging settings-override.json into existing settings.json..."
+              jq -s '.[0] * .[1]' "$SETTINGS_FILE" "$OVERRIDE_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$SETTINGS_FILE"
+            fi
+        volumeMounts:
+          - name: config
+            mountPath: /config
+          - name: settings-override
+            mountPath: /settings-override.json
+            subPath: settings-override.json
       containers:
         - name: jackett
           image: lscr.io/linuxserver/jackett:latest
@@ -29,15 +57,12 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: downloads
-              mountPath: /downloads
       volumes:
         - name: config
           hostPath:
-            path: /mnt/secondary/jackett/config
+            path: /mnt/secondary/config/jackett
             type: DirectoryOrCreate
-        - name: downloads 
-          hostPath:
-            path: /mnt/secondary/jackett/downloads
-            type: DirectoryOrCreate
+        - name: settings-override
+          configMap:
+            name: settings-override
 

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: settings-override
+data:
+  settings-override.json: |
+    {
+      "APIKey": "teyreu39x1pgoeniz94ytixujq41wbxf"
+    }
