@@ -51,7 +51,7 @@ spec:
             type: DirectoryOrCreate
         - name: downloads
           hostPath:
-            path: /mnt/secondary/transmission/data/complete
+            path: /mnt/secondary/downloads/complete
             type: DirectoryOrCreate
         - name: custom-init
           configMap:
