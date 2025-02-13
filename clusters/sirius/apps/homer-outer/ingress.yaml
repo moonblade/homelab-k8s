@@ -3,6 +3,40 @@ kind: Ingress
 metadata:
   name: homer-outer
   annotations:
+    external-dns.alpha.kubernetes.io/hostname: "homer.moonblade.work"
+spec:
+  rules:
+  - host: homer.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: homer-outer
+            port:
+              name: http
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: homer-dns
+spec:
+  endpoints:
+  - dnsName: homer.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    providerSpecific:
+      - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+        value: 'true'
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homer-outer-second
+  annotations:
     external-dns.alpha.kubernetes.io/hostname: "moonblade.work"
 spec:
   rules:
@@ -20,7 +54,7 @@ spec:
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
 metadata:
-  name: homer-dns
+  name: homer-dns-second
 spec:
   endpoints:
   - dnsName: moonblade.work
