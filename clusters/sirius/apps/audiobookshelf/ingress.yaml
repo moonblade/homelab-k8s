@@ -44,3 +44,16 @@ spec:
             name: audiobookshelf
             port:
               name: http
+---
+apiVersion: externaldns.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: audiobook-dns
+spec:
+  domain: audiobook.moonblade.work
+  targets:
+  - hostname: 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+  recordType: CNAME
+  providerSpecific:
+    cloudflare: 
+      proxied: true 
