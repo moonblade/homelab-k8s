@@ -30,10 +30,10 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: "audiobook.moonblade.work"
     # external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 spec:
-  tls:
-  - hosts:
-    - audiobook.moonblade.work
-    secretName: audiobook-outer-cert
+  # tls:
+  # - hosts:
+  #   - audiobook.moonblade.work
+  #   secretName: audiobook-outer-cert
   rules:
   - host: audiobook.moonblade.work
     http:
