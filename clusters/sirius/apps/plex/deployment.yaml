@@ -63,6 +63,8 @@ spec:
           mountPath: /data
         - name: plex-uncategorized
           mountPath: /uncategorized
+        - name: plex-deaddrop
+          mountPath: /deaddrop
         securityContext:
           privileged: true
       volumes:
@@ -78,5 +80,7 @@ spec:
         hostPath:
           path: /mnt/secondary/downloads/complete
           type: DirectoryOrCreate
-
-
+      - name: plex-deaddrop
+        hostPath:
+          path: /mnt/secondary/downloads/deaddrop/complete
+          type: DirectoryOrCreate
