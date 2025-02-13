@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-external-dns
+  namespace: external-dns
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: cloudflare-external-dns
+  template:
+    metadata:
+      labels:
+        app: cloudflare-external-dns
+    spec:
+      serviceAccountName: cloudflare-external-dns
+      containers:
+      - name: cloudflare-external-dns
+        image: registry.k8s.io/external-dns/external-dns:v0.13.6
+        # If authentication is disabled and/or you didn't create
+        # a secret, you can remove this block.
+        env:
+        - name: CF_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-creds
+              key: api_token
+        args:
+        - --source=ingress
+        - --source=crd
+        - --domain-filter=cf.moonblade.work
+        - --policy=upsert-only
+        - --provider=cloudflare
+      securityContext:
+        fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes token files
