@@ -37,6 +37,8 @@ spec:
               echo "Merging settings-override.json into existing settings.json..."
               jq -s '.[0] * .[1]' "$SETTINGS_FILE" "$OVERRIDE_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$SETTINGS_FILE"
             fi
+            mkdir -p /downloads/complete
+            mkdir -p /downloads/incomplete
         volumeMounts:
           - name: config
             mountPath: /config
@@ -61,8 +63,6 @@ spec:
           mountPath: /config
         - name: data
           mountPath: /downloads
-        - name: watch
-          mountPath: /watch
         envFrom:
           - secretRef:
               name: deaddrop-secret
@@ -76,15 +76,11 @@ spec:
       volumes:
       - name: config
         hostPath:
-          path: /mnt/secondary/deaddrop/config
+          path: /mnt/secondary/config/deaddrop
           type: DirectoryOrCreate
       - name: data
         hostPath:
-          path: /mnt/secondary/deaddrop/data
-          type: DirectoryOrCreate
-      - name: watch
-        hostPath:
-          path: /mnt/secondary/deaddrop/watch
+          path: /mnt/secondary/downloads/deaddrop
           type: DirectoryOrCreate
       - name: settings-override
         configMap:
