@@ -133,6 +133,15 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Jellyfin"
+        logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/jellyfin-logo.png"
+        subtitle: "Jellyfin server"
+        url: "https://jellyfin.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+
+
 
   # - name: "Misc"
   #   icon: "fas fa-box"

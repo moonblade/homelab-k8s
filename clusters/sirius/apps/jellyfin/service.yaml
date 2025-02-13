@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+spec:
+  selector:
+    app: jellyfin
+  ports:
+    - protocol: TCP
+      port: 8096 # Expose this port
+      targetPort: 8096
+      name: http
+    - protocol: TCP
+      port: 8920 # Optional
+      targetPort: 8920
+    - protocol: UDP
+      port: 7359 # Optional
+      targetPort: 7359
+    - protocol: UDP
+      port: 1900 # Optional
+      targetPort: 1900
+  type: ClusterIP

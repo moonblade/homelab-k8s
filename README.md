@@ -134,5 +134,7 @@ Removed unneeded crap like readarr and all that were not being used at all.
 - Feb 13, 2025
 
 Used "latest" as image name in audiobookbay-downloader, and use flux image updater to get the latest one as required and auto update
+
 Finally need to make stuff available outside the cluster. So setting up cloudflare tunnel on the nixos machine so that it can create any needed changes. `homer.moonblade.work` works
 
+Adding jellyfin in
