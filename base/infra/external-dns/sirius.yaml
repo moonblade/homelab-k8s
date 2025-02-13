@@ -30,7 +30,7 @@ spec:
         - --source=ingress
         - --source=crd
         - --source=service
-        - --domain-filter=sirius.moonblade.work
+        - --domain-filter=moonblade.work
         - --policy=upsert-only
         - --provider=cloudflare
       securityContext:
