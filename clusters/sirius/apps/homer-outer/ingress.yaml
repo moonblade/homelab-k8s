@@ -3,10 +3,10 @@ kind: Ingress
 metadata:
   name: homer-outer
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "homer.moonblade.work"
+    external-dns.alpha.kubernetes.io/hostname: "moonblade.work"
 spec:
   rules:
-  - host: homer.moonblade.work
+  - host: moonblade.work
     http:
       paths:
       - path: /
@@ -23,7 +23,7 @@ metadata:
   name: homer-dns
 spec:
   endpoints:
-  - dnsName: homer.moonblade.work
+  - dnsName: moonblade.work
     recordTTL: 60
     recordType: CNAME
     targets:
