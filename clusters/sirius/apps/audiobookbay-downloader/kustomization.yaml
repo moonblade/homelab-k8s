@@ -9,5 +9,5 @@ resources:
   - ./transmission.yaml
   - ./jackett.yaml
   - ./secret-sealed.yaml
-  - ./imagerepo.yaml
+  - ./imageupdate.yaml
 
