@@ -76,7 +76,7 @@ services:
       - name: "Audiobookshelf"
         logo: "https://www.audiobookshelf.org/Logo.png"
         subtitle: "Audiobookshelf"
-        url: "https://audibook.moonblade.work"
+        url: "https://audiobook.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
