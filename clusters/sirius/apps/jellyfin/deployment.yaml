@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:latest
+          ports:
+            - containerPort: 8096
+              protocol: TCP
+              name: http
+            - containerPort: 8920
+              protocol: TCP
+            - containerPort: 7359
+              protocol: UDP
+            - containerPort: 1900
+              protocol: UDP
+          env:
+            - name: PUID
+              value: "1001"
+            - name: PGID
+              value: "1001"
+            - name: TZ
+              value: Etc/UTC
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+            - name: downloads-volume
+              mountPath: /data/downloads
+            - name: deaddrop-volume
+              mountPath: /data/deaddrop
+      volumes:
+        - name: config-volume
+          hostPath:
+            path: /mnt/secondary/config/jellyfin
+            type: DirectoryOrCreate
+        - name: downloads-volume
+          hostPath:
+            path: /mnt/secondary/downloads/complete
+            type: Directory
+        - name: deaddrop-volume
+          hostPath:
+            path: /mnt/secondary/downloads/deaddrop/complete
+            type: Directory
