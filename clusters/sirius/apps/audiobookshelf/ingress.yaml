@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: audiobookshelf
+  annotations:
+    cert-manager.io/cluster-issuer: default-clusterissuer
+spec:
+  tls:
+  - hosts:
+    - audiobookshelf.sirius.moonblade.work
+    secretName: audiobookshelf-cert
+  rules:
+  - host: audiobookshelf.sirius.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: audiobookshelf
+            port:
+              name: http
