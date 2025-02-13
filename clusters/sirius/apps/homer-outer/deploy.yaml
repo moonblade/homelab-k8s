@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: homer-outer
+    app.kubernetes.io/name: homer-outer
+  name: homer-outer
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: homer-outer
+      app.kubernetes.io/name: homer-outer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: homer-outer
+        app.kubernetes.io/name: homer-outer
+    spec:
+      containers:
+      - image: kmjayadeep/homer:v23.02.2-corsfix
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 1
+        name: homer-outer
+        volumeMounts:
+        - name: homer-outer-assets
+          mountPath: /www/assets
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 1
+        securityContext:
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+        startupProbe:
+          failureThreshold: 30
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 1
+      volumes:
+      - name: homer-outer-assets
+        configMap:
+          name: homer-outer-assets
