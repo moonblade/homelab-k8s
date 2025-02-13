@@ -1,7 +1,7 @@
 GITHUB_TOKEN:=$(shell cat secrets/github-pat)
 
 bootstrap-git-sirius:
-	flux bootstrap github --owner=moonblade --repository=homelab-k8s --branch=main --path=clusters/sirius/bootstrap
+	flux bootstrap github --components-extra image-reflector-controller,image-automation-controller --owner=moonblade --repository=homelab-k8s --branch=test --path=clusters/sirius/bootstrap
 
 create-git-secret:
 	kubectl create secret generic flux-system --namespace flux-system --from-literal=username=moonblade --from-literal=password=$(GITHUB_TOKEN)
