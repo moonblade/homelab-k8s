@@ -32,7 +32,7 @@ spec:
   tls:
   - hosts:
     - audiobook.cf.moonblade.work
-    secretName: audiobookshelf-outer-cert
+    secretName: audiobook-outer-cert
   rules:
   - host: audiobook.cf.moonblade.work
     http:
