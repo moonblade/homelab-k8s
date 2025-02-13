@@ -30,10 +30,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - audiobookshelf.cf.moonblade.work
+    - audiobook.cf.moonblade.work
     secretName: audiobookshelf-outer-cert
   rules:
-  - host: audiobookshelf.cf.moonblade.work
+  - host: audiobook.cf.moonblade.work
     http:
       paths:
       - path: /
