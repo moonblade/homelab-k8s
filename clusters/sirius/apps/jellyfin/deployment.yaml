@@ -40,6 +40,8 @@ spec:
               mountPath: /data/downloads
             - name: deaddrop-volume
               mountPath: /data/deaddrop
+            - name: audiobooks
+              mountPath: /data/audiobooks
       volumes:
         - name: config-volume
           hostPath:
@@ -53,3 +55,8 @@ spec:
           hostPath:
             path: /mnt/secondary/downloads/deaddrop/complete
             type: Directory
+        - name: audiobooks
+          hostPath:
+            path: /mnt/secondary/audiobooks
+            type: Directory
+
