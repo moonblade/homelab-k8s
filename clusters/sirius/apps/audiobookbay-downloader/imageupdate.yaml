@@ -14,7 +14,7 @@ spec:
   imageRepositoryRef:
     name: audiobookbay-downloader
   filterTags:
-    pattern: 'ts_(?(ts)[0-9]+)$'
+    pattern: '^ts_(?<ts>[0-9]+)$'
     extract: '$ts'
   policy:
     numerical:
