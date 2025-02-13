@@ -4,6 +4,8 @@ metadata:
   name: homer-outer-second
   annotations:
     external-dns.alpha.kubernetes.io/hostname: ""
+  labels:
+    external-dns-exclude: "true"
 spec:
   rules:
   - host: homer.moonblade.work
@@ -38,6 +40,8 @@ metadata:
   name: homer-outer
   annotations:
     external-dns.alpha.kubernetes.io/hostname: ""
+  labels:
+    external-dns-exclude: "true"
 spec:
   rules:
   - host: moonblade.work
