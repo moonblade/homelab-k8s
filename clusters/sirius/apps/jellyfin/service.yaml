@@ -7,7 +7,7 @@ spec:
     app: jellyfin
   ports:
     - protocol: TCP
-      port: 8096 # Expose this port
+      port: 80
       targetPort: 8096
       name: http
   type: ClusterIP
