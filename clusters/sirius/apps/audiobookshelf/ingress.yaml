@@ -20,3 +20,26 @@ spec:
             name: audiobookshelf
             port:
               name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: audiobookshelf-outer
+  annotations:
+    cert-manager.io/cluster-issuer: default-clusterissuer
+spec:
+  tls:
+  - hosts:
+    - audiobookshelf.cf.moonblade.work
+    secretName: audiobookshelf-outer-cert
+  rules:
+  - host: audiobookshelf.cf.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: audiobookshelf
+            port:
+              name: http
