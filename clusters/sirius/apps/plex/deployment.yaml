@@ -59,8 +59,6 @@ spec:
         volumeMounts:
         - name: plex-config
           mountPath: /config
-        - name: plex-transcode
-          mountPath: /transcode
         - name: plex-media
           mountPath: /data
         securityContext:
@@ -68,11 +66,7 @@ spec:
       volumes:
       - name: plex-config
         hostPath:
-          path: /mnt/secondary/plex/config
-          type: DirectoryOrCreate
-      - name: plex-transcode
-        hostPath:
-          path: /mnt/secondary/plex/transcode
+          path: /mnt/secondary/config/plex
           type: DirectoryOrCreate
       - name: plex-media
         hostPath:
