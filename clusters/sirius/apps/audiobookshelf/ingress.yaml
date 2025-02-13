@@ -28,6 +28,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: default-clusterissuer
     external-dns.alpha.kubernetes.io/hostname: "audiobook.moonblade.work"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 spec:
   tls:
   - hosts:
@@ -45,15 +46,17 @@ spec:
             port:
               name: http
 ---
-apiVersion: externaldns.io/v1alpha1
+apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
 metadata:
   name: audiobook-dns
 spec:
-  domain: audiobook.moonblade.work
-  targets:
-  - hostname: 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
-  recordType: CNAME
-  providerSpecific:
-    cloudflare: 
-      proxied: true 
+  endpoints:
+  - dnsName: audiobook.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    # providerSpecific:
+    #   cloudflare: 
+    #     external-dns.alpha.kubernetes.io/cloudflare-proxied: true
