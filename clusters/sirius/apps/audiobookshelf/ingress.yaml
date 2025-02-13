@@ -27,14 +27,14 @@ metadata:
   name: audiobookshelf-outer
   annotations:
     cert-manager.io/cluster-issuer: default-clusterissuer
-    external-dns.alpha.kubernetes.io/hostname: "audiobook.cf.moonblade.work"
+    external-dns.alpha.kubernetes.io/hostname: "audiobook.moonblade.work"
 spec:
   tls:
   - hosts:
-    - audiobook.cf.moonblade.work
+    - audiobook.moonblade.work
     secretName: audiobook-outer-cert
   rules:
-  - host: audiobook.cf.moonblade.work
+  - host: audiobook.moonblade.work
     http:
       paths:
       - path: /
