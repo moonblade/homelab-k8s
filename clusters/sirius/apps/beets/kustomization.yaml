@@ -8,3 +8,4 @@ resources:
   - ./install-deps.yaml
   - ./config.yaml
   - ./entrypoint.yaml
+  - ./secret-sealed.yaml
