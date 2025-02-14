@@ -63,6 +63,9 @@ spec:
           mountPath: /config
         - name: data
           mountPath: /downloads
+        envFrom:
+          - secretRef:
+              name: transmission-secret
         env:
         - name: PUID
           value: "1000"

@@ -20,13 +20,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-  #     - name: "Transmission"
-  #       logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Transmission_Icon.svg/120px-Transmission_Icon.svg.png"
-  #       subtitle: "Transmission Web Interface"
-  #       url: "https://transmission.sirius.moonblade.work"
-  #       type: Ping
-  #       method: "HEAD"
-  #       mode: "no-cors"
+      - name: "Transmission"
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Transmission_Icon.svg/120px-Transmission_Icon.svg.png"
+        subtitle: "Transmission Web Interface"
+        url: "https://transmission.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
   #     - name: "Dead Drop"
   #       logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Transmission_Icon.svg/120px-Transmission_Icon.svg.png"
   #       subtitle: "Dead drop interface"
