@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: audiobookbay-downloader
-          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1739523683 # {"$imagepolicy": "audiobookbay-downloader:audiobookbay-downloader"}
+          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1739531770 # {"$imagepolicy": "audiobookbay-downloader:audiobookbay-downloader"}
           ports:
             - containerPort: 9000
           envFrom:
@@ -23,8 +23,8 @@ spec:
             - configMapRef:
                 name: audiobookbay-config
           env:
-          - name: DB_PATH
-            value: /config
+            - name: DB_PATH
+              value: /config
           volumeMounts:
             - name: downloads
               mountPath: /downloads
