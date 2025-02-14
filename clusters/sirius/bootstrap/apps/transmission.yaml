@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: transmission
+  name: deaddrop
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: transmission
-  namespace: transmission
+  name: deaddrop
+  namespace: deaddrop
 spec:
-  path: clusters/sirius/apps/transmission
+  path: clusters/sirius/apps/deaddrop
   interval: 15m
   prune: true
   wait: true
@@ -21,4 +21,4 @@ spec:
   healthChecks:
     - apiVersion: apps/v1
       kind: Deployment
-      name: transmission
+      name: deaddrop
