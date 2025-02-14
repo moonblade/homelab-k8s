@@ -41,7 +41,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: plex
+            name: transmission
             port:
               name: http
 ---
