@@ -137,4 +137,9 @@ Used "latest" as image name in audiobookbay-downloader, and use flux image updat
 
 Finally need to make stuff available outside the cluster. So setting up cloudflare tunnel on the nixos machine so that it can create any needed changes. `homer.moonblade.work` works
 
-Adding jellyfin in
+Adding jellyfin in, trying out stuff.
+
+- Feb 14, 2025
+
+Added deaddrop searcher.
+
