@@ -44,7 +44,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: beets
+            name: filebrowser
             port:
               name: http
 ---
