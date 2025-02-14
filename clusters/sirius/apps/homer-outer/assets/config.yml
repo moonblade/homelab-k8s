@@ -10,16 +10,16 @@ defaults:
 theme: default
 
 services:
-  # - name: "Sirius"
-  #   icon: "fas fa-star"
-  #   items:
-  #     - name: "Expense Tracker"
-  #       icon: "fas fa-wallet"
-  #       subtitle: "Manage expenses with ease"
-  #       url: "https://expense-tracker.sirius.moonblade.work"
-  #       type: Ping
-  #       method: "HEAD"
-  #       mode: "no-cors"
+  - name: "Sirius"
+    icon: "fas fa-star"
+    items:
+      - name: "Expense Tracker"
+        icon: "fas fa-wallet"
+        subtitle: "Manage expenses with ease"
+        url: "https://expense.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
   #     - name: "Transmission"
   #       logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Transmission_Icon.svg/120px-Transmission_Icon.svg.png"
   #       subtitle: "Transmission Web Interface"
@@ -34,20 +34,20 @@ services:
   #       type: Ping
   #       method: "HEAD"
   #       mode: "no-cors"
-  #     - name: "Plex"
-  #       logo: "https://static.cdnlogo.com/logos/p/96/plex.svg"
-  #       subtitle: "Plex Media Server"
-  #       url: "https://plex.sirius.moonblade.work"
-  #       type: Ping
-  #       method: "HEAD"
-  #       mode: "no-cors"
-  #     - name: "File Browser"
-  #       logo: "https://avatars.githubusercontent.com/u/35781395?s=48&v=4"
-  #       subtitle: "File Browser"
-  #       url: "https://browse.sirius.moonblade.work"
-  #       type: Ping
-  #       method: "HEAD"
-  #       mode: "no-cors"
+      - name: "Plex"
+        logo: "https://static.cdnlogo.com/logos/p/96/plex.svg"
+        subtitle: "Plex Media Server"
+        url: "https://plex.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "File Browser"
+        logo: "https://avatars.githubusercontent.com/u/35781395?s=48&v=4"
+        subtitle: "File Browser"
+        url: "https://browse.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
   #     - name: "Feeder"
   #       logo: "https://img.icons8.com/?size=100&id=qpuOQzhOVZ0a&format=png&color=000000"
   #       subtitle: "Feeder"
