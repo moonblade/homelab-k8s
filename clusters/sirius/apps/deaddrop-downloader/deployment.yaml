@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: audiobookbay-downloader
+  name: deaddrop-downloader
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: audiobookbay-downloader
+      app: deaddrop-downloader
   template:
     metadata:
       labels:
-        app: audiobookbay-downloader
+        app: deaddrop-downloader
     spec:
       containers:
-        - name: audiobookbay-downloader
+        - name: deaddrop-downloader
           image: ghcr.io/moonblade/audiobookbay-downloader:ts_1739531770 # {"$imagepolicy": "audiobookbay-downloader:audiobookbay-downloader"}
           ports:
             - containerPort: 9000
           envFrom:
             - secretRef:
-                name: audiobookbay-secret
+                name: deaddrop-secret
             - configMapRef:
-                name: audiobookbay-config
+                name: deaddrop-config
           env:
             - name: DB_PATH
               value: /config
           volumeMounts:
-            - name: audiobookbay-config
+            - name: deaddrop-config
               mountPath: /config
       volumes:
-        - name: audiobookbay-config
+        - name: deaddrop-config
           hostPath:
-            path: /mnt/secondary/config/audiobookbay-downloader
+            path: /mnt/secondary/config/deaddrop-downloader
             type: DirectoryOrCreate
