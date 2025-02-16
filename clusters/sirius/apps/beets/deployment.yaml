@@ -29,7 +29,7 @@ spec:
             - name: downloads
               mountPath: /downloads
             - name: oldbooks
-              mountPath: /downloads/oldbooks
+              mountPath: /oldbooks
             - name: custom-init
               mountPath: /custom-cont-init.d/install-deps.sh
               subPath: install-deps.sh
