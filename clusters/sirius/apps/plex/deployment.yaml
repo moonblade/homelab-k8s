@@ -65,6 +65,8 @@ spec:
           mountPath: /uncategorized
         - name: plex-deaddrop
           mountPath: /deaddrop
+        - name: old_books
+          mountPath: /old_books
         securityContext:
           privileged: true
       volumes:
@@ -83,4 +85,8 @@ spec:
       - name: plex-deaddrop
         hostPath:
           path: /mnt/secondary/downloads/deaddrop/complete
+          type: DirectoryOrCreate
+      - name: old_books
+        hostPath:
+          path: /mnt/secondary/external/old_books
           type: DirectoryOrCreate
