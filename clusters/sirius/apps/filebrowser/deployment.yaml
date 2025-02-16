@@ -20,6 +20,8 @@ spec:
           volumeMounts:
             - name: storage
               mountPath: /srv
+            - name: external
+              mountPath: /srv/external
             - name: database
               mountPath: /database.db
           securityContext:
@@ -29,7 +31,11 @@ spec:
         - name: storage
           hostPath:
             path: /mnt/secondary
-            type: DirectoryOrCreate
+            type: Directory
+        - name: external
+          hostPath:
+            path: /mnt/external
+            type: Directory
         - name: database
           hostPath:
             path: /mnt/secondary/config/filebrowser/database.db
