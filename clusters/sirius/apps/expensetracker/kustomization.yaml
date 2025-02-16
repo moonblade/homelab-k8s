@@ -6,4 +6,5 @@ resources:
   - ./deploy.yaml
   - ./service.yaml
   - ./ingress.yaml
+  - ./imageupdate.yaml
 
