@@ -44,5 +44,5 @@ spec:
     push:
       branch: main
   update:
-    path: ./clusters/sirius/apps/expensetracker/deployment.yaml
+    path: ./clusters/sirius/apps/expensetracker/deploy.yaml
     strategy: Setters
