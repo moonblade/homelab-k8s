@@ -28,6 +28,8 @@ spec:
               mountPath: /audiobooks
             - name: downloads
               mountPath: /downloads
+            - name: oldbooks
+              mountPath: /downloads/oldbooks
             - name: custom-init
               mountPath: /custom-cont-init.d/install-deps.sh
               subPath: install-deps.sh
@@ -52,6 +54,10 @@ spec:
         - name: downloads
           hostPath:
             path: /mnt/secondary/downloads/complete
+            type: DirectoryOrCreate
+        - name: oldbooks
+          hostPath:
+            path: /mnt/external/old_books
             type: DirectoryOrCreate
         - name: custom-init
           configMap:
