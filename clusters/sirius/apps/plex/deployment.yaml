@@ -88,5 +88,5 @@ spec:
           type: DirectoryOrCreate
       - name: oldbooks
         hostPath:
-          path: /mnt/secondary/external/old_books
+          path: /mnt/external/old_books
           type: DirectoryOrCreate
