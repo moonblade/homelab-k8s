@@ -5,6 +5,8 @@ metadata:
 spec:
   image: ghcr.io/moonblade/expense-tracker
   interval: 5m
+  secretRef:
+    name: expense-tracker-image-pull
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
