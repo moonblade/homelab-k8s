@@ -27,8 +27,8 @@ spec:
           mountPath: /metadata
         - name: uncategorized
           mountPath: /uncategorized
-        - name: old_books
-          mountPath: /old_books
+        - name: oldbooks
+          mountPath: /oldbooks
         - name: deaddrop
           mountPath: /deaddrop
         env:
@@ -43,7 +43,7 @@ spec:
         hostPath:
           path: /mnt/secondary/downloads/complete
           type: DirectoryOrCreate
-      - name: old_books
+      - name: oldbooks
         hostPath:
           path: /mnt/secondary/external/old_books
           type: DirectoryOrCreate
