@@ -45,7 +45,7 @@ spec:
           type: DirectoryOrCreate
       - name: oldbooks
         hostPath:
-          path: /mnt/external/old_books
+          path: /mnt/elements/old_books
           type: DirectoryOrCreate
       - name: deaddrop
         hostPath:
