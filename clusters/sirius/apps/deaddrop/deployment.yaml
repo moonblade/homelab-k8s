@@ -73,6 +73,11 @@ spec:
           value: "1001"
         - name: UMASK
           value: "022"
+        readinessProbe:
+          exec:
+            command: ["test", "-f", "/config/DONOTDELETE"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
       volumes:
       - name: config
         hostPath:
