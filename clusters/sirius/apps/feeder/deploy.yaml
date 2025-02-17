@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: feeder
-          image: ghcr.io/moonblade/feeder:16ef7f6
+          image: ghcr.io/moonblade/feeder:bd4e49a
           ports:
             - containerPort: 9000
           volumeMounts:
@@ -28,6 +28,8 @@ spec:
               value: "900"
             - name: FEEDURL
               value: "http://filebrowser/api/public/dl/-ZyX3mJU"
+            - name: TEST_FILE
+              value: "/feeds/DONOTDELETE"
       volumes:
         - name: feed-volume
           hostPath:
