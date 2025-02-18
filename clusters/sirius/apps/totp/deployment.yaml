@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 2fauth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: 2fauth
+  template:
+    metadata:
+      labels:
+        app: 2fauth
+    spec:
+      containers:
+      - name: 2fauth
+        image: 2fauth/2fauth
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: 2fauth-volume
+          mountPath: /2fauth
+        env:
+        - name: APP_NAME
+          value: 2FAuth
+        - name: APP_ENV
+          value: local
+        - name: APP_TIMEZONE
+          value: UTC
+        - name: APP_DEBUG
+          value: "false"
+        - name: SITE_OWNER
+          value: mail@example.com
+        - name: APP_KEY
+          value: SomeRandomStringOf32CharsExactly
+        - name: APP_URL
+          value: http://localhost
+        - name: IS_DEMO_APP
+          value: "false"
+        - name: LOG_CHANNEL
+          value: daily
+        - name: LOG_LEVEL
+          value: notice
+        - name: DB_DATABASE
+          value: /srv/database/database.sqlite
+        - name: CACHE_DRIVER
+          value: file
+        - name: SESSION_DRIVER
+          value: file
+        - name: MAIL_MAILER
+          value: log
+        - name: MAIL_HOST
+          value: smtp.mailtrap.io
+        - name: MAIL_PORT
+          value: "2525"
+        - name: MAIL_USERNAME
+          value: null
+        - name: MAIL_PASSWORD
+          value: null
+        - name: MAIL_ENCRYPTION
+          value: null
+        - name: MAIL_FROM_NAME
+          value: null
+        - name: MAIL_FROM_ADDRESS
+          value: null
+        - name: MAIL_VERIFY_SSL_PEER
+          value: "true"
+        - name: THROTTLE_API
+          value: "60"
+        - name: LOGIN_THROTTLE
+          value: "5"
+        - name: AUTHENTICATION_GUARD
+          value: web-guard
+        - name: AUTHENTICATION_LOG_RETENTION
+          value: "365"
+        - name: AUTH_PROXY_HEADER_FOR_USER
+          value: null
+        - name: AUTH_PROXY_HEADER_FOR_EMAIL
+          value: null
+        - name: PROXY_LOGOUT_URL
+          value: null
+        - name: WEBAUTHN_NAME
+          value: 2FAuth
+        - name: WEBAUTHN_ID
+          value: null
+        - name: WEBAUTHN_USER_VERIFICATION
+          value: preferred
+        - name: TRUSTED_PROXIES
+          value: null
+        - name: PROXY_FOR_OUTGOING_REQUESTS
+          value: null
+        - name: BROADCAST_DRIVER
+          value: log
+        - name: QUEUE_DRIVER
+          value: sync
+        - name: SESSION_LIFETIME
+          value: "120"
+        - name: REDIS_HOST
+          value: 127.0.0.1
+        - name: REDIS_PASSWORD
+          value: null
+        - name: REDIS_PORT
+          value: "6379"
+        - name: PUSHER_APP_ID
+          value: ""
+        - name: PUSHER_APP_KEY
+          value: ""
+        - name: PUSHER_APP_SECRET
+          value: ""
+        - name: PUSHER_APP_CLUSTER
+          value: mt1
+        - name: VITE_PUSHER_APP_KEY
+          value: ""
+        - name: VITE_PUSHER_APP_CLUSTER
+          value: mt1
+        - name: MIX_ENV
+          value: local
+        resources: # Add resource limits as needed
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      volumes:
+      - name: 2fauth-volume
+        hostPath:
+          path: /mnt/totp
+          type: DirectoryOrCreate
+
