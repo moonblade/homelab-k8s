@@ -41,6 +41,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Two Factor Auth"
+        logo: "https://docs.2fauth.app/static/2fauth_light.png"
+        subtitle: "Timed OTP Authenticator"
+        url: "https://totp.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Sirius"
     icon: "fas fa-star"
