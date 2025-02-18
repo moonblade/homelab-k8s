@@ -34,7 +34,7 @@ spec:
         - name: APP_KEY
           value: SomeRandomStringOf32CharsExactly
         - name: APP_URL
-          value: http://localhost
+          value: https://localhost
         - name: IS_DEMO_APP
           value: "false"
         - name: LOG_CHANNEL
