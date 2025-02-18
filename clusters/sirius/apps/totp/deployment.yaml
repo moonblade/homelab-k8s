@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 2fauth
+  name: totp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: 2fauth
+      app: totp
   template:
     metadata:
       labels:
-        app: 2fauth
+        app: totp
     spec:
       containers:
-      - name: 2fauth
+      - name: totp
         image: 2fauth/2fauth
         ports:
         - containerPort: 8000
