@@ -34,7 +34,7 @@ spec:
         - name: APP_KEY
           value: SomeRandomStringOf32CharsExactly
         - name: APP_URL
-          value: https://localhost
+          value: https://totp.sirius.moonblade.work
         - name: IS_DEMO_APP
           value: "false"
         - name: LOG_CHANNEL
