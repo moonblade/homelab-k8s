@@ -28,6 +28,11 @@ spec:
           volumeMounts:
             - name: deaddrop-config
               mountPath: /config
+          readinessProbe:
+            exec:
+              command: ["test", "-f", "/config/DONOTDELETE"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: deaddrop-config
           hostPath:

@@ -24,9 +24,16 @@ spec:
               mountPath: /srv/external
             - name: database
               mountPath: /database.db
+            - name: config
+              mountPath: /config
           securityContext:
             runAsUser: 1001
             runAsGroup: 1001
+          readinessProbe:
+            exec:
+              command: ["test", "-f", "/config/DONOTDELETE"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: storage
           hostPath:
@@ -40,6 +47,10 @@ spec:
           hostPath:
             path: /mnt/secondary/config/filebrowser/database.db
             type: FileOrCreate
+        - name: database
+          hostPath:
+            path: /mnt/secondary/config/filebrowser
+            type: Directory
       securityContext:
         fsGroup: 1001 # Ensures that the volume is accessible by the container user.
         # This is crucial for handling files owned by both root and user 1001

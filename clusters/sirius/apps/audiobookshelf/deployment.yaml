@@ -34,6 +34,11 @@ spec:
         env:
         - name: TZ
           value: America/Toronto
+        readinessProbe:
+          exec:
+            command: ["test", "-f", "/config/DONOTDELETE"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
       volumes:
       - name: audiobooks
         hostPath:

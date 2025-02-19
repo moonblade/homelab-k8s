@@ -57,11 +57,11 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-      readinessProbe:
-        exec:
-          command: ["test", "-f", "/config/DONOTDELETE"]
-        initialDelaySeconds: 5
-        periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["test", "-f", "/config/DONOTDELETE"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: config
           hostPath:

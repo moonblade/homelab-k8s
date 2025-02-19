@@ -42,6 +42,11 @@ spec:
             - name: entrypoint-script
               mountPath: /entrypoint-new.sh
               subPath: entrypoint-new.sh
+          readinessProbe:
+            exec:
+              command: ["test", "-f", "/config/DONOTDELETE"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: config
           hostPath:
