@@ -47,7 +47,7 @@ spec:
           hostPath:
             path: /mnt/secondary/config/filebrowser/database.db
             type: FileOrCreate
-        - name: database
+        - name: config
           hostPath:
             path: /mnt/secondary/config/filebrowser
             type: Directory
