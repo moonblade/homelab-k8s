@@ -8,4 +8,5 @@ data:
     pip install --no-cache-dir beets-audible beets-copyartifacts3 flask flask-cors
 
     # Original entrypoint
+    alias b='beet import -mi'
     ./entrypoint_fix_permissions.sh && su beetle -c ./entrypoint.sh

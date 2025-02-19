@@ -24,6 +24,9 @@ data:
     import:
       incremental: yes
 
+    match:
+      strong_rec_thresh: 0.10
+
     audible:
       # if the number of files in the book is the same as the number of chapters from Audible,
       # attempt to match each file to an audible chapter
