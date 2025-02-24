@@ -95,7 +95,7 @@ services:
         method: "HEAD"
         mode: "no-cors"
 
-  - name: "Audiobooks"
+  - name: "Media"
     icon: "fas fa-headphones"
     items:
       # - name: "Readarr"
@@ -109,6 +109,13 @@ services:
         logo: "data:image/png;base64,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"
         subtitle: "Audiobookbay search"
         url: "https://abb.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "YTS"
+        logo: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Logo-YTS.svg"
+        subtitle: "YTS search for movies"
+        url: "https://ytssearch.sirius.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"

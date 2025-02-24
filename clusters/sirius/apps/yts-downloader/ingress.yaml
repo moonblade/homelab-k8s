@@ -1,0 +1,61 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/instance: yts-downloader
+    app.kubernetes.io/name: yts-downloader
+  annotations:
+   cert-manager.io/cluster-issuer: default-clusterissuer
+  name: yts-ingress
+spec:
+  tls:
+  - hosts:
+    - ytssearch.sirius.moonblade.work
+    secretName: yts-cert
+  rules:
+  - host: ytssearch.sirius.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: yts-downloader
+            port:
+              name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: yts-outer
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: ""
+  labels:
+    external-dns-exclude: "true"
+spec:
+  rules:
+  - host: ytssearch.moonblade.work
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: yts-downloader
+            port:
+              name: http
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: yts-outer
+spec:
+  endpoints:
+  - dnsName: ytssearch.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    providerSpecific:
+      - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+        value: 'true'

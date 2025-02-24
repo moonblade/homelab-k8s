@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yts-downloader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yts-downloader
+  template:
+    metadata:
+      labels:
+        app: yts-downloader
+    spec:
+      containers:
+        - name: yts-downloader
+          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1739763355 # {"$imagepolicy": "yts-downloader:yts-downloader"}
+          ports:
+            - containerPort: 9000
+          envFrom:
+            - secretRef:
+                name: yts-secret
+            - configMapRef:
+                name: yts-config
+          env:
+            - name: DB_PATH
+              value: /config
+          readinessProbe:
+            exec:
+              command: ["test", "-f", "/config/DONOTDELETE"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: yts-config
+              mountPath: /config
+      volumes:
+        - name: yts-config
+          hostPath:
+            path: /mnt/secondary/config/yts-downloader
+            type: DirectoryOrCreate
