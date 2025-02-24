@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: yts-downloader-config
+  name: yts-config
 data:
   JACKETT_API_URL: https://jackett.sirius.moonblade.work/api/v2.0/indexers/yts/results
   TRANSMISSION_URL: https://transmission.sirius.moonblade.work/transmission/rpc
