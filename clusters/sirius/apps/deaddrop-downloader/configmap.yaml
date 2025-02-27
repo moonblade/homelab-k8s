@@ -5,3 +5,4 @@ metadata:
 data:
   JACKETT_API_URL: https://jackett.sirius.moonblade.work/api/v2.0/indexers/all/results
   TRANSMISSION_URL: https://deaddrop.sirius.moonblade.work/transmission/rpc
+  TITLE: DeadDrop Search
