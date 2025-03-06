@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: refresh-expenses
+spec:
+  schedule: "*/15 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 600
+      template:
+        spec:
+          containers:
+            - name: refresh-expenses
+              image: curlimages/curl:latest
+              command:
+                - curl
+                - -X
+                - POST
+                - http://expensetracker/transaction/refresh
+          restartPolicy: OnFailure
