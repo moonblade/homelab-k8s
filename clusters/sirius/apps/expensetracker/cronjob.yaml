@@ -16,5 +16,5 @@ spec:
                 - curl
                 - -X
                 - POST
-                - http://expensetracker/transaction/refresh
+                - http://expensetracker:9000/transaction/refresh
           restartPolicy: OnFailure
