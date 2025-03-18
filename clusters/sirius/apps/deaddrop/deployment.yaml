@@ -67,6 +67,8 @@ spec:
           - secretRef:
               name: deaddrop-secret
         env:
+        - name: LABEL
+          value: deaddrop
         - name: PUID
           value: "1000"
         - name: PGID

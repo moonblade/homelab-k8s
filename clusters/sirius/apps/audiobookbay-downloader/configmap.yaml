@@ -6,3 +6,4 @@ data:
   JACKETT_API_URL: https://jackett.sirius.moonblade.work/api/v2.0/indexers/audiobookbay/results
   TRANSMISSION_URL: https://transmission.sirius.moonblade.work/transmission/rpc
   TITLE: AudioBookBay Search
+  LABEL: audiobook
