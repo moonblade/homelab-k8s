@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: deaddrop-downloader
-          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1742406431 # {"$imagepolicy": "deaddrop-downloader:deaddrop-downloader"}
+          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1742407388 # {"$imagepolicy": "deaddrop-downloader:deaddrop-downloader"}
           ports:
             - containerPort: 9000
           envFrom:
