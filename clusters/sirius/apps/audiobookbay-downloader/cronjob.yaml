@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: beets-executor
+spec:
+  schedule: "*/15 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 600
+      template:
+        spec:
+          containers:
+            - name: beets-executor
+              image: curlimages/curl:latest
+              command:
+                - curl
+                - -X
+                - POST
+                - http://audiobookbay-downloader/execute
+          restartPolicy: OnFailure

@@ -10,4 +10,6 @@ resources:
   - ./jackett.yaml
   - ./secret-sealed.yaml
   - ./imageupdate.yaml
+  - ./cronjob.yaml
+  - ./beetsconfig.yaml
 

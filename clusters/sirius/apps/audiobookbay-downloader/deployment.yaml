@@ -33,8 +33,28 @@ spec:
           volumeMounts:
             - name: audiobookbay-config
               mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: audiobooks
+              mountPath: /audiobooks
+            - name: beetsconfig
+              mountPath: /config/config.yaml
+              subPath: config.yaml
+
       volumes:
         - name: audiobookbay-config
           hostPath:
             path: /mnt/secondary/config/audiobookbay-downloader
             type: DirectoryOrCreate
+        - name: downloads
+          hostPath:
+            path: /mnt/secondary/downloads/complete
+            type: DirectoryOrCreate
+        - name: audiobooks
+          hostPath:
+            path: /mnt/secondary/audiobooks
+            type: DirectoryOrCreate
+        - name: beetsconfig
+          configMap:
+            name: beetsconfig
+
