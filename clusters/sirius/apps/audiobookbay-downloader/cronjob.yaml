@@ -16,5 +16,5 @@ spec:
                 - curl
                 - -X
                 - POST
-                - http://audiobookbay-downloader/execute
+                - http://audiobookbay-downloader/autoimport
           restartPolicy: OnFailure
