@@ -4,7 +4,7 @@ metadata:
   name: beetsconfig
 data:
   config.yaml: |
-    plugins: audible copyartifacts edit fromfilename scrub web
+    plugins: audible copyartifacts edit fromfilename scrub
     directory: /audiobooks
     paths:
       # For books that belong to a series
