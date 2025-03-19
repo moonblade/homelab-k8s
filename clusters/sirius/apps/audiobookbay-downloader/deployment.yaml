@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: audiobookbay-downloader
-          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1742397067 # {"$imagepolicy": "audiobookbay-downloader:audiobookbay-downloader"}
+          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1742399450 # {"$imagepolicy": "audiobookbay-downloader:audiobookbay-downloader"}
           ports:
             - containerPort: 9000
           envFrom:
@@ -40,7 +40,6 @@ spec:
             - name: beetsconfig
               mountPath: /config/config.yaml
               subPath: config.yaml
-
       volumes:
         - name: audiobookbay-config
           hostPath:
@@ -57,4 +56,3 @@ spec:
         - name: beetsconfig
           configMap:
             name: beetsconfig
-
