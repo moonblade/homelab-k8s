@@ -42,7 +42,7 @@ spec:
             subPath: settings-override.json
       containers:
         - name: jackett
-          image: lscr.io/linuxserver/jackett:latest
+          image: lscr.io/linuxserver/jackett:0.22.1791
           ports:
             - containerPort: 9117
           env:
