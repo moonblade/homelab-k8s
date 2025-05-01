@@ -7,6 +7,6 @@ data:
   TRANSMISSION_URL: https://transmission.sirius.moonblade.work/transmission/rpc
   BEETS_INPUT_PATH: /downloads
   BEETSDIR: /config
-  USE_BEET_IMPORT: "true"
+  USE_BEETS_IMPORT: "true"
   TITLE: AudioBookBay Search
   LABEL: audiobook
