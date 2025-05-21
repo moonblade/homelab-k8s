@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: poker
-          image: pokerth/pokerthserver:latest
+          image: rom14700/pokerth-server 
           ports:
             - containerPort: 7234  # default PokerTH server port
           volumeMounts:
