@@ -17,6 +17,9 @@ spec:
           image: rom14700/pokerth-server 
           ports:
             - containerPort: 7234
+          env:
+            - name: POKERTH_PASSWORD
+              value: "pokerth"
           volumeMounts:
             - name: poker-data
               mountPath: /root/.pokerth
