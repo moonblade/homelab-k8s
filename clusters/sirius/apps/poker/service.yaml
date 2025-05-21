@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: poker
+spec:
+  selector:
+    app: poker
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: http
+      port: 7234
+      targetPort: 7234
+
