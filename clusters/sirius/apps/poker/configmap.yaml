@@ -8,7 +8,7 @@ data:
     <html lang="en">
     <head>
       <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>Poker Bet Tracker</title>
       <style>
         * {
@@ -42,9 +42,18 @@ data:
         }
 
         .info {
-          text-align: center;
-          font-size: 1.2em;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 1.3em;
           margin-bottom: 10px;
+        }
+
+        .amount {
+          background: #00000055;
+          padding: 5px 10px;
+          border-radius: 8px;
+          font-weight: bold;
         }
 
         .controls {
@@ -55,11 +64,11 @@ data:
         }
 
         button {
-          flex: 1 1 40%;
-          padding: 10px;
-          font-size: 1em;
+          flex: 1 1 30%;
+          padding: 12px;
+          font-size: 1.1em;
           border: none;
-          border-radius: 10px;
+          border-radius: 12px;
           background-color: #f9a825;
           color: #000;
           cursor: pointer;
@@ -71,17 +80,21 @@ data:
         }
 
         .center-pot {
-          background: #444;
+          background: #222;
           text-align: center;
-          padding: 5px 0;
+          padding: 15px 0;
           color: white;
-          font-size: 1.3em;
+          font-size: 2em;
+          font-weight: bold;
         }
       </style>
     </head>
     <body>
       <div class="half top">
-        <div class="info">Player 2: $<span id="p2-amount">1000</span> | Bet: $<span id="p2-bet">0</span></div>
+        <div class="info">
+          <div>Bet: $<span id="p2-bet">0</span></div>
+          <div class="amount">Player 2: $<span id="p2-amount">1000</span></div>
+        </div>
         <div class="controls">
           <button onclick="call('p2')">Call</button>
           <button onclick="raise('p2')">Raise</button>
@@ -93,7 +106,10 @@ data:
       <div class="center-pot">Pot: $<span id="pot">0</span></div>
 
       <div class="half bottom">
-        <div class="info">Player 1: $<span id="p1-amount">1000</span> | Bet: $<span id="p1-bet">0</span></div>
+        <div class="info">
+          <div>Bet: $<span id="p1-bet">0</span></div>
+          <div class="amount">Player 1: $<span id="p1-amount">1000</span></div>
+        </div>
         <div class="controls">
           <button onclick="call('p1')">Call</button>
           <button onclick="raise('p1')">Raise</button>
@@ -130,13 +146,18 @@ data:
         }
 
         function raise(player) {
-          const total = state.p1.amount + state.p2.amount + state.p1.bet + state.p2.bet + state.pot;
+          const other = player === 'p1' ? 'p2' : 'p1';
           const raiseAmt = 10;
-          if (state[player].amount >= raiseAmt) {
-            state[player].amount -= raiseAmt;
-            state[player].bet += raiseAmt;
-            state.pot += raiseAmt;
+          const maxRaise = state[other].amount + (state[other].bet - state[player].bet);
+          const allowedRaise = Math.min(raiseAmt, maxRaise, state[player].amount);
+
+          if (allowedRaise > 0) {
+            state[player].amount -= allowedRaise;
+            state[player].bet += allowedRaise;
+            state.pot += allowedRaise;
             updateUI();
+          } else {
+            alert("Raise not allowed. Opponent can't match or you're out of funds.");
           }
         }
 
@@ -158,6 +179,10 @@ data:
         }
 
         function nextRound() {
+          if (state.p1.bet !== state.p2.bet) {
+            alert("Bets are unequal. Resolve betting before next round.");
+            return;
+          }
           state.p1.bet = 0;
           state.p2.bet = 0;
           updateUI();
