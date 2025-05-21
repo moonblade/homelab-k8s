@@ -16,11 +16,12 @@ spec:
         - name: poker
           image: rom14700/pokerth-server 
           ports:
-            - containerPort: 7234  # default PokerTH server port
+            - containerPort: 7234
           volumeMounts:
-            - name: pokerth-data
-              mountPath: /root/.pokerth  # where PokerTH stores data
+            - name: poker-data
+              mountPath: /root/.pokerth
       volumes:
-        - name: pokerth-data
-          emptyDir: {}  # use PVC for persistence in production
-
+        - name: poker-data
+          hostPath:
+            path: /mnt/secondary/config/poker
+            type: DirectoryOrCreate
