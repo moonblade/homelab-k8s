@@ -13,18 +13,13 @@ spec:
         app: poker
     spec:
       containers:
-        - name: poker
-          image: rom14700/pokerth-server 
-          ports:
-            - containerPort: 7234
-          env:
-            - name: POKERTH_PASSWORD
-              value: "pokerth"
+        - name: nginx
+          image: nginx:alpine
           volumeMounts:
-            - name: poker-data
-              mountPath: /root/.pokerth
+            - name: html
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
       volumes:
-        - name: poker-data
-          hostPath:
-            path: /mnt/secondary/config/poker
-            type: DirectoryOrCreate
+        - name: html
+          configMap:
+            name: nginx-index

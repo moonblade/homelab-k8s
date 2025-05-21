@@ -1,0 +1,170 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-index
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Poker Bet Tracker</title>
+      <style>
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+        }
+
+        .half {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 10px;
+          color: white;
+        }
+
+        .top {
+          background: #2e8b57;
+          transform: rotate(180deg);
+        }
+
+        .bottom {
+          background: #1e3d59;
+        }
+
+        .info {
+          text-align: center;
+          font-size: 1.2em;
+          margin-bottom: 10px;
+        }
+
+        .controls {
+          display: flex;
+          justify-content: space-around;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        button {
+          flex: 1 1 40%;
+          padding: 10px;
+          font-size: 1em;
+          border: none;
+          border-radius: 10px;
+          background-color: #f9a825;
+          color: #000;
+          cursor: pointer;
+          transition: background-color 0.2s ease-in-out;
+        }
+
+        button:hover {
+          background-color: #f57f17;
+        }
+
+        .center-pot {
+          background: #444;
+          text-align: center;
+          padding: 5px 0;
+          color: white;
+          font-size: 1.3em;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="half top">
+        <div class="info">Player 2: $<span id="p2-amount">1000</span> | Bet: $<span id="p2-bet">0</span></div>
+        <div class="controls">
+          <button onclick="call('p2')">Call</button>
+          <button onclick="raise('p2')">Raise</button>
+          <button onclick="setAmount('p2')">Set Amount</button>
+          <button onclick="playerWin('p2')">P2 Wins</button>
+        </div>
+      </div>
+
+      <div class="center-pot">Pot: $<span id="pot">0</span></div>
+
+      <div class="half bottom">
+        <div class="info">Player 1: $<span id="p1-amount">1000</span> | Bet: $<span id="p1-bet">0</span></div>
+        <div class="controls">
+          <button onclick="call('p1')">Call</button>
+          <button onclick="raise('p1')">Raise</button>
+          <button onclick="setAmount('p1')">Set Amount</button>
+          <button onclick="playerWin('p1')">P1 Wins</button>
+          <button onclick="nextRound()">Next Round</button>
+        </div>
+      </div>
+
+      <script>
+        let state = {
+          p1: { amount: 1000, bet: 0 },
+          p2: { amount: 1000, bet: 0 },
+          pot: 0,
+        };
+
+        function updateUI() {
+          document.getElementById('p1-amount').textContent = state.p1.amount;
+          document.getElementById('p1-bet').textContent = state.p1.bet;
+          document.getElementById('p2-amount').textContent = state.p2.amount;
+          document.getElementById('p2-bet').textContent = state.p2.bet;
+          document.getElementById('pot').textContent = state.pot;
+        }
+
+        function call(player) {
+          const other = player === 'p1' ? 'p2' : 'p1';
+          const diff = state[other].bet - state[player].bet;
+          if (diff > 0 && state[player].amount >= diff) {
+            state[player].amount -= diff;
+            state[player].bet += diff;
+            state.pot += diff;
+          }
+          updateUI();
+        }
+
+        function raise(player) {
+          const total = state.p1.amount + state.p2.amount + state.p1.bet + state.p2.bet + state.pot;
+          const raiseAmt = 10;
+          if (state[player].amount >= raiseAmt) {
+            state[player].amount -= raiseAmt;
+            state[player].bet += raiseAmt;
+            state.pot += raiseAmt;
+            updateUI();
+          }
+        }
+
+        function setAmount(player) {
+          const amount = parseInt(prompt("Enter total amount for " + player.toUpperCase()), 10);
+          if (!isNaN(amount)) {
+            state[player].amount = amount;
+            state[player].bet = 0;
+            updateUI();
+          }
+        }
+
+        function playerWin(player) {
+          state[player].amount += state.pot;
+          state.pot = 0;
+          state.p1.bet = 0;
+          state.p2.bet = 0;
+          updateUI();
+        }
+
+        function nextRound() {
+          state.p1.bet = 0;
+          state.p2.bet = 0;
+          updateUI();
+        }
+
+        updateUI();
+      </script>
+    </body>
+    </html>
+
