@@ -10,186 +10,112 @@ data:
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>Poker Bet Tracker</title>
-      <style>
-        * {
-          box-sizing: border-box;
-        }
-
-        body {
-          margin: 0;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          display: flex;
-          flex-direction: column;
-          height: 100vh;
-        }
-
-        .half {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: 10px;
-          color: white;
-        }
-
-        .top {
-          background: #2e8b57;
-          transform: rotate(180deg);
-        }
-
-        .bottom {
-          background: #1e3d59;
-        }
-
-        .info {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-size: 1.3em;
-          margin-bottom: 10px;
-        }
-
-        .amount {
-          background: #00000055;
-          padding: 5px 10px;
-          border-radius: 8px;
-          font-weight: bold;
-        }
-
-        .controls {
-          display: flex;
-          justify-content: space-around;
-          flex-wrap: wrap;
-          gap: 10px;
-        }
-
-        button {
-          flex: 1 1 30%;
-          padding: 12px;
-          font-size: 1.1em;
-          border: none;
-          border-radius: 12px;
-          background-color: #f9a825;
-          color: #000;
-          cursor: pointer;
-          transition: background-color 0.2s ease-in-out;
-        }
-
-        button:hover {
-          background-color: #f57f17;
-        }
-
-        .center-pot {
-          background: #222;
-          text-align: center;
-          padding: 15px 0;
-          color: white;
-          font-size: 2em;
-          font-weight: bold;
-        }
-      </style>
+      <!-- Include Tailwind CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     </head>
-    <body>
-      <div class="half top">
-        <div class="info">
-          <div>Bet: $<span id="p2-bet">0</span></div>
-          <div class="amount">Player 2: $<span id="p2-amount">1000</span></div>
+    <body class="flex flex-col items-center justify-center min-h-screen m-0 font-sans bg-black">
+      <div id="centered" class="flex-col md:flex-row">
+        <div class="flex-1 flex flex-col justify-between p-2 text-white bg-green-700 transform rotate-180">
+          <div class="flex justify-between items-center text-lg mb-2">
+            <div>Bet: $<span id="p2-bet">0</span></div>
+            <div class="bg-black bg-opacity-30 p-2 rounded font-bold">Player 2: $<span id="p2-amount">1000</span></div>
+          </div>
+          <div class="flex justify-around flex-wrap gap-2">
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="call('p2')">Call</button>
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="raise('p2')">Raise</button>
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="setAmount('p2')">Set Amount</button>
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="playerWin('p2')">P2 Wins</button>
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="nextRound()">Next Round</button>
+          </div>
         </div>
-        <div class="controls">
-          <button onclick="call('p2')">Call</button>
-          <button onclick="raise('p2')">Raise</button>
-          <button onclick="setAmount('p2')">Set Amount</button>
-          <button onclick="playerWin('p2')">P2 Wins</button>
-        </div>
-      </div>
 
-      <div class="center-pot">Pot: $<span id="pot">0</span></div>
+        <div class="bg-gray-900 text-center p-4 text-white text-2xl font-bold">Pot: $<span id="pot">0</span></div>
 
-      <div class="half bottom">
-        <div class="info">
-          <div>Bet: $<span id="p1-bet">0</span></div>
-          <div class="amount">Player 1: $<span id="p1-amount">1000</span></div>
-        </div>
-        <div class="controls">
-          <button onclick="call('p1')">Call</button>
-          <button onclick="raise('p1')">Raise</button>
-          <button onclick="setAmount('p1')">Set Amount</button>
-          <button onclick="playerWin('p1')">P1 Wins</button>
-          <button onclick="nextRound()">Next Round</button>
+        <div class="flex-1 flex flex-col justify-between p-2 text-white bg-blue-900">
+          <div class="flex justify-between items-center text-lg mb-2">
+            <div>Bet: $<span id="p1-bet">0</span></div>
+            <div class="bg-black bg-opacity-30 p-2 rounded font-bold">Player 1: $<span id="p1-amount">1000</span></div>
+          </div>
+          <div class="flex justify-around flex-wrap gap-2">
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="call('p1')">Call</button>
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="raise('p1')">Raise</button>
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="setAmount('p1')">Set Amount</button>
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="playerWin('p1')">P1 Wins</button>
+            <button class="flex-1 p-3 text-lg border-none rounded bg-yellow-500 text-black cursor-pointer transition duration-200 ease-in-out hover:bg-yellow-600" onclick="nextRound()">Next Round</button>
+          </div>
         </div>
       </div>
 
       <script>
         let state = {
           p1: { amount: 1000, bet: 0 },
-          p2: { amount: 1000, bet: 0 },
-          pot: 0,
-        };
+        p2: { amount: 1000, bet: 0 },
+        pot: 0,
+      };
 
-        function updateUI() {
-          document.getElementById('p1-amount').textContent = state.p1.amount;
-          document.getElementById('p1-bet').textContent = state.p1.bet;
-          document.getElementById('p2-amount').textContent = state.p2.amount;
-          document.getElementById('p2-bet').textContent = state.p2.bet;
-          document.getElementById('pot').textContent = state.pot;
+      function updateUI() {
+        document.getElementById('p1-amount').textContent = state.p1.amount;
+        document.getElementById('p1-bet').textContent = state.p1.bet;
+        document.getElementById('p2-amount').textContent = state.p2.amount;
+        document.getElementById('p2-bet').textContent = state.p2.bet;
+        document.getElementById('pot').textContent = state.pot;
+      }
+
+      function call(player) {
+        const other = player === 'p1' ? 'p2' : 'p1';
+        const diff = state[other].bet - state[player].bet;
+        if (diff > 0 && state[player].amount >= diff) {
+          state[player].amount -= diff;
+          state[player].bet += diff;
+          state.pot += diff;
         }
-
-        function call(player) {
-          const other = player === 'p1' ? 'p2' : 'p1';
-          const diff = state[other].bet - state[player].bet;
-          if (diff > 0 && state[player].amount >= diff) {
-            state[player].amount -= diff;
-            state[player].bet += diff;
-            state.pot += diff;
-          }
-          updateUI();
-        }
-
-        function raise(player) {
-          const other = player === 'p1' ? 'p2' : 'p1';
-          const raiseAmt = 10;
-          const maxRaise = state[other].amount + (state[other].bet - state[player].bet);
-          const allowedRaise = Math.min(raiseAmt, maxRaise, state[player].amount);
-
-          if (allowedRaise > 0) {
-            state[player].amount -= allowedRaise;
-            state[player].bet += allowedRaise;
-            state.pot += allowedRaise;
-            updateUI();
-          } else {
-            alert("Raise not allowed. Opponent can't match or you're out of funds.");
-          }
-        }
-
-        function setAmount(player) {
-          const amount = parseInt(prompt("Enter total amount for " + player.toUpperCase()), 10);
-          if (!isNaN(amount)) {
-            state[player].amount = amount;
-            state[player].bet = 0;
-            updateUI();
-          }
-        }
-
-        function playerWin(player) {
-          state[player].amount += state.pot;
-          state.pot = 0;
-          state.p1.bet = 0;
-          state.p2.bet = 0;
-          updateUI();
-        }
-
-        function nextRound() {
-          if (state.p1.bet !== state.p2.bet) {
-            alert("Bets are unequal. Resolve betting before next round.");
-            return;
-          }
-          state.p1.bet = 0;
-          state.p2.bet = 0;
-          updateUI();
-        }
-
         updateUI();
-      </script>
-    </body>
-    </html>
+      }
 
+      function raise(player) {
+        const other = player === 'p1' ? 'p2' : 'p1';
+        const raiseAmt = 10;
+        const maxRaise = state[other].amount + (state[other].bet - state[player].bet);
+        const allowedRaise = Math.min(raiseAmt, maxRaise, state[player].amount);
+
+        if (allowedRaise > 0) {
+          state[player].amount -= allowedRaise;
+          state[player].bet += allowedRaise;
+          state.pot += allowedRaise;
+          updateUI();
+        } else {
+          alert("Raise not allowed. Opponent can't match or you're out of funds.");
+        }
+      }
+
+      function setAmount(player) {
+        const amount = parseInt(prompt("Enter total amount for " + player.toUpperCase()), 10);
+        if (!isNaN(amount)) {
+          state[player].amount = amount;
+          state[player].bet = 0;
+          updateUI();
+        }
+      }
+
+      function playerWin(player) {
+        state[player].amount += state.pot;
+        state.pot = 0;
+        state.p1.bet = 0;
+        state.p2.bet = 0;
+        updateUI();
+      }
+
+      function nextRound() {
+        if (state.p1.bet !== state.p2.bet) {
+          alert("Bets are unequal. Resolve betting before next round.");
+          return;
+        }
+        state.p1.bet = 0;
+        state.p2.bet = 0;
+        updateUI();
+      }
+
+      updateUI();
+    </script>
+  </body>
+  </html>
