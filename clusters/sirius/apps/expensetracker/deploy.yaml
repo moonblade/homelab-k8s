@@ -19,7 +19,7 @@ spec:
         app.kubernetes.io/name: expensetracker
     spec:
       containers:
-      - image: ghcr.io/moonblade/expense-tracker:ts_1747474466 # {"$imagepolicy": "expensetracker:expensetracker"}
+      - image: ghcr.io/moonblade/expense-tracker:ts_1749220694 # {"$imagepolicy": "expensetracker:expensetracker"}
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
