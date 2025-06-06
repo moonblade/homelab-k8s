@@ -30,6 +30,12 @@ spec:
               value: "http://filebrowser/api/public/dl/-ZyX3mJU"
             - name: TEST_FILE
               value: "/feeds/DONOTDELETE"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 7234
+            initialDelaySeconds: 300
+            periodSeconds: 300
       volumes:
         - name: feed-volume
           hostPath:
