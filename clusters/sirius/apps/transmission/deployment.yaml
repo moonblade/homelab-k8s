@@ -71,8 +71,8 @@ spec:
           value: "1000"
         - name: PGID
           value: "1000"
-        - name: UMASK
-          value: "022"
+        # - name: UMASK
+          # value: "022"
         readinessProbe:
           exec:
             command: ["test", "-f", "/config/DONOTDELETE"]
