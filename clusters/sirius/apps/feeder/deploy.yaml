@@ -27,7 +27,7 @@ spec:
             - name: UPDATE_FREQUENCY_SECONDS
               value: "900"
             - name: FEEDURL
-              value: "http://filebrowser/api/public/dl/-ZyX3mJU"
+              value: "http://filebrowser/api/public/dl/Vi2SRYU3"
             - name: TEST_FILE
               value: "/feeds/DONOTDELETE"
           livenessProbe:
