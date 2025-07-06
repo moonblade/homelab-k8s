@@ -23,7 +23,7 @@ spec:
             - name: external
               mountPath: /srv/external
             - name: database
-              mountPath: /database/filebrowser.db
+              mountPath: /database.db
             - name: config
               mountPath: /config
             - name: settings-json
@@ -48,7 +48,7 @@ spec:
             type: Directory
         - name: database
           hostPath:
-            path: /mnt/secondary/config/filebrowser/filebrowser.db
+            path: /mnt/secondary/config/filebrowser/database.db
             type: FileOrCreate
         - name: config
           hostPath:
