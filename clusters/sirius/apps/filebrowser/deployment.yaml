@@ -23,9 +23,12 @@ spec:
             - name: external
               mountPath: /srv/external
             - name: database
-              mountPath: /database.db
+              mountPath: /database/filebrowser.db
             - name: config
               mountPath: /config
+            - name: settings-json
+              mountPath: /config/settings.json
+              subPath: settings.json
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -45,12 +48,15 @@ spec:
             type: Directory
         - name: database
           hostPath:
-            path: /mnt/secondary/config/filebrowser/database.db
+            path: /mnt/secondary/config/filebrowser/filebrowser.db
             type: FileOrCreate
         - name: config
           hostPath:
             path: /mnt/secondary/config/filebrowser
             type: Directory
+        - name: settings-json
+          configMap:
+            name: settings-json
       securityContext:
         fsGroup: 1000 # Ensures that the volume is accessible by the container user.
         # This is crucial for handling files owned by both root and user 1001
