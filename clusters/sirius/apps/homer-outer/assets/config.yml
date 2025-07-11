@@ -136,7 +136,7 @@ services:
       - name: "Blog"
         logo: "https://cdn.pixabay.com/photo/2022/01/16/16/44/blogger-logo-6942640_1280.png"
         subtitle: "Blog on github"
-        url: "moonblade.github.io/blog"
+        url: "https://moonblade.github.io/blog"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
