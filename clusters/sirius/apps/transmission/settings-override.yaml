@@ -8,6 +8,5 @@ data:
       "ratio-limit": 2.0,
       "ratio-limit-enabled": true,
       "idle-seeding-limit": 10080,
-      "incomplete-dir-enabled": false,
       "idle-seeding-limit-enabled": true
     }
