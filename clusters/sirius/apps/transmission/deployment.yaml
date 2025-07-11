@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
       - name: settings-editor
-        image: alpine
+        image: alpine:3.22.0
         envFrom:
           - configMapRef:
               name: settings-override
@@ -47,7 +47,7 @@ spec:
             subPath: settings-override.json
       containers:
       - name: transmission
-        image: linuxserver/transmission:latest
+        image: linuxserver/transmission:4.0.6
         ports:
         - name: http
           containerPort: 9091
@@ -62,7 +62,7 @@ spec:
         - name: config
           mountPath: /config
         - name: data
-          mountPath: /root/Downloads
+          mountPath: /downloads
         envFrom:
           - secretRef:
               name: transmission-secret
