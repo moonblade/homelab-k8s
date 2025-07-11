@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
       - name: settings-editor
-        image: alpine
+        image: alpine:3.22.0
         envFrom:
           - configMapRef:
               name: settings-override
@@ -31,14 +31,36 @@ spec:
             OVERRIDE_FILE="/settings-override.json"
             TEMP_FILE="/tmp/merged-settings.json"
 
+            # Check if settings file exists
             if [ ! -f "$SETTINGS_FILE" ]; then
               echo "settings.json not found, ignoring..."
             else
               echo "Merging settings-override.json into existing settings.json..."
-              jq -s '.[0] * .[1]' "$SETTINGS_FILE" "$OVERRIDE_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$SETTINGS_FILE"
+
+              # Ensure both files are non-empty and contain valid JSON
+              if jq empty "$SETTINGS_FILE" && jq empty "$OVERRIDE_FILE"; then
+                # Perform the merge
+                if jq -s '.[0] * .[1]' "$SETTINGS_FILE" "$OVERRIDE_FILE" > "$TEMP_FILE"; then
+                  # Check if TEMP_FILE is not empty and valid JSON
+                  if [ -s "$TEMP_FILE" ] && jq empty "$TEMP_FILE"; then
+                    mv "$TEMP_FILE" "$SETTINGS_FILE"
+                    echo "Merge successful."
+                  else
+                    echo "Merged file is invalid or empty. Aborting update."
+                    rm -f "$TEMP_FILE"
+                  fi
+                else
+                  echo "jq merge failed. Aborting update."
+                  rm -f "$TEMP_FILE"
+                fi
+              else
+                echo "One or both input JSON files are invalid or empty. Aborting merge."
+              fi
             fi
+
             mkdir -p /downloads/complete
             mkdir -p /downloads/incomplete
+
         volumeMounts:
           - name: config
             mountPath: /config
@@ -47,7 +69,7 @@ spec:
             subPath: settings-override.json
       containers:
       - name: deaddrop
-        image: linuxserver/transmission:latest
+        image: linuxserver/transmission:4.0.6-r4-ls291
         ports:
         - name: http
           containerPort: 9091
