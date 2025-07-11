@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
             - name: feeder-executor
-              image: curlimages/curl:latest
+              image: curlimages/curl:8.14.1
               command:
                 - curl
                 - -X
