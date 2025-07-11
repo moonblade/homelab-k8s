@@ -130,9 +130,17 @@ services:
       #   method: "HEAD"
       #   mode: "no-cors"
       #
-  # - name: "Misc"
-  #   icon: "fas fa-box"
-  #   items:
+  - name: "Misc"
+    icon: "fas fa-box"
+    items:
+      - name: "Blog"
+        logo: "https://cdn.pixabay.com/photo/2022/01/16/16/44/blogger-logo-6942640_1280.png"
+        subtitle: "Blog on github"
+        url: "moonblade.github.io/blog"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+  #
   #     - name: "Athena"
   #       logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
   #       subtitle: "Proxmox UI"
