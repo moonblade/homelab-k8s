@@ -19,4 +19,3 @@ spec:
     crds: CreateReplace
   values:
     dummy: "dummy-value"
-"
