@@ -1,6 +1,5 @@
 # Homelab Kubernetes Cluster Manifests
 
-
 Be able to setup kubernetes entirely from manifests.
 `make bootstrap-git-sirius` can be used to setup the git repo for the very first time. Its no longer needed after that its easier to do `make kuztomize-flux-sirius`.
 
