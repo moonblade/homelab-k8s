@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: authentik
-      version: "2024.4.2"  # or latest tested version
+      version: "2025.6.3"  # or latest tested version
       sourceRef:
         kind: HelmRepository
         name: authentik
@@ -18,13 +18,5 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
-    server:
-      replicas: 1
-    ingress:
-      enabled: true
-    postgresql:
-      enabled: true
-    redis:
-      enabled: true
-    authentik:
-      log_level: "info"
+    dummy: "dummy-value"
+"
