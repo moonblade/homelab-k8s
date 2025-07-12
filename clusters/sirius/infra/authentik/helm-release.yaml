@@ -1,0 +1,23 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: authentik
+spec:
+  values:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - host: authentik.moonblade.work
+          paths:
+            - path: /
+              pathType: Prefix
+    authentik:
+      email:
+        from: "no-reply@moonblade.work"
+        host: smtp.mailgun.org
+        port: 587
+        username: "postmaster@moonblade.work"
+        # password and other secrets in sealed-secrets
+
