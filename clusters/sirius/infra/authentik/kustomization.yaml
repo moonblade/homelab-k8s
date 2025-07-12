@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - ../../../../base/infra/authentik/
   - ./dnsendpoint.yaml
-  - ./secret-sealed.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
