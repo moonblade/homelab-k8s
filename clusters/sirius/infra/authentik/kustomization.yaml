@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: authentik_2
+namespace: authentik2
 resources:
   - ../../../../base/infra/authentik/
   - ./dnsendpoint.yaml
