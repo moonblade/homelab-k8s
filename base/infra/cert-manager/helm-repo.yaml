@@ -1,5 +1,6 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
+namespace: cert-manager
 metadata:
   name: jetstack
   namespace: cert-manager
