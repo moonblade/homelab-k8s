@@ -4,4 +4,3 @@ metadata:
   name: local-path
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
-# reclaimPolicy: Retain
