@@ -4,7 +4,7 @@ metadata:
   name: authentik-dns
 spec:
   endpoints:
-    - dnsName: authentik.moonblade.work
+    - dnsName: login.moonblade.work
       recordTTL: 60
       recordType: CNAME
       targets:
