@@ -19,7 +19,7 @@ spec:
             ingressClassName: nginx
             enabled: true
             hosts:
-                - authentik.domain.tld
+                - authentik.moonblade.work
 
     postgresql:
         enabled: true
