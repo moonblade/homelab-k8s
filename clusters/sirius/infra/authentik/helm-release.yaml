@@ -18,6 +18,11 @@ spec:
         ingressClassName: nginx
         hosts:
           - login.moonblade.work
+        tls:
+          - hosts:
+            - login.moonblade.work
+            secretName: authentik-tls
+
     postgresql:
       enabled: true
     redis:
