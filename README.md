@@ -142,3 +142,12 @@ Adding jellyfin in, trying out stuff.
 
 Added deaddrop searcher.
 
+- July 13, 2025
+
+After needing to add the username and password for others multiple times. Which when looking back on it, they NEVER USE. I figured hmm, why not try single sign on. Wanted all my apps to use the same login preferably through google if possible.
+As part of it tried setting up keycloak, but chatgpt rubbish didn't work on first go, so I ended up with authentik instead since I heard its simpler.
+
+On setting it up, realized that I had longhorn which I never fixed, so I can't actually get pvcs to work, So eneded up setting up local path provisioner and removing, or rather trying to remove longhorn.
+But fast forward three authentik setups later, I FINALLY GOT IT WORKING.
+
+Now on to adding it in homer, and actually allowing other apps to login with it.
