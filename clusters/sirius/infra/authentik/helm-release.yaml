@@ -16,14 +16,14 @@ spec:
       ingress:
         enabled: true
         ingressClassName: nginx
-        annotations:
-          cert-manager.io/cluster-issuer: default-clusterissuer
         hosts:
           - login.moonblade.work
-        tls:
-          - hosts:
-              - login.moonblade.work
-            secretName: login-moonblade-tls
+        # annotations:
+        #   cert-manager.io/cluster-issuer: default-clusterissuer
+        # tls:
+        #   - hosts:
+        #       - login.moonblade.work
+        #     secretName: login-moonblade-tls
 
     postgresql:
       enabled: true
