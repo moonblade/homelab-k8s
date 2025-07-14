@@ -4,14 +4,14 @@ metadata:
   name: audiobook-search-authentik
   namespace: authentik
   annotations:
-    # cert-manager.io/cluster-issuer: default-clusterissuer
+    cert-manager.io/cluster-issuer: default-clusterissuer
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   ingressClassName: nginx
-  # tls:
-  #   - hosts:
-  #       - audiobooksearch.moonblade.work
-  #     secretName: audiobook-search-authentik-tls
+  tls:
+    - hosts:
+        - audiobooksearch.moonblade.work
+      secretName: audiobook-search-authentik-tls
   rules:
     - host: audiobooksearch.moonblade.work
       http:
