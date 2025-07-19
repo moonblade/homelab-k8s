@@ -17,7 +17,6 @@ spec:
     - host: audiobooksearch.moonblade.work
       http:
         paths:
-          # ✅ Your actual app path
           - path: /
             pathType: Prefix
             backend:
@@ -25,8 +24,17 @@ spec:
                 name: nginx-test
                 port:
                   number: 80
-
-          # ✅ Outpost path
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ak-outpost-audiobooksearch
+  namespace: authentik
+spec:
+  rules:
+    - host: audiobooksearch.moonblade.work
+      http:
+        paths:
           - path: /outpost.goauthentik.io
             pathType: Prefix
             backend:
