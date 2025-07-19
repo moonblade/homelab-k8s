@@ -17,15 +17,6 @@ spec:
     - host: audiobooksearch.moonblade.work
       http:
         paths:
-          # ✅ Outpost path
-          - path: /outpost.goauthentik.io
-            pathType: Prefix
-            backend:
-              service:
-                name: ak-outpost-audiobooksearch
-                port:
-                  number: 9000
-
           # ✅ Your actual app path
           - path: /
             pathType: Prefix
@@ -35,6 +26,14 @@ spec:
                 port:
                   number: 80
 
+          # ✅ Outpost path
+          - path: /outpost.goauthentik.io
+            pathType: Prefix
+            backend:
+              service:
+                name: ak-outpost-audiobooksearch
+                port:
+                  number: 9000
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
