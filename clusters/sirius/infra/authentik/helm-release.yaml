@@ -29,6 +29,16 @@ spec:
       enabled: true
     redis:
       enabled: true
+    outposts:
+      enabled: true
+      # Proxy is the common one for protecting apps
+      proxy:
+        enabled: true
+      # (Optional) Enable others if needed
+      # ldap:
+      #   enabled: true
+      # radius:
+      #   enabled: true
 
   valuesFrom:
     - kind: Secret
