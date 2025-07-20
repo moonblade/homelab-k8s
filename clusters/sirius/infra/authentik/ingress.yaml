@@ -3,15 +3,9 @@ kind: Ingress
 metadata:
   name: audiobooksearch
   namespace: authentik
-  annotations:
-    cert-manager.io/cluster-issuer: default-clusterissuer
 spec:
   rules:
     - host: audiobooksearch.moonblade.work
-      tls:
-        - secretName: audiobooksearch-tls
-          hosts:
-            - audiobooksearch.moonblade.work
       http:
         paths:
           - path: /
