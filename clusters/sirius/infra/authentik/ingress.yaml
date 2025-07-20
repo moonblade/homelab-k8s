@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ak-outpost-audiobooksearch
+  name: audiobooksearch
   namespace: authentik
 spec:
   rules:
@@ -12,9 +12,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: ak-outpost-audiobooksearch
+                name: nginx-test
                 port:
-                  number: 9000
+                  number: 80
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
@@ -37,14 +37,14 @@ metadata:
   name: login-authentik
   namespace: authentik
   annotations:
-    # cert-manager.io/cluster-issuer: default-clusterissuer
+    cert-manager.io/cluster-issuer: default-clusterissuer
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   ingressClassName: nginx
-  # tls:
-  #   - hosts:
-  #       - login.moonblade.work
-  #     secretName: login-authentik-tls
+  tls:
+    - hosts:
+        - login.moonblade.work
+      secretName: login-authentik-tls
   rules:
     - host: login.moonblade.work
       http:
