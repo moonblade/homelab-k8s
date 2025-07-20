@@ -24,26 +24,30 @@ spec:
             port:
               name: http
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deaddropext
+spec:
+  type: ExternalName
+  externalName: ak-outpost-deaddrop.authentik.svc.cluster.local
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: deaddrop-outer
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: ""
-  labels:
-    external-dns-exclude: "true"
+  name: audiobookbay-outer
 spec:
   rules:
-  - host: ddsearch.moonblade.work
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: deaddrop-downloader
-            port:
-              name: http
+    - host: ddsearch.moonblade.work
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: deaddropext
+                port:
+                  number: 9000
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
