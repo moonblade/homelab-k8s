@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: yts-downloader
-          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1753006954 # {"$imagepolicy": "yts-downloader:yts-downloader"}
+          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1753026148 # {"$imagepolicy": "yts-downloader:yts-downloader"}
           ports:
             - containerPort: 9000
           envFrom:
