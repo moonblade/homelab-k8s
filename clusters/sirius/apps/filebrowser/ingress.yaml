@@ -27,7 +27,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: filebrowser
+  name: filebrowserext
 spec:
   type: ExternalName
   externalName: ak-outpost-filebrowser.authentik.svc.cluster.local
@@ -45,7 +45,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: filebrowser
+                name: filebrowserext
                 port:
                   number: 9000
 ---
