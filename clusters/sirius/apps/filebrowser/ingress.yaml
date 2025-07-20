@@ -38,7 +38,7 @@ metadata:
   name: filebrowser-outer
 spec:
   rules:
-    - host: ytssearch.moonblade.work
+    - host: browse.moonblade.work
       http:
         paths:
           - path: /
