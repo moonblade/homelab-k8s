@@ -23,27 +23,55 @@ spec:
             name: audiobookbay-downloader
             port:
               name: http
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: audiobookbay-outer
+#   annotations:
+#     external-dns.alpha.kubernetes.io/hostname: ""
+#   labels:
+#     external-dns-exclude: "true"
+# spec:
+#   rules:
+#   - host: abbsearch.moonblade.work
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: audiobookbay-downloader
+#             port:
+#               name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audiobooksearch
+spec:
+  type: ExternalName
+  externalName: audiobooksearch.authentic.svc.cluster.local
+  ports:
+    - port: 9000
+      targetPort: 9000
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: audiobookbay-outer
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: ""
-  labels:
-    external-dns-exclude: "true"
 spec:
   rules:
-  - host: abbsearch.moonblade.work
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: audiobookbay-downloader
-            port:
-              name: http
+    - host: abbsearch.moonblade.work
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: audiobooksearch
+                port:
+                  number: 9000
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
