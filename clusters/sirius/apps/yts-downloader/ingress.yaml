@@ -24,26 +24,30 @@ spec:
             port:
               name: http
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ytssearch
+spec:
+  type: ExternalName
+  externalName: ak-outpost-yts-search.authentik.svc.cluster.local
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: yts-outer
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: ""
-  labels:
-    external-dns-exclude: "true"
+  name: ytssearch-outer
 spec:
   rules:
-  - host: ytssearch.moonblade.work
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: yts-downloader
-            port:
-              name: http
+    - host: ytssearch.moonblade.work
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ytssearch
+                port:
+                  number: 9000
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
