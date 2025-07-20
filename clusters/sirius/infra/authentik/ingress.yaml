@@ -4,6 +4,7 @@ metadata:
   name: audiobooksearch
   namespace: authentik
   annotations:
+      cert-manager.io/cluster-issuer: default-clusterissuer
       # This should be the in-cluster DNS name for the authentik outpost service
       # as when the external URL is specified here, nginx will overwrite some crucial headers
       nginx.ingress.kubernetes.io/auth-url: |-
@@ -16,6 +17,10 @@ metadata:
       nginx.ingress.kubernetes.io/auth-snippet: |
           proxy_set_header X-Forwarded-Host $http_host;
 spec:
+  tls:
+    - hosts:
+        - audiobooksearch.moonblade.work
+      secretName: audiobooksearch-tls
   rules:
     - host: audiobooksearch.moonblade.work
       http:
