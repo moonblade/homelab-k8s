@@ -37,14 +37,14 @@ metadata:
   name: login-authentik
   namespace: authentik
   annotations:
-    cert-manager.io/cluster-issuer: default-clusterissuer
+    # cert-manager.io/cluster-issuer: default-clusterissuer
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   ingressClassName: nginx
-  tls:
-    - hosts:
-        - login.moonblade.work
-      secretName: login-authentik-tls
+  # tls:
+  #   - hosts:
+  #       - login.moonblade.work
+  #     secretName: login-authentik-tls
   rules:
     - host: login.moonblade.work
       http:
@@ -55,4 +55,4 @@ spec:
               service:
                 name: authentik-server
                 port:
-                  number: 80
+                  number: 443
