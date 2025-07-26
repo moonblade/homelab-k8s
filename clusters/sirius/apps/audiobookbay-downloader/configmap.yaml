@@ -10,3 +10,4 @@ data:
   USE_BEETS_IMPORT: "true"
   TITLE: AudioBookBay Search
   LABEL: audiobook
+  AUTH_MODE: "authentik"

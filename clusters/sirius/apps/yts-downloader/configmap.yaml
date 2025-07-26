@@ -7,3 +7,4 @@ data:
   TRANSMISSION_URL: https://transmission.sirius.moonblade.work/transmission/rpc
   TITLE: YTS Search
   LABEL: yts
+  AUTH_MODE: "authentik"
