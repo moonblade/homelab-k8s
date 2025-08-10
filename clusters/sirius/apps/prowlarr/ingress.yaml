@@ -41,7 +41,7 @@ spec:
           service:
             name: prowlarr
             port:
-              number: http
+              name: http
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
