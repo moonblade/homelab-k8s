@@ -19,5 +19,5 @@ spec:
       AUTH_OIDC_AUTO_LOGIN: "true"
       AUTH_OIDC_CLIENT_NAME: "Homarr"
       AUTH_OIDC_ISSUER: "https://login.moonblade.work/application/o/homarr/"
-      AUTH_PROVIDERS: "oidc"
+      AUTH_PROVIDERS: "credential,oidc"
       AUTH_OIDC_GROUPS_ATTRIBUTE: "groups"
