@@ -13,4 +13,5 @@ spec:
         name: media-servarr
         namespace: homarr
   values:
-    dummy: value
+    ingress:
+      enabled: false
