@@ -10,7 +10,7 @@ spec:
       chart: homarr
       sourceRef:
         kind: HelmRepository
-        name: media-servarr
+        name: homarr-labs
         namespace: homarr
   values:
     ingress:

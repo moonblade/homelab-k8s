@@ -1,8 +1,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: media-servarr
+  name: homarr-labs
   namespace: homarr
 spec:
-  url: https://media-servarr.shw.al/charts
+  url: https://homarr-labs.github.io/charts/
   interval: 1h
