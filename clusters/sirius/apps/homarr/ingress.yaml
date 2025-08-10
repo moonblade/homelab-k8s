@@ -18,7 +18,8 @@ spec:
         backend:
           service:
             name: homarr
-            port: 7575
+            port:
+              number: 7575
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
