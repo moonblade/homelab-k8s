@@ -7,10 +7,10 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: media-servarr/homarr
+      chart: homarr
       sourceRef:
         kind: HelmRepository
-        name: homarr
+        name: media-servarr
         namespace: homarr
   values:
     dummy: value
