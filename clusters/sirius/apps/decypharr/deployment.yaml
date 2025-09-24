@@ -41,7 +41,7 @@ spec:
       volumes:
       - name: downloads
         hostPath:
-          path: /mnt/secondary/downloads
+          path: /mnt/secondary/decypharr
           type: Directory
       - name: config
         hostPath:
