@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  labels:
+    app: qbittorrent
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      initContainers:
+      - name: directory-setup
+        image: alpine:3.22.0
+        command:
+          - sh
+          - -c
+          - |
+            mkdir -p /downloads/complete
+            mkdir -p /downloads/incomplete
+            chown -R 1000:1000 /downloads
+            chmod -R 755 /downloads
+        volumeMounts:
+          - name: data
+            mountPath: /downloads
+      containers:
+      - name: qbittorrent
+        image: lscr.io/linuxserver/qbittorrent:latest
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: torrent-tcp
+          containerPort: 6881
+          protocol: TCP
+        - name: torrent-udp
+          containerPort: 6881
+          protocol: UDP
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: data
+          mountPath: /downloads
+        envFrom:
+          - secretRef:
+              name: qbittorrent-secret
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Etc/UTC"
+        - name: WEBUI_PORT
+          value: "8080"
+        - name: TORRENTING_PORT
+          value: "6881"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+      volumes:
+      - name: config
+        hostPath:
+          path: /mnt/secondary/config/qbittorrent
+          type: DirectoryOrCreate
+      - name: data
+        hostPath:
+          path: /mnt/secondary/downloads
+          type: DirectoryOrCreate
+
