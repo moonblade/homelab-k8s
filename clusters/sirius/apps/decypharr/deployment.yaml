@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decypharr
+  labels:
+    app: decypharr
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: decypharr
+  template:
+    metadata:
+      labels:
+        app: decypharr
+    spec:
+      containers:
+      - name: decypharr
+        image: cy01/blackhole:latest
+        ports:
+        - name: http
+          containerPort: 8282
+          protocol: TCP
+        volumeMounts:
+        - name: downloads
+          mountPath: /mnt
+          mountPropagation: Bidirectional
+        - name: config
+          mountPath: /app
+        securityContext:
+          capabilities:
+            add:
+              - SYS_ADMIN
+          privileged: true
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+      volumes:
+      - name: downloads
+        hostPath:
+          path: /mnt/secondary/downloads
+          type: Directory
+      - name: config
+        hostPath:
+          path: /mnt/secondary/config/decypharr
+          type: DirectoryOrCreate
+      nodeSelector:
+        kubernetes.io/os: linux
+      securityContext:
+        fsGroup: 1000
+
