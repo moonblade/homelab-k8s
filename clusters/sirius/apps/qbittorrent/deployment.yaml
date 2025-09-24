@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,14 +24,11 @@ spec:
           - |
             mkdir -p /downloads/complete
             mkdir -p /downloads/incomplete
-            mkdir -p /config/qBittorrent/config
-            chown -R 1000:1000 /downloads /config
-            chmod -R 755 /downloads /config
+            chown -R 1000:1000 /downloads
+            chmod -R 755 /downloads
         volumeMounts:
           - name: data
             mountPath: /downloads
-          - name: config
-            mountPath: /config
       containers:
       - name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:latest
@@ -51,9 +47,6 @@ spec:
           mountPath: /config
         - name: data
           mountPath: /downloads
-        - name: qbittorrent-config-file
-          mountPath: /config/qBittorrent/config/qBittorrent.conf
-          subPath: qBittorrent.conf
         envFrom:
           - secretRef:
               name: qbittorrent-secret
@@ -91,7 +84,4 @@ spec:
         hostPath:
           path: /mnt/secondary/downloads
           type: DirectoryOrCreate
-      - name: qbittorrent-config-file
-        configMap:
-          name: qbittorrent-config
 
