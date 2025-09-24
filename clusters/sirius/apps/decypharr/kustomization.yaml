@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: decypharr
 resources:
   - deployment.yaml
+  - service.yaml
