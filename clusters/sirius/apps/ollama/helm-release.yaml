@@ -1,0 +1,50 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ollama
+  namespace: ollama
+spec:
+  interval: 1h0m0s
+  chart:
+    spec:
+      chart: ollama
+      sourceRef:
+        kind: HelmRepository
+        name: otwld
+        namespace: ollama
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  values:
+    # CPU-only configuration (no GPU)
+    ollama:
+      gpu:
+        enabled: false
+      
+      # Models to pull at startup (lightweight models for CPU)
+      models:
+        pull:
+          - tinyllama
+          - gemma:2b
+    
+    # Persistence configuration
+    persistentVolume:
+      enabled: true
+      size: 20Gi
+      accessModes:
+        - ReadWriteOnce
+    
+    # Resource configuration for CPU
+    resources:
+      limits:
+        memory: 4Gi
+        cpu: 2000m
+      requests:
+        memory: 2Gi
+        cpu: 1000m
+    
+    # Service configuration
+    service:
+      type: ClusterIP
+      port: 11434
