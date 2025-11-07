@@ -1,0 +1,30 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: grafana
+  namespace: grafana
+spec:
+  interval: 1h0m0s
+  chart:
+    spec:
+      chart: grafana
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: grafana
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  values:
+    persistence:
+      enabled: true
+      size: 10Gi
+    
+    resources:
+      limits:
+        memory: 1Gi
+        cpu: 500m
+      requests:
+        memory: 256Mi
+        cpu: 100m
