@@ -30,16 +30,8 @@ spec:
           memory: 512Mi
           cpu: 200m
       
-      # Use basic auth from secret
-      extraSecretMounts:
-        - name: auth
-          secretName: prometheus-auth
-          mountPath: /etc/prometheus/auth
-          readOnly: true
-      
-      # Configure basic auth
-      extraArgs:
-        web.config.file: /etc/prometheus/auth/web.yml
+      # Use custom prometheus config
+      configMapOverrideName: prometheus-config
     
     alertmanager:
       enabled: false
