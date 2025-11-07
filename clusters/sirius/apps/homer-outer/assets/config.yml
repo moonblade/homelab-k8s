@@ -55,6 +55,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Prometheus"
+        logo: "https://prometheus.io/assets/prometheus_logo_grey.svg"
+        subtitle: "Metrics & Monitoring"
+        url: "https://prometheus.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Search"
     icon: "fas fa-search"

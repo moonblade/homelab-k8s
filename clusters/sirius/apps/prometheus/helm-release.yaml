@@ -1,0 +1,54 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: prometheus
+  namespace: prometheus
+spec:
+  interval: 1h0m0s
+  chart:
+    spec:
+      chart: prometheus
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus
+        namespace: prometheus
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  values:
+    server:
+      persistentVolume:
+        enabled: true
+        size: 20Gi
+      
+      resources:
+        limits:
+          memory: 2Gi
+          cpu: 1000m
+        requests:
+          memory: 512Mi
+          cpu: 200m
+      
+      # Use basic auth from secret
+      extraSecretMounts:
+        - name: auth
+          secretName: prometheus-auth
+          mountPath: /etc/prometheus/auth
+          readOnly: true
+      
+      # Configure basic auth
+      extraArgs:
+        web.config.file: /etc/prometheus/auth/web.yml
+    
+    alertmanager:
+      enabled: false
+    
+    kube-state-metrics:
+      enabled: true
+    
+    prometheus-node-exporter:
+      enabled: true
+    
+    prometheus-pushgateway:
+      enabled: false
