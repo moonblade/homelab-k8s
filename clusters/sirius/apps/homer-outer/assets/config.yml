@@ -56,7 +56,7 @@ services:
         method: "HEAD"
         mode: "no-cors"
       - name: "Prometheus"
-        logo: "https://prometheus.io/assets/prometheus_logo_grey.svg"
+        logo: "https://raw.githubusercontent.com/cncf/artwork/master/projects/prometheus/icon/color/prometheus-icon-color.png"
         subtitle: "Metrics & Monitoring"
         url: "https://prometheus.moonblade.work"
         type: Ping
