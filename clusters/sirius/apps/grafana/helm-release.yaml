@@ -26,6 +26,16 @@ spec:
       enabled: true
       size: 10Gi
     
+    # Disable init container that causes permission issues
+    initChownData:
+      enabled: false
+    
+    # Set security context to run as non-root
+    securityContext:
+      runAsUser: 472
+      runAsGroup: 472
+      fsGroup: 472
+    
     resources:
       limits:
         memory: 1Gi
