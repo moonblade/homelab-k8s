@@ -48,6 +48,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Grafana"
+        logo: "https://grafana.com/static/img/menu/grafana2.svg"
+        subtitle: "Monitoring & Observability"
+        url: "https://grafana.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Search"
     icon: "fas fa-search"
