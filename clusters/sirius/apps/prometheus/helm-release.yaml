@@ -29,6 +29,26 @@ spec:
         requests:
           memory: 512Mi
           cpu: 200m
+      
+      # Mount the bearer token secret
+      extraSecretMounts:
+        - name: arlie-bearer-token
+          secretName: arlie-bearer-token
+          mountPath: /etc/secrets/arlie
+          readOnly: true
+    
+    # Add Arlie scrape config
+    extraScrapeConfigs: |
+      - job_name: 'arlie'
+        scrape_interval: 30s
+        scheme: https
+        metrics_path: /metrics
+        authorization:
+          type: Bearer
+          credentials_file: /etc/secrets/arlie/token
+        static_configs:
+          - targets:
+              - cvchatapp.commvault.com
     
     alertmanager:
       enabled: false
