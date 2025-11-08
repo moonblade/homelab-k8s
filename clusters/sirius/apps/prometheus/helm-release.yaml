@@ -29,17 +29,6 @@ spec:
         requests:
           memory: 512Mi
           cpu: 200m
-      
-      # Use custom prometheus config
-      configMapOverrideName: prometheus-server
-    
-    serverFiles:
-      prometheus.yml:
-        scrape_configs:
-          - job_name: prometheus
-            static_configs:
-              - targets:
-                  - localhost:9090
     
     alertmanager:
       enabled: false
