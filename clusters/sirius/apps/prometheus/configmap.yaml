@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prometheus-config
+  name: prometheus-server
   namespace: prometheus
 data:
   prometheus.yml: |
@@ -13,3 +13,8 @@ data:
       - job_name: 'prometheus'
         static_configs:
           - targets: ['localhost:9090']
+  
+  alerting_rules.yml: ""
+  recording_rules.yml: ""
+  alerts: ""
+  rules: ""
