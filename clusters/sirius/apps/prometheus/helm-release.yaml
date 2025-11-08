@@ -50,6 +50,7 @@ spec:
           - targets:
               - cvchatapp.commvault.com
               - cvchatapp-mnishamk.azurewebsites.net
+              - cvchatapp-test.azurewebsites.net
 
     
     alertmanager:
