@@ -49,6 +49,8 @@ spec:
         static_configs:
           - targets:
               - cvchatapp.commvault.com
+              - cvchatapp-mnishamk.azurewebsites.net
+
     
     alertmanager:
       enabled: false
