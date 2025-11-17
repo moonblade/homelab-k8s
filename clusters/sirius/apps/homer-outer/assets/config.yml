@@ -27,13 +27,6 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-      - name: "File Browser"
-        logo: "https://avatars.githubusercontent.com/u/35781395?s=48&v=4"
-        subtitle: "File Browser"
-        url: "https://browse.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
       - name: "Feeder"
         logo: "https://img.icons8.com/?size=100&id=qpuOQzhOVZ0a&format=png&color=000000"
         subtitle: "Feeder"
@@ -48,6 +41,17 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+
+  - name: "Admin"
+    icon: "fas fa-shield-alt"
+    items:
+      - name: "File Browser"
+        logo: "https://avatars.githubusercontent.com/u/35781395?s=48&v=4"
+        subtitle: "File Browser"
+        url: "https://browse.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Grafana"
         logo: "https://grafana.com/static/img/menu/grafana2.svg"
         subtitle: "Monitoring & Observability"
@@ -59,6 +63,13 @@ services:
         logo: "https://raw.githubusercontent.com/cncf/artwork/master/projects/prometheus/icon/color/prometheus-icon-color.png"
         subtitle: "Metrics & Monitoring"
         url: "https://prometheus.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Weave GitOps"
+        logo: "https://avatars.githubusercontent.com/u/9976052?s=200&v=4"
+        subtitle: "GitOps Dashboard"
+        url: "https://weave.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
