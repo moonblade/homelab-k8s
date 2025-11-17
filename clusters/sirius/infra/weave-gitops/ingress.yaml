@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weaveext
+  namespace: flux-system
+spec:
+  type: ExternalName
+  externalName: ak-outpost-weave.authentik.svc.cluster.local
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: weave-outer
+  namespace: flux-system
+spec:
+  rules:
+    - host: weave.moonblade.work
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: weaveext
+                port:
+                  number: 9000
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: weave-outer
+  namespace: flux-system
+spec:
+  endpoints:
+  - dnsName: weave.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    providerSpecific:
+      - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+        value: 'true'
