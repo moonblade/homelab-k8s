@@ -73,6 +73,20 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Athena"
+        logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
+        subtitle: "Proxmox UI"
+        url: "https://athena.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Kubernetes Dashboard"
+        logo: "https://avatars.githubusercontent.com/u/13629408?s=200&v=4"
+        subtitle: "K8s Dashboard"
+        url: "https://dashboard.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Search"
     icon: "fas fa-search"
@@ -128,6 +142,13 @@ services:
         logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/jellyfin-logo.png"
         subtitle: "Jellyfin server"
         url: "https://jellyfin.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Jackett"
+        logo: "https://avatars.githubusercontent.com/u/15383019?s=48&v=4"
+        subtitle: "Manage indexers"
+        url: "https://jackett.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"

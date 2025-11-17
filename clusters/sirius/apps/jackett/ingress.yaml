@@ -20,3 +20,46 @@ spec:
                 name: jackett
                 port:
                   name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jackettext
+  namespace: jackett
+spec:
+  type: ExternalName
+  externalName: ak-outpost-jackett.authentik.svc.cluster.local
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jackett-outer
+  namespace: jackett
+spec:
+  rules:
+    - host: jackett.moonblade.work
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jackettext
+                port:
+                  number: 9000
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: jackett-outer
+  namespace: jackett
+spec:
+  endpoints:
+  - dnsName: jackett.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    providerSpecific:
+      - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+        value: 'true'
