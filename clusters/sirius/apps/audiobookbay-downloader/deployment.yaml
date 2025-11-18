@@ -37,6 +37,8 @@ spec:
               mountPath: /downloads
             - name: audiobooks
               mountPath: /audiobooks
+            - name: secondaudiobooks
+              mountPath: /secondaudiobooks
             - name: beetsconfig
               mountPath: /config/config.yaml
               subPath: config.yaml
@@ -52,6 +54,10 @@ spec:
         - name: audiobooks
           hostPath:
             path: /mnt/secondary/audiobooks
+            type: DirectoryOrCreate
+        - name: secondaudiobooks
+          hostPath:
+            path: /mnt/elements/audiobooks
             type: DirectoryOrCreate
         - name: beetsconfig
           configMap:
