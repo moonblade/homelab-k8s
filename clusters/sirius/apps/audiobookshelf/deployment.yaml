@@ -31,6 +31,8 @@ spec:
           mountPath: /oldbooks
         - name: deaddrop
           mountPath: /deaddrop
+        - name: secondaudiobooks
+          mountPath: /secondaudiobooks
         env:
         - name: TZ
           value: America/Toronto
@@ -63,4 +65,8 @@ spec:
       - name: metadata
         hostPath:
           path: /mnt/secondary/config/audiobookshelf-metadata
+          type: DirectoryOrCreate
+      - name: secondaudiobooks
+        hostPath:
+          path: /mnt/elements/audiobooks
           type: DirectoryOrCreate
