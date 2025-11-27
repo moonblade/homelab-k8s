@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stremio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stremio
+  template:
+    metadata:
+      labels:
+        app: stremio
+    spec:
+      containers:
+        - name: stremio
+          image: stremio/server:latest
+          ports:
+            - containerPort: 11470
+              name: http
+            - containerPort: 12470
+              name: https
+          env:
+            - name: NO_CORS
+              value: "1"
+          volumeMounts:
+            - name: stremio-data
+              mountPath: /root/.stremio-server
+      volumes:
+        - name: stremio-data
+          hostPath:
+            path: /mnt/secondary/stremio
+            type: DirectoryOrCreate

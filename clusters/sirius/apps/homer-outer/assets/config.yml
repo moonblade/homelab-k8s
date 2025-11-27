@@ -73,13 +73,6 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-      - name: "Athena"
-        logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
-        subtitle: "Proxmox UI"
-        url: "https://athena.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
       - name: "Kubernetes Dashboard"
         logo: "https://avatars.githubusercontent.com/u/13629408?s=200&v=4"
         subtitle: "K8s Dashboard"
@@ -152,6 +145,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Stremio"
+        logo: "https://www.stremio.com/website/stremio-logo-small.png"
+        subtitle: "Streaming Server"
+        url: "https://stremio.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       # - name: "Beets"
       #   logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/beets-icon.png"
       #   subtitle: "Manage your audiobook library"
@@ -184,14 +184,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-  #
-  #     - name: "Athena"
-  #       logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
-  #       subtitle: "Proxmox UI"
-  #       url: "https://athena.moonblade.work"
-  #       type: Ping
-  #       method: "HEAD"
-  #       mode: "no-cors"
+      - name: "Athena"
+        logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
+        subtitle: "Proxmox UI"
+        url: "https://athena.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
   #
   # - name: "Raspberry Pi"
   #   icon: "fas fa-microchip"

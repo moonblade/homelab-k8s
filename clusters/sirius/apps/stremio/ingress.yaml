@@ -1,0 +1,60 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stremio-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: default-clusterissuer
+spec:
+  tls:
+    - hosts:
+        - stremio.sirius.moonblade.work
+      secretName: stremio-cert
+  rules:
+    - host: stremio.sirius.moonblade.work
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: stremio
+                port:
+                  name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stremio-outer
+  annotations:
+    cert-manager.io/cluster-issuer: default-clusterissuer
+spec:
+  tls:
+    - hosts:
+        - stremio.moonblade.work
+      secretName: stremio-outer-cert
+  rules:
+    - host: stremio.moonblade.work
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: stremio
+                port:
+                  name: http
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: stremio-outer
+spec:
+  endpoints:
+  - dnsName: stremio.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    providerSpecific:
+      - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+        value: 'true'
