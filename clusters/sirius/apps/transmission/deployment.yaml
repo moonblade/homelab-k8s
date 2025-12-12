@@ -106,7 +106,7 @@ spec:
           type: DirectoryOrCreate
       - name: data
         hostPath:
-          path: /mnt/elements/downloads
+          path: /mnt/secondary/downloads
           type: DirectoryOrCreate
       - name: settings-override
         configMap:
