@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   name: nginx-gateway-fabric
@@ -10,7 +10,7 @@ spec:
       chart: nginx-gateway-fabric
       version: '1.4.0'
       sourceRef:
-        kind: HelmRepository
+        kind: OCIRepository
         name: nginx-gateway-fabric
         namespace: nginx-gateway
       interval: 1m
