@@ -14,10 +14,6 @@ spec:
         name: nginx-gateway-fabric
         namespace: nginx-gateway
       interval: 1m
-  install:
-    crds: Create
-  upgrade:
-    crds: CreateReplace
   values:
     nginxGateway:
       # Configure the Gateway controller
