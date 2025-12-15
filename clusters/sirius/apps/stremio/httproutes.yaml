@@ -5,7 +5,7 @@ metadata:
   namespace: stremio
 spec:
   parentRefs:
-  - name: sirius-gateway
+  - name: main-gateway
     namespace: nginx-gateway
     sectionName: https
   hostnames:
