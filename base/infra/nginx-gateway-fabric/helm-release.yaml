@@ -14,13 +14,11 @@ spec:
         name: nginx-gateway-fabric
         namespace: nginx-gateway
       interval: 1m
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
   values:
-    # Deploy Gateway API CRDs
-    crds:
-      gatewayApi:
-        install: true
-        version: v1.1.0
-    
     nginxGateway:
       # Configure the Gateway controller
       config:
