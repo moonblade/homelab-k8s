@@ -4,4 +4,5 @@ namespace: stremio
 resources:
   - ./deployment.yaml
   - ./service.yaml
-  - ./ingress.yaml
+  # - ./ingress.yaml
+  - ./httproutes.yaml

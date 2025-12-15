@@ -1,0 +1,56 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nginx-gateway-fabric
+  namespace: nginx-gateway
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: nginx-gateway-fabric
+      version: '1.4.0'
+      sourceRef:
+        kind: HelmRepository
+        name: nginx-gateway-fabric
+        namespace: nginx-gateway
+      interval: 1m
+  values:
+    # Deploy Gateway API CRDs
+    crds:
+      gatewayApi:
+        install: true
+        version: v1.1.0
+    
+    nginxGateway:
+      # Configure the Gateway controller
+      config:
+        # Enable prometheus metrics
+        telemetry:
+          exporter:
+            endpoint: "otel-collector.nginx-gateway.svc.cluster.local:4317"
+            interval: "5s"
+            batchTimeout: "5s"
+            batchCount: 512
+      
+      # Service configuration
+      service:
+        type: LoadBalancer
+        # This will be set in environment-specific patches
+        loadBalancerIP: ""
+        annotations:
+          metallb.universe.tf/allow-shared-ip: nginx-gateway
+          
+    nginx:
+      # Nginx specific configuration
+      config:
+        stream-snippet: |
+          # Add any custom stream configs here if needed
+          
+      # Resource limits
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
