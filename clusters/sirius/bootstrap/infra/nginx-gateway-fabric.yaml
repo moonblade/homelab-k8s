@@ -12,4 +12,3 @@ spec:
     name: flux-system
   dependsOn:
   - name: metallb
-  validation: client
