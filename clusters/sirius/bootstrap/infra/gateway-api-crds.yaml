@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/sirius/infra/gateway-api-crds
+  path: ./base/infra/gateway-api-crds
   prune: true
   sourceRef:
     kind: GitRepository
