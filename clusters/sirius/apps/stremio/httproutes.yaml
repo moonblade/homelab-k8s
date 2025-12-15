@@ -28,7 +28,7 @@ metadata:
   namespace: stremio
 spec:
   parentRefs:
-  - name: external-gateway
+  - name: main-gateway
     namespace: nginx-gateway
     sectionName: https-external
   hostnames:
@@ -51,7 +51,7 @@ metadata:
   namespace: stremio
 spec:
   parentRefs:
-  - name: external-gateway
+  - name: main-gateway
     namespace: nginx-gateway
     sectionName: http-external
   hostnames:
