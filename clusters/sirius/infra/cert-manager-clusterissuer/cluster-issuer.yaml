@@ -19,3 +19,12 @@ spec:
       selector:
         dnsZones:
           - moonblade.work
+    - dns01:
+        cloudflare:
+          email: mnishamk1995@gmail.com
+          apiTokenSecretRef:
+            name: cloudflare-api-token
+            key: api-token
+      selector:
+        dnsZones:
+          - sirius.moonblade.work
