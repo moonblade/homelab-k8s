@@ -83,3 +83,17 @@ spec:
     providerSpecific:
       - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
         value: 'true'
+---
+# DNS for internal sirius domain pointing to Gateway
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: stremio-internal-dns
+  namespace: stremio
+spec:
+  endpoints:
+  - dnsName: stremio2.sirius.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.1.201
