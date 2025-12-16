@@ -5,7 +5,7 @@ metadata:
 data:
   config.yaml: |
     plugins: audible copyartifacts edit fromfilename scrub
-    directory: /secondaudiobooks
+    directory: /audiobooks
     paths:
       # For books that belong to a series
       "albumtype:audiobook series_name::.+ series_position::.+": $albumartist/%ifdef{series_name}/%ifdef{series_position} - $album%aunique{}/$track - $title
