@@ -9,7 +9,7 @@ spec:
     namespace: nginx-gateway
     sectionName: https
   hostnames:
-  - stremio.sirius.moonblade.work
+  - stremio2.sirius.moonblade.work
   rules:
   - matches:
     - path:
