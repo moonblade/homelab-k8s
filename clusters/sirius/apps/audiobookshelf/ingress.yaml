@@ -26,15 +26,15 @@ kind: Ingress
 metadata:
   name: audiobookshelf-outer
   annotations:
-    cert-manager.io/cluster-issuer: default-clusterissuer
+    external-dns.alpha.kubernetes.io/hostname: ""
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-set-header: "X-Forwarded-Proto https"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Proto "https";
+      proxy_set_header X-Forwarded-Port 443;
   labels:
     external-dns-exclude: "true"
 spec:
-  tls:
-  - hosts:
-    - audiobook.moonblade.work
-    secretName: audiobookshelf-outer-cert
   rules:
   - host: audiobook.moonblade.work
     http:
