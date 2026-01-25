@@ -35,8 +35,10 @@ spec:
           volumeMounts:
             - name: audiobookbay-config
               mountPath: /config
-            - name: downloads
+            - name: nfsdownloads
               mountPath: /downloads
+              subPath: complete
+              mountPropagation: HostToContainer
             - name: audiobooks
               mountPath: /audiobooks
             - name: secondaudiobooks
@@ -56,6 +58,11 @@ spec:
           hostPath:
             path: /mnt/secondary/downloads/complete
             type: DirectoryOrCreate
+        - name: nfsdownloads
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/downloads
+            readOnly: false
         - name: audiobooks
           hostPath:
             path: /mnt/secondary/audiobooks
