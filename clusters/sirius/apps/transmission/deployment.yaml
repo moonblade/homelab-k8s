@@ -15,6 +15,8 @@ spec:
       labels:
         app: transmission
     spec:
+      securityContext:
+        fsGroup: 0
       initContainers:
       - name: settings-editor
         image: alpine:3.22.0
@@ -82,8 +84,9 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-        - name: data
+        - name: nfsdownloads
           mountPath: /downloads
+          mountPropagation: HostToContainer
         envFrom:
           - secretRef:
               name: transmission-secret
@@ -108,6 +111,11 @@ spec:
         hostPath:
           path: /mnt/secondary/downloads
           type: DirectoryOrCreate
+      - name: nfsdownloads
+        nfs:
+          server: 192.168.1.10
+          path: /mnt/primary/root/downloads
+          readOnly: false
       - name: settings-override
         configMap:
           name: settings-override
