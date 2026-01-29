@@ -35,16 +35,12 @@ spec:
           volumeMounts:
             - name: audiobookbay-config
               mountPath: /config
-            - name: nfsdownloads
+            - name: downloads
               mountPath: /downloads
               subPath: complete
               mountPropagation: HostToContainer
             - name: audiobooks
               mountPath: /audiobooks
-            - name: secondaudiobooks
-              mountPath: /secondaudiobooks
-            - name: thirdaudiobooks
-              mountPath: /thirdaudiobooks
               mountPropagation: HostToContainer
             - name: beetsconfig
               mountPath: /config/config.yaml
@@ -55,23 +51,11 @@ spec:
             path: /mnt/secondary/config/audiobookbay-downloader
             type: DirectoryOrCreate
         - name: downloads
-          hostPath:
-            path: /mnt/secondary/downloads/complete
-            type: DirectoryOrCreate
-        - name: nfsdownloads
           nfs:
             server: 192.168.1.10
             path: /mnt/primary/root/downloads
             readOnly: false
         - name: audiobooks
-          hostPath:
-            path: /mnt/secondary/audiobooks
-            type: DirectoryOrCreate
-        - name: secondaudiobooks
-          hostPath:
-            path: /mnt/elements/audiobooks
-            type: DirectoryOrCreate
-        - name: thirdaudiobooks
           nfs:
             server: 192.168.1.10
             path: /mnt/primary/root/audiobooks
