@@ -32,6 +32,11 @@ spec:
     providerSpecific:
       - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
         value: 'true'
+  - dnsName: hades.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 100.64.235.127
 #  - dnsName: nobrokerrpi.moonblade.work
 #    recordTTL: 60
 #    recordType: CNAME
