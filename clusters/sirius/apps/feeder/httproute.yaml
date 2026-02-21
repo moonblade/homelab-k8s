@@ -14,6 +14,7 @@ spec:
     kind: Service
     name: ak-outpost-feeder
 ---
+# External: feeder.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -35,3 +36,38 @@ spec:
     - name: ak-outpost-feeder
       namespace: authentik
       port: 9000
+---
+# Internal: feeder.sirius.moonblade.work → feeder service directly (no auth)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: feeder-internal
+  namespace: feeder
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - feeder.sirius.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: feeder
+      port: 80
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: feeder-internal-dns
+  namespace: feeder
+spec:
+  endpoints:
+  - dnsName: feeder.sirius.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.1.201
