@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: source-google-oauth
+  labels:
+    blueprints.goauthentik.io/description: "Google OAuth Source for SSO"
+entries:
+  - model: authentik_sources_oauth.oauthsource
+    id: google-source
+    state: present
+    identifiers:
+      slug: google
+    attrs:
+      name: Google
+      slug: google
+      enabled: true
+      provider_type: google
+      consumer_key: !Env GOOGLE_CLIENT_ID
+      consumer_secret: !Env GOOGLE_CLIENT_SECRET
+      authentication_flow: !Find [authentik_flows.flow, [slug, default-source-authentication]]
+      enrollment_flow: !Find [authentik_flows.flow, [slug, google-enroll]]
