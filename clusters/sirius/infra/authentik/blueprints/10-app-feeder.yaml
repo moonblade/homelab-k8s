@@ -18,7 +18,7 @@ entries:
       intercept_header_auth: true
       access_token_validity: hours=24
       refresh_token_validity: days=30
-      authentication_flow: !Find [authentik_flows.flow, [slug, default-source-authentication]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
       authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
 
