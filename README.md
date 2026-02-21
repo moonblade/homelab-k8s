@@ -151,3 +151,77 @@ On setting it up, realized that I had longhorn which I never fixed, so I can't a
 But fast forward three authentik setups later, I FINALLY GOT IT WORKING.
 
 Now on to adding it in homer, and actually allowing other apps to login with it.
+
+## Auto-logged
+
+- July 19-20, 2025
+
+Spent two days setting up Authentik outpost for reverse proxy authentication. Tried multiple approaches - snippets, separate ingresses, proxy mode. Eventually got it working with forward auth annotations and outpost reverse proxy for apps like audiobooksearch, yts-search, filebrowser, and deaddrop.
+
+- July 26, 2025
+
+Added expense-tracker app with auto image updates.
+
+- Aug 10, 2025
+
+Tried adding Sonarr and experimented with OIDC auth. Removed Homarr. Re-enabled Prowlarr.
+
+- Sep 2, 2025
+
+Disabled unused apps to clean up the cluster.
+
+- Sep 17, 2025
+
+Added DNS entries for new services.
+
+- Sep 24, 2025
+
+Experimented with qBittorrent and Decypharr. Ended up removing them after testing.
+
+- Oct 17, 2025
+
+Added n8n automation platform. Tried adding Ollama for local LLM. Removed poker app.
+
+- Nov 7, 2025
+
+Added Grafana monitoring with sealed secrets for admin credentials. Had some permission issues fixed by disabling init container.
+
+- Nov 8, 2025
+
+Added Prometheus monitoring stack with Helm. Struggled with configmap naming but got it working.
+
+- Nov 17, 2025
+
+Added Weave GitOps outside the cluster behind Authentik for external visibility. Re-enabled Jackett.
+
+- Nov 18-19, 2025
+
+Added second audiobook storage path in elements mount.
+
+- Nov 26-27, 2025
+
+Added Stremio deployment. Experimented with Decypharr again and removed it. Set up auto image updates for feeder app.
+
+- Dec 15, 2025
+
+Added nginx-gateway-fabric infrastructure (Gateway API) as alternative to ingress-nginx. Lots of troubleshooting with CRDs, OCI repos, and routes.
+
+- Dec 16-17, 2025
+
+Tried TLS certs with gateway, added forwarded proto headers. Moved back to single drive setup.
+
+- Jan 25, 2026
+
+Added third audiobooks folder. Moved beets and transmission configurations.
+
+- Jan 29, 2026
+
+Refactored cluster configuration.
+
+- Feb 8, 2026
+
+Added n8n workflow automation. Removed Hades app.
+
+- Feb 21, 2026
+
+Major Authentik blueprints work. Created blueprints to declaratively configure OAuth2 apps (feeder, audiobooksearch, jackett, yts-search, filebrowser, deaddrop, weave, audiobookshelf). Added Google OAuth source blueprint. Made feeder internal-only with Cloudflare tunnel route via Authentik outpost.
