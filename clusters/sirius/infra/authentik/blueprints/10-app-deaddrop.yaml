@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-deaddrop
+  labels:
+    blueprints.goauthentik.io/description: "Deaddrop proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: deaddrop-provider
+    state: present
+    identifiers:
+      name: Provider for Deaddrop
+    attrs:
+      name: Provider for Deaddrop
+      mode: proxy
+      external_host: https://ddsearch.moonblade.work
+      internal_host: http://deaddrop-downloader.deaddrop-downloader.svc.cluster.local
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: deaddrop-app
+    state: present
+    identifiers:
+      slug: deaddrop
+    attrs:
+      name: Deaddrop
+      slug: deaddrop
+      provider: !KeyOf deaddrop-provider
+      policy_engine_mode: any
+      meta_launch_url: https://ddsearch.moonblade.work
+
+  # Policy binding to allow users with admin role
+  - model: authentik_policies.policybinding
+    id: deaddrop-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf deaddrop-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      target: !KeyOf deaddrop-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: deaddrop-outpost
+    state: present
+    identifiers:
+      name: Deaddrop
+    attrs:
+      name: Deaddrop
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf deaddrop-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info

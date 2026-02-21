@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-audiobookshelf
+  labels:
+    blueprints.goauthentik.io/description: "Audiobookshelf OAuth2/OIDC application"
+entries:
+  - model: authentik_providers_oauth2.oauth2provider
+    id: audiobookshelf-provider
+    state: present
+    identifiers:
+      name: Provider for Audiobookshelf
+    attrs:
+      name: Provider for Audiobookshelf
+      client_type: confidential
+      client_id: e5ieKJCVUWo39dLxFhMJFPwcgmZTsqQrtUmBi5d2
+      client_secret: SHmmbK7rlxf4J1QqWhMo4GgCjA38eR6pbuHz36nbRZdacsHHjeGqH3muHuCvtpLNNChDdIIjYLE206fsB9CiC5yeeakxfwWgWpdbagbPEaxtkhDBmqcPjTJjRV5tx627
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      redirect_uris: |
+        https://audiobook.moonblade.work/auth/openid/callback
+        https://audiobook.moonblade.work/auth/openid/mobile-redirect
+
+  - model: authentik_core.application
+    id: audiobookshelf-app
+    state: present
+    identifiers:
+      slug: audiobookshelf
+    attrs:
+      name: Audiobookshelf
+      slug: audiobookshelf
+      provider: !KeyOf audiobookshelf-provider
+      policy_engine_mode: any
+
+  - model: authentik_policies.policybinding
+    id: audiobookshelf-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf audiobookshelf-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"audiobook\""]]
+      target: !KeyOf audiobookshelf-app
+      order: 0
+      enabled: true
+      timeout: 30

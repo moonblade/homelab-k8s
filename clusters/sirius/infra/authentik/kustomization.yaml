@@ -15,6 +15,11 @@ configMapGenerator:
       - ./blueprints/10-app-feeder.yaml
       - ./blueprints/10-app-audiobooksearch.yaml
       - ./blueprints/10-app-jackett.yaml
+      - ./blueprints/10-app-yts-search.yaml
+      - ./blueprints/10-app-filebrowser.yaml
+      - ./blueprints/10-app-deaddrop.yaml
+      - ./blueprints/10-app-weave.yaml
+      - ./blueprints/10-app-audiobookshelf.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
