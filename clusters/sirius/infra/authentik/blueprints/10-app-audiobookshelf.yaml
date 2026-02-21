@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-audiobookshelf
+  labels:
+    blueprints.goauthentik.io/description: "Audiobookshelf OAuth2 application"
+entries:
+  - model: authentik_providers_oauth2.oauth2provider
+    id: audiobookshelf-provider
+    state: present
+    identifiers:
+      name: Provider for Audiobook Shelf
+    attrs:
+      name: Provider for Audiobook Shelf
+      client_id: e5ieKJCVUWo39dLxFhMJFPwcgmZTsqQrtUmBi5d2
+      client_secret: !Env AUDIOBOOKSHELF_CLIENT_SECRET
+      client_type: confidential
+      redirect_uris:
+        - url: https://audiobook.moonblade.work/audiobookshelf/auth/openid/callback
+          matching_mode: strict
+        - url: https://audiobook.moonblade.work/audiobookshelf/auth/openid/mobile-redirect
+          matching_mode: strict
+        - url: https://audiobookshelf.sirius.moonblade.work/audiobookshelf/auth/openid/callback
+          matching_mode: strict
+        - url: https://audiobookshelf.sirius.moonblade.work/audiobookshelf/auth/openid/mobile-redirect
+          matching_mode: strict
+        - url: http://audiobook.moonblade.work/audiobookshelf/auth/openid/callback
+          matching_mode: strict
+        - url: http://audiobook.moonblade.work/audiobookshelf/auth/openid/mobile-redirect
+          matching_mode: strict
+        - url: https://audiobook.moonblade.work/audiobookshelf/login
+          matching_mode: strict
+      access_token_validity: minutes=5
+      refresh_token_validity: days=30
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: audiobookshelf-app
+    state: present
+    identifiers:
+      slug: audiobookshelf
+    attrs:
+      name: Audiobook Shelf
+      slug: audiobookshelf
+      provider: !KeyOf audiobookshelf-provider
+      policy_engine_mode: any
+
+  # Policy binding to allow users with audiobook role
+  - model: authentik_policies.policybinding
+    id: audiobookshelf-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf audiobookshelf-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"audiobook\""]]
+      target: !KeyOf audiobookshelf-app
+      order: 0
+      enabled: true
+      timeout: 30
