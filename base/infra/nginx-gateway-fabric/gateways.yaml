@@ -27,13 +27,12 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
-    # Temporarily remove TLS until certificates are ready
-    # tls:
-    #   mode: Terminate
-    #   certificateRefs:
-    #   - kind: Secret
-    #     name: wildcard-sirius-cert
-    #     namespace: nginx-gateway
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: wildcard-sirius-cert
+        namespace: nginx-gateway
   # External HTTP listener
   - name: http-external
     port: 8080

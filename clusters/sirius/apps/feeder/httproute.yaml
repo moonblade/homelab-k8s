@@ -41,13 +41,32 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: feeder-internal
+  name: feeder-internal-redirect
   namespace: feeder
 spec:
   parentRefs:
   - name: main-gateway
     namespace: nginx-gateway
     sectionName: http
+  hostnames:
+  - feeder.sirius.moonblade.work
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: feeder-internal
+  namespace: feeder
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: https
   hostnames:
   - feeder.sirius.moonblade.work
   rules:
