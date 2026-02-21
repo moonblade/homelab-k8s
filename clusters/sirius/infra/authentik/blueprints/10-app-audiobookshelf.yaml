@@ -9,7 +9,7 @@ entries:
     id: audiobookshelf-provider
     state: present
     identifiers:
-      name: Provider for Audiobookshelf
+      client_id: e5ieKJCVUWo39dLxFhMJFPwcgmZTsqQrtUmBi5d2
     attrs:
       name: Provider for Audiobookshelf
       client_type: confidential
@@ -21,9 +21,9 @@ entries:
       access_token_validity: hours=24
       refresh_token_validity: days=30
       signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
-      redirect_uris: |
-        https://audiobook.moonblade.work/auth/openid/callback
-        https://audiobook.moonblade.work/auth/openid/mobile-redirect
+      redirect_uris:
+        - https://audiobook.moonblade.work/auth/openid/callback
+        - https://audiobook.moonblade.work/auth/openid/mobile-redirect
 
   - model: authentik_core.application
     id: audiobookshelf-app
