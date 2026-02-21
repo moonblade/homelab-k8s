@@ -29,6 +29,7 @@ entries:
       client_id: e5ieKJCVUWo39dLxFhMJFPwcgmZTsqQrtUmBi5d2
       client_secret: !Env AUDIOBOOKSHELF_CLIENT_SECRET
       client_type: confidential
+      sub_mode: user_email
       redirect_uris:
         - url: https://audiobook.moonblade.work/audiobookshelf/auth/openid/callback
           matching_mode: strict
