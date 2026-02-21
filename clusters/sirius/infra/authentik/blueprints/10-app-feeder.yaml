@@ -33,6 +33,20 @@ entries:
       provider: !KeyOf feeder-provider
       policy_engine_mode: any
 
+  # Policy binding to allow users with admin role
+  - model: authentik_policies.policybinding
+    id: feeder-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf feeder-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      target: !KeyOf feeder-app
+      order: 0
+      enabled: true
+      timeout: 30
+
   - model: authentik_outposts.outpost
     id: feeder-outpost
     state: present
@@ -49,6 +63,7 @@ entries:
         kubernetes_namespace: authentik
         kubernetes_replicas: 1
         kubernetes_service_type: ClusterIP
-        kubernetes_ingress_secret_name: authentik-outpost-tls
+        kubernetes_disabled_components:
+          - Ingress
         object_naming_template: ak-outpost-%(name)s
         log_level: info
