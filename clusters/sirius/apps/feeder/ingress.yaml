@@ -1,29 +1,3 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  labels:
-    app.kubernetes.io/instance: feeder
-    app.kubernetes.io/name: feeder
-  annotations:
-   cert-manager.io/cluster-issuer: default-clusterissuer
-  name: feeder-ingress
-spec:
-  tls:
-  - hosts:
-    - feeder.sirius.moonblade.work
-    secretName: feeder-cert
-  rules:
-  - host: feeder.sirius.moonblade.work
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: feeder
-            port:
-              name: http
----
 apiVersion: v1
 kind: Service
 metadata:
