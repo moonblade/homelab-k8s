@@ -13,6 +13,7 @@ configMapGenerator:
       disableNameSuffixHash: true
     files:
       - ./blueprints/10-app-feeder.yaml
+      - ./blueprints/10-app-audiobooksearch.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
