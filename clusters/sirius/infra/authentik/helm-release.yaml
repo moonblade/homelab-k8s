@@ -25,6 +25,10 @@ spec:
         #       - login.moonblade.work
         #     secretName: login-moonblade-tls
 
+    blueprints:
+      configMaps:
+        - authentik-blueprints
+
     postgresql:
       enabled: true
     redis:
