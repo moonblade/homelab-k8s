@@ -9,6 +9,8 @@ resources:
 
 configMapGenerator:
   - name: authentik-blueprints
+    options:
+      disableNameSuffixHash: true
     files:
       - ./blueprints/10-app-feeder.yaml
 
