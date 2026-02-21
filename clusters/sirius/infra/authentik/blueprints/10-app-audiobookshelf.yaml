@@ -5,6 +5,20 @@ metadata:
   labels:
     blueprints.goauthentik.io/description: "Audiobookshelf OAuth2 application"
 entries:
+  - model: authentik_providers_oauth2.scopemapping
+    id: audiobookshelf-email-scope
+    state: present
+    identifiers:
+      name: "Audiobookshelf Email Mapping (verified)"
+    attrs:
+      name: "Audiobookshelf Email Mapping (verified)"
+      scope_name: email
+      expression: |
+        return {
+            "email": request.user.email,
+            "email_verified": True
+        }
+
   - model: authentik_providers_oauth2.oauth2provider
     id: audiobookshelf-provider
     state: present
@@ -38,7 +52,7 @@ entries:
       invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
       property_mappings:
         - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
-        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+        - !KeyOf audiobookshelf-email-scope
         - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
 
   - model: authentik_core.application
