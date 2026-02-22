@@ -1,0 +1,80 @@
+# External: abbsearch.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
+# Note: ReferenceGrant is in clusters/sirius/infra/authentik/referencegrants.yaml
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: audiobookbay-external
+  namespace: audiobookbay-downloader
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - abbsearch.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: ak-outpost-audiobook-search
+      namespace: authentik
+      port: 9000
+---
+# Internal: abb.sirius.moonblade.work HTTP → HTTPS redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: audiobookbay-internal-redirect
+  namespace: audiobookbay-downloader
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - abb.sirius.moonblade.work
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+# Internal: abb.sirius.moonblade.work → audiobookbay-downloader service directly (no auth)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: audiobookbay-internal
+  namespace: audiobookbay-downloader
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: https
+  hostnames:
+  - abb.sirius.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: audiobookbay-downloader
+      port: 80
+---
+# DNS for internal route pointing to Gateway IP
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: audiobookbay-internal-dns
+  namespace: audiobookbay-downloader
+spec:
+  endpoints:
+  - dnsName: abb.sirius.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.1.201
