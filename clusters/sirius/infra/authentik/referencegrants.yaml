@@ -1,0 +1,34 @@
+# ReferenceGrants for Gateway API - allows HTTPRoutes in app namespaces to route to Authentik outpost services
+# This file is in authentik infra (not app dirs) so namespace isn't overwritten by app kustomizations
+
+# Feeder app
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-feeder-to-authentik
+  namespace: authentik
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: feeder
+  to:
+  - group: ""
+    kind: Service
+    name: ak-outpost-feeder
+---
+# YTS-Downloader app
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-yts-to-authentik
+  namespace: authentik
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: yts-downloader
+  to:
+  - group: ""
+    kind: Service
+    name: ak-outpost-yts-search

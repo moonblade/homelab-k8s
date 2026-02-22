@@ -6,6 +6,7 @@ resources:
   - ./dnsendpoint.yaml
   - ./secret-sealed.yaml
   - ./ingress.yaml
+  - ./referencegrants.yaml
 
 configMapGenerator:
   - name: authentik-blueprints

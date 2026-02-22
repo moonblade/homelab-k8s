@@ -1,20 +1,6 @@
-# ReferenceGrant allows HTTPRoute in yts-downloader namespace to route to service in authentik namespace
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: ReferenceGrant
-metadata:
-  name: allow-yts-to-authentik
-  namespace: authentik
-spec:
-  from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: yts-downloader
-  to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-yts-search
----
 # External: ytssearch.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
+# Note: ReferenceGrant is in clusters/sirius/infra/authentik/referencegrants.yaml
+
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
