@@ -1,0 +1,94 @@
+# ReferenceGrant allows HTTPRoute in yts-downloader namespace to route to service in authentik namespace
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-yts-to-authentik
+  namespace: authentik
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: yts-downloader
+  to:
+  - group: ""
+    kind: Service
+    name: ak-outpost-yts-search
+---
+# External: ytssearch.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: yts-external
+  namespace: yts-downloader
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - ytssearch.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: ak-outpost-yts-search
+      namespace: authentik
+      port: 9000
+---
+# Internal: ytssearch.sirius.moonblade.work HTTP → HTTPS redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: yts-internal-redirect
+  namespace: yts-downloader
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - ytssearch.sirius.moonblade.work
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+# Internal: ytssearch.sirius.moonblade.work → yts-downloader service directly (no auth)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: yts-internal
+  namespace: yts-downloader
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: https
+  hostnames:
+  - ytssearch.sirius.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: yts-downloader
+      port: 80
+---
+# DNS for internal route pointing to Gateway IP
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: yts-internal-dns
+  namespace: yts-downloader
+spec:
+  endpoints:
+  - dnsName: ytssearch.sirius.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.1.201
