@@ -6,7 +6,7 @@ resources:
   - ./feeder-env-sealed-secret.yaml
   - ./image-pull-secret.yaml
   - ./service.yaml
-  - ./ingress.yaml
+  # - ./ingress.yaml  # Replaced by httproute.yaml
   - ./httproute.yaml
   - ./filebrowser.yaml
   - ./cronjob.yaml

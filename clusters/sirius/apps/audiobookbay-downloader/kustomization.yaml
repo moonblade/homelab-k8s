@@ -5,7 +5,7 @@ resources:
   - ./deployment.yaml
   - ./configmap.yaml
   - ./service.yaml
-  - ./ingress.yaml
+  # - ./ingress.yaml  # Replaced by httproute.yaml
   - ./httproute.yaml
   - ./transmission.yaml
   - ./jackett.yaml
