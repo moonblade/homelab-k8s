@@ -6,14 +6,4 @@ metadata:
 spec:
   values:
     ingress:
-      enabled: true
-      hosts:
-      - host: weave.sirius.moonblade.work
-        paths:
-        - path: /
-          pathType: ImplementationSpecific
-
-      tls:
-      - secretName: weave-tls
-        hosts:
-        - weave.sirius.moonblade.work
+      enabled: false
