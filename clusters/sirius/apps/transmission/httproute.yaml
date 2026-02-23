@@ -1,0 +1,103 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: transmission-external
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - transmission.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: transmission
+          port: 9091
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: transmission-internal
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: https
+  hostnames:
+    - transmission.sirius.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: transmission
+          port: 9091
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: transmission-internal-redirect
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - transmission.sirius.moonblade.work
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: transmission-internal-dns
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+spec:
+  endpoints:
+    - dnsName: transmission.sirius.moonblade.work
+      recordTTL: 60
+      recordType: A
+      targets:
+        - 192.168.1.201
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: transmission-outer
+  labels:
+    app.kubernetes.io/instance: transmission
+    app.kubernetes.io/name: transmission
+spec:
+  endpoints:
+    - dnsName: transmission.moonblade.work
+      recordTTL: 60
+      recordType: CNAME
+      targets:
+        - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: 'true'

@@ -4,7 +4,7 @@ namespace: transmission
 resources:
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
+  - httproute.yaml
   - secret-sealed.yaml
   - settings-override.yaml
 
