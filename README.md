@@ -225,3 +225,7 @@ Added n8n workflow automation. Removed Hades app.
 - Feb 21, 2026
 
 Major Authentik blueprints work. Created blueprints to declaratively configure OAuth2 apps (feeder, audiobooksearch, jackett, yts-search, filebrowser, deaddrop, weave, audiobookshelf). Added Google OAuth source blueprint. Made feeder internal-only with Cloudflare tunnel route via Authentik outpost.
+
+- Feb 23, 2026
+
+Gateway API migration: Migrated filebrowser (browse.moonblade.work + browse.sirius.moonblade.work) and homer-outer (homer.moonblade.work + moonblade.work) to Gateway API. Disabled internal homer. Added ReferenceGrant for filebrowser to authentik cross-namespace routing.
