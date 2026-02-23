@@ -1,0 +1,114 @@
+# External route - via Authentik outpost (requires ReferenceGrant in authentik namespace)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: weave-external
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/instance: weave-gitops
+    app.kubernetes.io/name: weave-gitops
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - weave.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ak-outpost-weave
+          namespace: authentik
+          port: 9000
+---
+# Internal route - direct to weave-gitops service (no Authentik)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: weave-internal
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/instance: weave-gitops
+    app.kubernetes.io/name: weave-gitops
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: https
+  hostnames:
+    - weave.sirius.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: weave-gitops
+          port: 9001
+---
+# HTTP to HTTPS redirect for internal route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: weave-internal-redirect
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/instance: weave-gitops
+    app.kubernetes.io/name: weave-gitops
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - weave.sirius.moonblade.work
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+# DNS for internal route
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: weave-internal-dns
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/instance: weave-gitops
+    app.kubernetes.io/name: weave-gitops
+spec:
+  endpoints:
+    - dnsName: weave.sirius.moonblade.work
+      recordTTL: 60
+      recordType: A
+      targets:
+        - 192.168.1.201
+---
+# DNS for external route (Cloudflare tunnel)
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: weave-outer
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/instance: weave-gitops
+    app.kubernetes.io/name: weave-gitops
+spec:
+  endpoints:
+    - dnsName: weave.moonblade.work
+      recordTTL: 60
+      recordType: CNAME
+      targets:
+        - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: 'true'
