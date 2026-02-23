@@ -228,4 +228,4 @@ Major Authentik blueprints work. Created blueprints to declaratively configure O
 
 - Feb 23, 2026
 
-Gateway API migration: Migrated filebrowser (browse.moonblade.work + browse.sirius.moonblade.work) and homer-outer (homer.moonblade.work + moonblade.work) to Gateway API. Disabled internal homer. Added ReferenceGrant for filebrowser to authentik cross-namespace routing.
+Gateway API migration: Migrated filebrowser (browse.moonblade.work + browse.sirius.moonblade.work), homer-outer (homer.moonblade.work + moonblade.work), and jackett (jackett.moonblade.work + jackett.sirius.moonblade.work) to Gateway API. Disabled internal homer. Added ReferenceGrants for filebrowser and jackett to authentik cross-namespace routing.
