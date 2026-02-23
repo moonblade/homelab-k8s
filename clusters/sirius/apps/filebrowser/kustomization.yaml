@@ -4,6 +4,6 @@ namespace: filebrowser
 resources:
   - ./deployment.yaml
   - ./service.yaml
-  - ./ingress.yaml
+  - ./httproute.yaml
   - ./config.yaml
 
