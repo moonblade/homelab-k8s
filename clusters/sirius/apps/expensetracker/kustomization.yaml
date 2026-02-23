@@ -5,7 +5,8 @@ resources:
   - ./secret-sealed.yaml
   - ./deploy.yaml
   - ./service.yaml
-  - ./ingress.yaml
+  # - ./ingress.yaml  # Disabled - migrated to Gateway API
+  - ./httproute.yaml
   - ./imageupdate.yaml
   - ./cronjob.yaml
 
