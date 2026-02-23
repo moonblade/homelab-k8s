@@ -1,0 +1,78 @@
+# External: audiobook.moonblade.work via Cloudflare tunnel → audiobookshelf directly (has own auth)
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: audiobookshelf-external
+  namespace: audiobookshelf
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - audiobook.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: audiobookshelf
+      port: 80
+---
+# Internal: audiobookshelf.sirius.moonblade.work HTTP → HTTPS redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: audiobookshelf-internal-redirect
+  namespace: audiobookshelf
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - audiobookshelf.sirius.moonblade.work
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+# Internal: audiobookshelf.sirius.moonblade.work → audiobookshelf service directly
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: audiobookshelf-internal
+  namespace: audiobookshelf
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: https
+  hostnames:
+  - audiobookshelf.sirius.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: audiobookshelf
+      port: 80
+---
+# DNS for internal route pointing to Gateway IP
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: audiobookshelf-internal-dns
+  namespace: audiobookshelf
+spec:
+  endpoints:
+  - dnsName: audiobookshelf.sirius.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.1.201
