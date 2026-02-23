@@ -4,6 +4,6 @@ namespace: jackett
 resources:
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
+  - httproute.yaml
   - settings-override.yaml
 

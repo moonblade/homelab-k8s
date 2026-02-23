@@ -1,0 +1,109 @@
+# External route via Cloudflare tunnel - TLS terminated by Cloudflare
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jackett-external
+  labels:
+    app.kubernetes.io/instance: jackett
+    app.kubernetes.io/name: jackett
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - jackett.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ak-outpost-jackett
+          namespace: authentik
+          port: 9000
+---
+# Internal route via local DNS - TLS terminated by Gateway
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jackett-internal
+  labels:
+    app.kubernetes.io/instance: jackett
+    app.kubernetes.io/name: jackett
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: https
+  hostnames:
+    - jackett.sirius.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: jackett
+          port: 9117
+---
+# HTTP to HTTPS redirect for internal route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jackett-internal-redirect
+  labels:
+    app.kubernetes.io/instance: jackett
+    app.kubernetes.io/name: jackett
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - jackett.sirius.moonblade.work
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+# Internal DNS endpoint
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: jackett-internal-dns
+  labels:
+    app.kubernetes.io/instance: jackett
+    app.kubernetes.io/name: jackett
+spec:
+  endpoints:
+    - dnsName: jackett.sirius.moonblade.work
+      recordTTL: 60
+      recordType: A
+      targets:
+        - 192.168.1.201
+---
+# External DNS endpoint (Cloudflare tunnel)
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: jackett-external-dns
+  labels:
+    app.kubernetes.io/instance: jackett
+    app.kubernetes.io/name: jackett
+spec:
+  endpoints:
+    - dnsName: jackett.moonblade.work
+      recordTTL: 60
+      recordType: CNAME
+      targets:
+        - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: 'true'
