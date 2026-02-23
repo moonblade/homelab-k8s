@@ -9,7 +9,7 @@ spec:
   parentRefs:
     - name: main-gateway
       namespace: nginx-gateway
-      sectionName: https
+      sectionName: http
   hostnames:
     - expense.moonblade.work
   rules:
