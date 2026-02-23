@@ -7,6 +7,7 @@ resources:
   - ./secret-sealed.yaml
   - ./ingress.yaml
   - ./referencegrants.yaml
+  - ./httproute.yaml
 
 configMapGenerator:
   - name: authentik-blueprints
