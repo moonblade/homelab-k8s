@@ -4,5 +4,4 @@ namespace: readarr
 resources:
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
 

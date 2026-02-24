@@ -4,7 +4,6 @@ namespace: qbittorrent
 resources:
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
   - secrets-sealed.yaml
   - config.yaml
 
