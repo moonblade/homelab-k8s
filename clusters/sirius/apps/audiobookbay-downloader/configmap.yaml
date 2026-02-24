@@ -11,3 +11,4 @@ data:
   TITLE: AudioBookBay Search
   LABEL: audiobook
   AUTH_MODE: "authentik"
+  GOODREADS_ENABLED: "true"
