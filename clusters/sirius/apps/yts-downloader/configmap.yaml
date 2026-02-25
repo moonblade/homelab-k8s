@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: yts-config
 data:
-  JACKETT_API_URL: https://jackett.sirius.moonblade.work/api/v2.0/indexers/yts/results
-  TRANSMISSION_URL: https://transmission.sirius.moonblade.work/transmission/rpc
+  JACKETT_API_URL: http://jackett.jackett.svc.cluster.local:9117/api/v2.0/indexers/yts/results
+  TRANSMISSION_URL: http://transmission.transmission.svc.cluster.local:9091/transmission/rpc
   TITLE: YTS Search
   LABEL: yts
   AUTH_MODE: "authentik"
