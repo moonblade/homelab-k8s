@@ -34,7 +34,7 @@ entries:
       policy_engine_mode: any
       meta_launch_url: https://stremio.moonblade.work
 
-  # Policy binding to allow users with admin role
+  # Policy binding to allow users with audiobook role
   - model: authentik_policies.policybinding
     id: stremio-policy-binding
     state: present
@@ -42,7 +42,8 @@ entries:
       order: 0
       target: !KeyOf stremio-app
     attrs:
-      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"audiobook\""]]
+
       target: !KeyOf stremio-app
       order: 0
       enabled: true
