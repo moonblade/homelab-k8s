@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-stremio
+  labels:
+    blueprints.goauthentik.io/description: "Stremio proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: stremio-provider
+    state: present
+    identifiers:
+      name: Provider for Stremio
+    attrs:
+      name: Provider for Stremio
+      mode: proxy
+      external_host: https://stremio.moonblade.work
+      internal_host: http://stremio.stremio.svc.cluster.local:11470
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: stremio-app
+    state: present
+    identifiers:
+      slug: stremio
+    attrs:
+      name: Stremio
+      slug: stremio
+      provider: !KeyOf stremio-provider
+      policy_engine_mode: any
+      meta_launch_url: https://stremio.moonblade.work
+
+  # Policy binding to allow users with admin role
+  - model: authentik_policies.policybinding
+    id: stremio-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf stremio-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      target: !KeyOf stremio-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: stremio-outpost
+    state: present
+    identifiers:
+      name: Stremio
+    attrs:
+      name: Stremio
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf stremio-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info

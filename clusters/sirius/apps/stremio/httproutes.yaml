@@ -1,99 +1,109 @@
+# External route via Cloudflare tunnel - TLS terminated by Cloudflare
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: stremio-external
+  labels:
+    app.kubernetes.io/instance: stremio
+    app.kubernetes.io/name: stremio
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - stremio.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ak-outpost-stremio
+          namespace: authentik
+          port: 9000
+---
+# Internal route via local DNS - TLS terminated by Gateway
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: stremio-internal
-  namespace: stremio
+  labels:
+    app.kubernetes.io/instance: stremio
+    app.kubernetes.io/name: stremio
 spec:
   parentRefs:
-  - name: main-gateway
-    namespace: nginx-gateway
-    sectionName: https
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: https
   hostnames:
-  - stremio2.sirius.moonblade.work
+    - stremio.sirius.moonblade.work
   rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /
-    backendRefs:
-    - name: stremio
-      port: 11470 # Using the http port from service
-      namespace: stremio
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: stremio
+          port: 11470
 ---
-# External HTTPS route for stremio.moonblade.work
+# HTTP to HTTPS redirect for internal route
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: stremio-external-https
-  namespace: stremio
+  name: stremio-internal-redirect
+  labels:
+    app.kubernetes.io/instance: stremio
+    app.kubernetes.io/name: stremio
 spec:
   parentRefs:
-  - name: main-gateway
-    namespace: nginx-gateway
-    sectionName: https-external
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
   hostnames:
-  - stremio.moonblade.work
+    - stremio.sirius.moonblade.work
   rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /
-    backendRefs:
-    - name: stremio
-      port: 11470
-      namespace: stremio
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
 ---
-# HTTP redirect for stremio.moonblade.work
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: stremio-external-redirect
-  namespace: stremio
-spec:
-  parentRefs:
-  - name: main-gateway
-    namespace: nginx-gateway
-    sectionName: http-external
-  hostnames:
-  - stremio.moonblade.work
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /
-    filters:
-    - type: RequestRedirect
-      requestRedirect:
-        scheme: https
-        port: 8443
----
-# Keep the DNSEndpoint for external DNS
-apiVersion: externaldns.k8s.io/v1alpha1
-kind: DNSEndpoint
-metadata:
-  name: stremio-outer
-  namespace: stremio
-spec:
-  endpoints:
-  - dnsName: stremio.moonblade.work
-    recordTTL: 60
-    recordType: CNAME
-    targets:
-    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
-    providerSpecific:
-      - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
-        value: 'true'
----
-# DNS for internal sirius domain pointing to Gateway
+# Internal DNS endpoint
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
 metadata:
   name: stremio-internal-dns
-  namespace: stremio
+  labels:
+    app.kubernetes.io/instance: stremio
+    app.kubernetes.io/name: stremio
 spec:
   endpoints:
-  - dnsName: stremio2.sirius.moonblade.work
-    recordTTL: 60
-    recordType: A
-    targets:
-    - 192.168.1.201
+    - dnsName: stremio.sirius.moonblade.work
+      recordTTL: 60
+      recordType: A
+      targets:
+        - 192.168.1.201
+---
+# External DNS endpoint (Cloudflare tunnel)
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: stremio-external-dns
+  labels:
+    app.kubernetes.io/instance: stremio
+    app.kubernetes.io/name: stremio
+spec:
+  endpoints:
+    - dnsName: stremio.moonblade.work
+      recordTTL: 60
+      recordType: CNAME
+      targets:
+        - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: 'true'
