@@ -5,7 +5,6 @@ resources:
   - ../../../../base/infra/authentik/
   - ./dnsendpoint.yaml
   - ./secret-sealed.yaml
-  - ./ingress.yaml
   - ./referencegrants.yaml
   - ./httproute.yaml
 
