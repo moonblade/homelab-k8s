@@ -41,6 +41,7 @@ homelab-k8s/
 - **SealedSecrets**: Raw secrets in `secrets/raw_secrets/`, sealed versions in app dirs as `secret-sealed.yaml`
 - **Image automation**: Apps use `imageupdate.yaml` with Flux ImageRepository/Policy/UpdateAutomation
 - **Image tag pattern**: `^ts_(?P<ts>[0-9]+)$` - timestamp-based tags
+- **Homer dashboard sync**: When adding, enabling, or disabling any app, update Homer config accordingly to keep the dashboard in sync
 
 ## ANTI-PATTERNS (THIS PROJECT)
 
