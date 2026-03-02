@@ -105,6 +105,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Jitsi Meet"
+        logo: "https://jitsi.org/wp-content/uploads/2020/04/oie_transparent-5.png"
+        subtitle: "Video conferencing"
+        url: "https://meet.sirius.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Audiobookshelf"
         logo: "https://www.audiobookshelf.org/Logo.png"
         subtitle: "Audiobookshelf"

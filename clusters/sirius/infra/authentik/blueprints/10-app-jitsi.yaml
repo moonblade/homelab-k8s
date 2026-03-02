@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-jitsi
+  labels:
+    blueprints.goauthentik.io/description: "Jitsi Meet proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: jitsi-provider
+    state: present
+    identifiers:
+      name: Provider for Jitsi
+    attrs:
+      name: Provider for Jitsi
+      mode: proxy
+      external_host: https://meet.moonblade.work
+      internal_host: http://jitsi.jitsi.svc.cluster.local:80
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: jitsi-app
+    state: present
+    identifiers:
+      slug: jitsi
+    attrs:
+      name: Jitsi Meet
+      slug: jitsi
+      provider: !KeyOf jitsi-provider
+      policy_engine_mode: any
+      meta_launch_url: https://meet.moonblade.work
+
+  - model: authentik_outposts.outpost
+    id: jitsi-outpost
+    state: present
+    identifiers:
+      name: jitsi
+    attrs:
+      name: jitsi
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf jitsi-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info

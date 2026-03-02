@@ -1,0 +1,168 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jitsi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jitsi
+  template:
+    metadata:
+      labels:
+        app: jitsi
+    spec:
+      containers:
+        # Prosody - XMPP server
+        - name: prosody
+          image: jitsi/prosody:stable-9753
+          env:
+            - name: XMPP_DOMAIN
+              value: meet.jitsi
+            - name: XMPP_AUTH_DOMAIN
+              value: auth.meet.jitsi
+            - name: XMPP_MUC_DOMAIN
+              value: muc.meet.jitsi
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              value: internal-muc.meet.jitsi
+            - name: XMPP_GUEST_DOMAIN
+              value: guest.meet.jitsi
+            - name: XMPP_RECORDER_DOMAIN
+              value: recorder.meet.jitsi
+            - name: TZ
+              value: Asia/Calcutta
+            - name: JVB_TCP_HARVESTER_DISABLED
+              value: "true"
+            - name: PUBLIC_URL
+              value: https://meet.moonblade.work
+          ports:
+            - containerPort: 5222
+              name: xmpp-c2s
+            - containerPort: 5280
+              name: xmpp-bosh
+            - containerPort: 5347
+              name: xmpp-component
+          volumeMounts:
+            - name: prosody-config
+              mountPath: /config
+            - name: prosody-plugins
+              mountPath: /prosody-plugins-custom
+
+        # Jicofo - Conference focus
+        - name: jicofo
+          image: jitsi/jicofo:stable-9753
+          env:
+            - name: XMPP_DOMAIN
+              value: meet.jitsi
+            - name: XMPP_AUTH_DOMAIN
+              value: auth.meet.jitsi
+            - name: XMPP_MUC_DOMAIN
+              value: muc.meet.jitsi
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              value: internal-muc.meet.jitsi
+            - name: XMPP_SERVER
+              value: localhost
+            - name: JICOFO_AUTH_USER
+              value: focus
+            - name: JICOFO_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jitsi-secrets
+                  key: JICOFO_AUTH_PASSWORD
+            - name: TZ
+              value: Asia/Calcutta
+            - name: JVB_BREWERY_MUC
+              value: jvbbrewery@internal-muc.meet.jitsi
+          volumeMounts:
+            - name: jicofo-config
+              mountPath: /config
+
+        # JVB - Jitsi Video Bridge
+        - name: jvb
+          image: jitsi/jvb:stable-9753
+          env:
+            - name: XMPP_DOMAIN
+              value: meet.jitsi
+            - name: XMPP_AUTH_DOMAIN
+              value: auth.meet.jitsi
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              value: internal-muc.meet.jitsi
+            - name: XMPP_SERVER
+              value: localhost
+            - name: JVB_AUTH_USER
+              value: jvb
+            - name: JVB_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jitsi-secrets
+                  key: JVB_AUTH_PASSWORD
+            - name: JVB_BREWERY_MUC
+              value: jvbbrewery@internal-muc.meet.jitsi
+            - name: JVB_PORT
+              value: "10000"
+            - name: JVB_TCP_HARVESTER_DISABLED
+              value: "true"
+            - name: PUBLIC_URL
+              value: https://meet.moonblade.work
+            - name: TZ
+              value: Asia/Calcutta
+          ports:
+            - containerPort: 10000
+              protocol: UDP
+              name: jvb-udp
+            - containerPort: 8080
+              name: jvb-http
+          volumeMounts:
+            - name: jvb-config
+              mountPath: /config
+
+        # Web - Nginx frontend
+        - name: web
+          image: jitsi/web:stable-9753
+          env:
+            - name: XMPP_DOMAIN
+              value: meet.jitsi
+            - name: XMPP_AUTH_DOMAIN
+              value: auth.meet.jitsi
+            - name: XMPP_MUC_DOMAIN
+              value: muc.meet.jitsi
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              value: internal-muc.meet.jitsi
+            - name: XMPP_GUEST_DOMAIN
+              value: guest.meet.jitsi
+            - name: XMPP_BOSH_URL_BASE
+              value: http://localhost:5280
+            - name: PUBLIC_URL
+              value: https://meet.moonblade.work
+            - name: TZ
+              value: Asia/Calcutta
+            - name: ENABLE_XMPP_WEBSOCKET
+              value: "1"
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          volumeMounts:
+            - name: web-config
+              mountPath: /config
+            - name: web-crontabs
+              mountPath: /var/spool/cron/crontabs
+            - name: web-transcripts
+              mountPath: /usr/share/jitsi-meet/transcripts
+
+      volumes:
+        - name: prosody-config
+          emptyDir: {}
+        - name: prosody-plugins
+          emptyDir: {}
+        - name: jicofo-config
+          emptyDir: {}
+        - name: jvb-config
+          emptyDir: {}
+        - name: web-config
+          emptyDir: {}
+        - name: web-crontabs
+          emptyDir: {}
+        - name: web-transcripts
+          emptyDir: {}

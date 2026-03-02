@@ -78,6 +78,21 @@ make dashboard-token
 make bootstrap-git-sirius
 ```
 
+## CLUSTER ACCESS
+
+To connect to the cluster:
+1. **Primary**: Use `KUBECONFIG=~/.kube/sirius.yaml` (direct connection)
+2. **Fallback**: If sirius.yaml doesn't connect, use Tailscale context `siriusts`
+
+```bash
+# Primary (direct)
+export KUBECONFIG=~/.kube/sirius.yaml
+kubectl get nodes
+
+# Fallback (via Tailscale)
+kubectl --context siriusts get nodes
+```
+
 ## NOTES
 
 - **Storage**: local-path-provisioner active, longhorn disabled (had issues)
