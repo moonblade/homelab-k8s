@@ -45,6 +45,21 @@ spec:
                 secretKeyRef:
                   name: jitsi-secrets
                   key: JVB_AUTH_PASSWORD
+            # TURN server configuration for NAT traversal
+            - name: TURN_HOST
+              value: "openrelay.metered.ca"
+            - name: TURN_PORT
+              value: "443"
+            - name: TURNS_HOST
+              value: "openrelay.metered.ca"
+            - name: TURNS_PORT
+              value: "443"
+            - name: TURN_TRANSPORT
+              value: "tcp"
+            - name: TURN_USERNAME
+              value: "openrelayproject"
+            - name: TURN_PASSWORD
+              value: "openrelayproject"
           ports:
             - containerPort: 5222
               name: xmpp-c2s
