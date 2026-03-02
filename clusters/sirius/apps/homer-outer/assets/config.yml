@@ -46,7 +46,7 @@ services:
     icon: "fas fa-shield-alt"
     items:
       - name: "File Browser"
-        logo: "https://avatars.githubusercontent.com/u/35781395?s=48&v=4"
+        logo: "https://raw.githubusercontent.com/filebrowser/logo/master/icon_raw.svg"
         subtitle: "File Browser"
         url: "https://browse.moonblade.work"
         type: Ping
