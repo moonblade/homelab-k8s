@@ -71,7 +71,7 @@ spec:
             - name: XMPP_INTERNAL_MUC_DOMAIN
               value: internal-muc.meet.jitsi
             - name: XMPP_SERVER
-              value: localhost
+              value: "127.0.0.1"
             - name: JICOFO_AUTH_USER
               value: focus
             - name: JICOFO_AUTH_PASSWORD
@@ -98,7 +98,7 @@ spec:
             - name: XMPP_INTERNAL_MUC_DOMAIN
               value: internal-muc.meet.jitsi
             - name: XMPP_SERVER
-              value: localhost
+              value: "127.0.0.1"
             - name: JVB_AUTH_USER
               value: jvb
             - name: JVB_AUTH_PASSWORD
@@ -141,7 +141,7 @@ spec:
             - name: XMPP_GUEST_DOMAIN
               value: guest.meet.jitsi
             - name: XMPP_BOSH_URL_BASE
-              value: http://localhost:5280
+              value: http://127.0.0.1:5280
             - name: PUBLIC_URL
               value: https://meet.moonblade.work
             - name: TZ
