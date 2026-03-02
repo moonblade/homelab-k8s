@@ -110,6 +110,12 @@ spec:
               value: jvbbrewery
             - name: JVB_PORT
               value: "10000"
+            - name: JVB_ADVERTISE_IPS
+              value: "192.168.1.150"
+            - name: DOCKER_HOST_ADDRESS
+              value: "192.168.1.150"
+            - name: JVB_STUN_SERVERS
+              value: "meet-jit-si-turnrelay.jitsi.net:443"
             - name: JVB_TCP_HARVESTER_DISABLED
               value: "true"
             - name: PUBLIC_URL
@@ -148,6 +154,10 @@ spec:
               value: Asia/Calcutta
             - name: ENABLE_XMPP_WEBSOCKET
               value: "1"
+            - name: ENABLE_P2P
+              value: "false"
+            - name: JVB_PREFER_SCTP
+              value: "true"
           ports:
             - containerPort: 80
               name: http
