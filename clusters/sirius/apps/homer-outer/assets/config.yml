@@ -1,6 +1,7 @@
 title: "Sirius"
 subtitle: "Apps"
 logo: "https://static.vecteezy.com/system/resources/previews/002/412/550/large_2x/premium-athena-the-goddess-black-icon-logo-illustration-design-vector.jpg"
+icon: "https://cdn-icons-png.flaticon.com/512/1925/1925155.png"
 columns: "3"
 connectivityCheck: true
 defaults:
