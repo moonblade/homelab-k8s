@@ -64,7 +64,7 @@ services:
     icon: "fas fa-search"
     items:
       - name: "Audiobookbay"
-        icon: "fas fa-book"
+        logo: "https://audiobookbay.lu/images/audiobook.png"
         subtitle: "Search audiobookbay"
         url: "https://abbsearch.moonblade.work"
         type: Ping
