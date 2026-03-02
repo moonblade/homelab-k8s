@@ -82,7 +82,7 @@ spec:
             - name: TZ
               value: Asia/Calcutta
             - name: JVB_BREWERY_MUC
-              value: jvbbrewery@internal-muc.meet.jitsi
+              value: jvbbrewery
           volumeMounts:
             - name: jicofo-config
               mountPath: /config
@@ -107,7 +107,7 @@ spec:
                   name: jitsi-secrets
                   key: JVB_AUTH_PASSWORD
             - name: JVB_BREWERY_MUC
-              value: jvbbrewery@internal-muc.meet.jitsi
+              value: jvbbrewery
             - name: JVB_PORT
               value: "10000"
             - name: JVB_TCP_HARVESTER_DISABLED
