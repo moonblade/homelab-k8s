@@ -35,6 +35,16 @@ spec:
               value: "true"
             - name: PUBLIC_URL
               value: https://meet.moonblade.work
+            - name: JICOFO_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jitsi-secrets
+                  key: JICOFO_AUTH_PASSWORD
+            - name: JVB_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jitsi-secrets
+                  key: JVB_AUTH_PASSWORD
           ports:
             - containerPort: 5222
               name: xmpp-c2s
