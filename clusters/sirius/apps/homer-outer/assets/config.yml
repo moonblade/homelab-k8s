@@ -64,7 +64,7 @@ services:
     icon: "fas fa-search"
     items:
       - name: "Audiobookbay"
-        logo: "https://audiobookbay.is/favicon.ico"
+        icon: "fas fa-book"
         subtitle: "Search audiobookbay"
         url: "https://abbsearch.moonblade.work"
         type: Ping
@@ -74,13 +74,6 @@ services:
         logo: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Logo-YTS.svg"
         subtitle: "YTS search for movies"
         url: "https://ytssearch.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Deaddrop"
-        logo: "https://deaddrop.commvault.com/favicon.ico"
-        subtitle: "Search deaddrop"
-        url: "https://ddsearch.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
