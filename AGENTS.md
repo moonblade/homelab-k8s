@@ -98,6 +98,10 @@ kubectl get nodes
 kubectl --context siriusts get nodes
 ```
 
+## RELATED REPOS
+
+- **Infrastructure**: `../homelab-iac/` - Proxmox VMs, NixOS configs, TrueNAS, Terraform. All infra changes go there, not here.
+
 ## NOTES
 
 - **Storage**: local-path-provisioner active, longhorn disabled (had issues)
