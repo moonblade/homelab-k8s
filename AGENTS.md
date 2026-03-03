@@ -36,6 +36,7 @@ homelab-k8s/
 
 1. **All changes via PR** - Never push directly to main. Create feature branch, open PR via `gh pr create`
 2. **Log changes in README** - Add brief entry to README.md Auto-logged section for each change with date
+3. **Wait for PR approval** - After creating a PR, wait for human to approve before merging. Do not auto-merge.
 
 ## CONVENTIONS
 
