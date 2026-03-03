@@ -37,6 +37,11 @@ spec:
     recordType: A
     targets:
     - 100.64.235.127
+  - dnsName: luna.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 100.88.71.45
 #  - dnsName: nobrokerrpi.moonblade.work
 #    recordTTL: 60
 #    recordType: CNAME
