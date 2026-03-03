@@ -32,6 +32,11 @@ homelab-k8s/
 | Seal a secret | `cat secrets/secret.yaml \| kubeseal -o yaml` | Outputs SealedSecret |
 | Create kubeseal key | `make create-sealed-secret-key` | Uses keys in `secrets/` |
 
+## WORKFLOW RULES
+
+1. **All changes via PR** - Never push directly to main. Create feature branch, open PR via `gh pr create`
+2. **Log changes in README** - Add brief entry to README.md Auto-logged section for each change with date
+
 ## CONVENTIONS
 
 - **Flux GitOps**: All deployments via Flux Kustomization/HelmRelease
