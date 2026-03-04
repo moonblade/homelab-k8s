@@ -21,22 +21,12 @@ spec:
         ports:
         - containerPort: 80
         volumeMounts:
-        - name: audiobooks
-          mountPath: /audiobooks
         - name: config
           mountPath: /config
         - name: metadata
           mountPath: /metadata
-        - name: uncategorized
-          mountPath: /uncategorized
-        - name: oldbooks
-          mountPath: /oldbooks
-        - name: deaddrop
-          mountPath: /deaddrop
-        - name: secondaudiobooks
-          mountPath: /secondaudiobooks
         - name: thirdaudiobooks
-          mountPath: /thirdaudiobooks
+          mountPath: /audiobooks
           mountPropagation: HostToContainer
         env:
         - name: TZ
@@ -47,34 +37,16 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
       volumes:
-      - name: audiobooks
-        hostPath:
-          path: /mnt/secondary/audiobooks
-          type: DirectoryOrCreate
-      - name: uncategorized
-        hostPath:
-          path: /mnt/secondary/downloads/complete
-          type: DirectoryOrCreate
-      - name: oldbooks
-        hostPath:
-          path: /mnt/elements/old_books
-          type: DirectoryOrCreate
-      - name: deaddrop
-        hostPath:
-          path: /mnt/secondary/downloads/deaddrop/complete
-          type: DirectoryOrCreate
       - name: config
-        hostPath:
-          path: /mnt/secondary/config/audiobookshelf
-          type: DirectoryOrCreate
+        nfs:
+          server: 192.168.1.10
+          path: /mnt/primary/root/config/audiobookshelf
+          readOnly: false
       - name: metadata
-        hostPath:
-          path: /mnt/secondary/config/audiobookshelf-metadata
-          type: DirectoryOrCreate
-      - name: secondaudiobooks
-        hostPath:
-          path: /mnt/elements/audiobooks
-          type: DirectoryOrCreate
+        nfs:
+          server: 192.168.1.10
+          path: /mnt/primary/root/config/audiobookshelf-metadata
+          readOnly: false
       - name: thirdaudiobooks
         nfs:
           server: 192.168.1.10
