@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: deaddrop-config
-data:
-  JACKETT_API_URL: http://jackett.jackett.svc.cluster.local:9117/api/v2.0/indexers/all/results
-  TRANSMISSION_URL: http://transmission.transmission.svc.cluster.local:9091/transmission/rpc
-  TITLE: DeadDrop Search
-  AUTH_MODE: "authentik"
