@@ -33,7 +33,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           volumeMounts:
-            - name: audiobookbay-config
+            - name: config
               mountPath: /config
             - name: downloads
               mountPath: /downloads
@@ -46,7 +46,7 @@ spec:
               mountPath: /config/config.yaml
               subPath: config.yaml
       volumes:
-        - name: audiobookbay-config
+        - name: config
           nfs:
             server: 192.168.1.10
             path: /mnt/primary/root/config/audiobookbay-downloader
