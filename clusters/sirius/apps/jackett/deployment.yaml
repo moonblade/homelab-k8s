@@ -64,9 +64,10 @@ spec:
             periodSeconds: 10
       volumes:
         - name: config
-          hostPath:
-            path: /mnt/secondary/config/jackett
-            type: DirectoryOrCreate
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/config/jackett
+            readOnly: false
         - name: settings-override
           configMap:
             name: settings-override
