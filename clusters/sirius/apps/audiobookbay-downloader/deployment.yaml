@@ -47,9 +47,10 @@ spec:
               subPath: config.yaml
       volumes:
         - name: audiobookbay-config
-          hostPath:
-            path: /mnt/secondary/config/audiobookbay-downloader
-            type: DirectoryOrCreate
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/config/audiobookbay-downloader
+            readOnly: false
         - name: downloads
           nfs:
             server: 192.168.1.10

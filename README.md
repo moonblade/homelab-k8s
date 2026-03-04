@@ -229,3 +229,7 @@ Major Authentik blueprints work. Created blueprints to declaratively configure O
 - Feb 23, 2026
 
 Gateway API migration: Migrated filebrowser (browse.moonblade.work + browse.sirius.moonblade.work), homer-outer (homer.moonblade.work + moonblade.work), jackett (jackett.moonblade.work + jackett.sirius.moonblade.work), login.moonblade.work (Authentik), n8n (n8n.moonblade.work + n8n.sirius.moonblade.work), transmission (transmission.moonblade.work + transmission.sirius.moonblade.work), and weave-gitops (weave.moonblade.work + weave.sirius.moonblade.work) to Gateway API. Disabled internal homer and jellyfin. Removed unused audiobooksearch.moonblade.work. Added ReferenceGrants for cross-namespace routing to Authentik outposts.
+
+- Mar 4, 2026
+
+Migrated audiobookbay-downloader config from local hostPath (/mnt/secondary) to TrueNAS NFS (/mnt/primary/root/config/audiobookbay-downloader).
