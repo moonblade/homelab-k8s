@@ -28,6 +28,6 @@ spec:
               mountPath: /root/.stremio-server
       volumes:
         - name: stremio-data
-          hostPath:
-            path: /mnt/secondary/stremio
-            type: DirectoryOrCreate
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/config/stremio
