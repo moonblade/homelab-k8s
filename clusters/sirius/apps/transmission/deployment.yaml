@@ -104,13 +104,10 @@ spec:
           periodSeconds: 10
       volumes:
       - name: config
-        hostPath:
-          path: /mnt/secondary/config/transmission
-          type: DirectoryOrCreate
-      - name: data
-        hostPath:
-          path: /mnt/secondary/downloads
-          type: DirectoryOrCreate
+        nfs:
+          server: 192.168.1.10
+          path: /mnt/primary/root/config/transmission
+          readOnly: false
       - name: nfsdownloads
         nfs:
           server: 192.168.1.10
