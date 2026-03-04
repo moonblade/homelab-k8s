@@ -18,18 +18,18 @@ spec:
           ports:
             - containerPort: 9000
           volumeMounts:
-            - name: feed-volume
-              mountPath: /feeds
+            - name: feeder-data
+              mountPath: /data
+            - name: feeder-config
+              mountPath: /config
           envFrom:
             - secretRef:
                 name: feeder-env-secret
           env:
             - name: UPDATE_FREQUENCY_SECONDS
               value: "900"
-            - name: FEEDURL
-              value: "http://filebrowser/api/public/dl/hf_Ov0yq"
             - name: TEST_FILE
-              value: "/feeds/DONOTDELETE"
+              value: "/config/db.json"
           livenessProbe:
             httpGet:
               path: /
@@ -37,9 +37,13 @@ spec:
             initialDelaySeconds: 300
             periodSeconds: 300
       volumes:
-        - name: feed-volume
-          hostPath:
-            path: /mnt/secondary/feeder/
-            type: DirectoryOrCreate
+        - name: feeder-data
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/feeder
+        - name: feeder-config
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/config/feeder
       imagePullSecrets:
         - name: feeder-image-pull

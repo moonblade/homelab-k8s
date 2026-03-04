@@ -239,3 +239,9 @@ Migrated audiobookshelf config and metadata from local hostPath to TrueNAS NFS. 
 Removed unused apps: beets, plex, jellyfin, decypharr, prowlarr. Deleted K8s manifests and config directories from sirius.
 
 Migrated filebrowser to TrueNAS NFS. Storage now at /mnt/primary/root, config at /mnt/primary/root/config/filebrowser. Removed external mount and separate database.db mount.
+
+Migrated jackett, transmission, and stremio configs from local hostPath to TrueNAS NFS.
+
+Removed more unused apps: totp, deaddrop, deaddrop-downloader, qbittorrent, readarr, yts-downloader. Cleaned up longhorn infra and namespace (was stuck Terminating for 391 days).
+
+Migrated feeder from local hostPath to TrueNAS NFS. Split /feeds into /data (/mnt/primary/root/feeder) and /config (/mnt/primary/root/config/feeder) per webtoepub update. Removed deprecated FEEDURL env var.
