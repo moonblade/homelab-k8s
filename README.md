@@ -245,3 +245,5 @@ Migrated jackett, transmission, and stremio configs from local hostPath to TrueN
 Removed more unused apps: totp, deaddrop, deaddrop-downloader, qbittorrent, readarr, yts-downloader. Cleaned up longhorn infra and namespace (was stuck Terminating for 391 days).
 
 Migrated feeder from local hostPath to TrueNAS NFS. Split /feeds into /data (/mnt/primary/root/feeder) and /config (/mnt/primary/root/config/feeder) per webtoepub update. Removed deprecated FEEDURL env var.
+
+Migrated Authentik PostgreSQL from local-path PVC to TrueNAS NFS (/mnt/primary/root/storage/authentik/postgresql). Created NFS-backed PV/PVC with daily snapshots and replication to secondary disk. Updated local-path-provisioner base path from /mnt/secondary/storage to /mnt/primary/root/storage.
