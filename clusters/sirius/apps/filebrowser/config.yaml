@@ -9,6 +9,6 @@ data:
       "baseURL": "",
       "address": "",
       "log": "stdout",
-      "database": "/database.db",
+      "database": "/config/database.db",
       "root": "/srv"
     }

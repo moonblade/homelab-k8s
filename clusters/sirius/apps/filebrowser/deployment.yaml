@@ -23,10 +23,6 @@ spec:
           volumeMounts:
             - name: storage
               mountPath: /srv
-            - name: external
-              mountPath: /srv/external
-            - name: database
-              mountPath: /database.db
             - name: config
               mountPath: /config
             - name: settings-json
@@ -42,21 +38,15 @@ spec:
             periodSeconds: 10
       volumes:
         - name: storage
-          hostPath:
-            path: /mnt/secondary
-            type: Directory
-        - name: external
-          hostPath:
-            path: /mnt/external
-            type: Directory
-        - name: database
-          hostPath:
-            path: /mnt/secondary/config/filebrowser/database.db
-            type: FileOrCreate
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root
+            readOnly: false
         - name: config
-          hostPath:
-            path: /mnt/secondary/config/filebrowser
-            type: Directory
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/config/filebrowser
+            readOnly: false
         - name: settings-json
           configMap:
             name: settings-json
