@@ -235,3 +235,5 @@ Gateway API migration: Migrated filebrowser (browse.moonblade.work + browse.siri
 Migrated audiobookbay-downloader config from local hostPath (/mnt/secondary) to TrueNAS NFS (/mnt/primary/root/config/audiobookbay-downloader).
 
 Migrated audiobookshelf config and metadata from local hostPath to TrueNAS NFS. Removed unused volume mounts (audiobooks, secondaudiobooks, oldbooks, uncategorized, deaddrop) - only thirdaudiobooks remains for audiobook storage.
+
+Removed unused apps: beets, plex, jellyfin, decypharr, prowlarr. Deleted K8s manifests and config directories from sirius.
