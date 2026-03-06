@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: groups
+  labels:
+    blueprints.goauthentik.io/description: "User groups for role-based access"
+entries:
+  - model: authentik_core.group
+    id: group-user
+    state: present
+    identifiers:
+      name: user
+    attrs:
+      name: user
+      attributes: {}
+
+  - model: authentik_core.group
+    id: group-audiobookshelf
+    state: present
+    identifiers:
+      name: audiobookshelf
+    attrs:
+      name: audiobookshelf
+      parent: !KeyOf group-user
+      attributes: {}

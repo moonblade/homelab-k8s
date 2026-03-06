@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: policies
+  labels:
+    blueprints.goauthentik.io/description: "Expression policies for role-based access control"
+entries:
+  # Policy: Has role "audiobook"
+  - model: authentik_policies_expression.expressionpolicy
+    id: policy-has-role-audiobook
+    state: present
+    identifiers:
+      name: Has role "audiobook"
+    attrs:
+      name: Has role "audiobook"
+      expression: |
+        return "roles" in request.user.attributes and "audiobook" in request.user.attributes["roles"]
+
+  # Policy: Has role "movie"
+  - model: authentik_policies_expression.expressionpolicy
+    id: policy-has-role-movie
+    state: present
+    identifiers:
+      name: Has role "movie"
+    attrs:
+      name: Has role "movie"
+      expression: |
+        return "roles" in request.user.attributes and "movie" in request.user.attributes["roles"]
+
+  # Policy: Has role "admin"
+  - model: authentik_policies_expression.expressionpolicy
+    id: policy-has-role-admin
+    state: present
+    identifiers:
+      name: Has role "admin"
+    attrs:
+      name: Has role "admin"
+      expression: |
+        return "roles" in request.user.attributes and "admin" in request.user.attributes["roles"]
