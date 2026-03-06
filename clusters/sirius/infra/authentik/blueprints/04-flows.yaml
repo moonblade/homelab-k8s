@@ -1,0 +1,177 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: flows-custom
+  labels:
+    blueprints.goauthentik.io/description: "Custom flows for Google login, enrollment, and invitation"
+entries:
+  - model: authentik_flows.flow
+    id: flow-google-login
+    state: present
+    identifiers:
+      slug: google-login
+    attrs:
+      name: google-login
+      slug: google-login
+      title: Google
+      designation: authentication
+      authentication: none
+      denied_action: message_continue
+      layout: stacked
+      policy_engine_mode: any
+
+  - model: authentik_flows.flow
+    id: flow-google-enroll
+    state: present
+    identifiers:
+      slug: google-enroll
+    attrs:
+      name: google-enroll
+      slug: google-enroll
+      title: Google login
+      designation: enrollment
+      authentication: none
+      denied_action: message_continue
+      layout: stacked
+      policy_engine_mode: any
+
+  - model: authentik_flows.flow
+    id: flow-invitation
+    state: present
+    identifiers:
+      slug: invitation-flow
+    attrs:
+      name: Invitation flow
+      slug: invitation-flow
+      title: moonblade.work
+      designation: enrollment
+      authentication: none
+      denied_action: message_continue
+      layout: stacked
+      policy_engine_mode: any
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-google-login-0
+    state: present
+    identifiers:
+      target: !KeyOf flow-google-login
+      order: 0
+    attrs:
+      target: !KeyOf flow-google-login
+      stage: !Find [authentik_stages_identification.identificationstage, [name, google-login]]
+      order: 0
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-google-login-10
+    state: present
+    identifiers:
+      target: !KeyOf flow-google-login
+      order: 10
+    attrs:
+      target: !KeyOf flow-google-login
+      stage: !Find [authentik_stages_user_login.userloginstage, [name, google-login]]
+      order: 10
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-google-enroll-10
+    state: present
+    identifiers:
+      target: !KeyOf flow-google-enroll
+      order: 10
+    attrs:
+      target: !KeyOf flow-google-enroll
+      stage: !Find [authentik_stages_user_write.userwritestage, [name, google add user]]
+      order: 10
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-google-enroll-20
+    state: present
+    identifiers:
+      target: !KeyOf flow-google-enroll
+      order: 20
+    attrs:
+      target: !KeyOf flow-google-enroll
+      stage: !Find [authentik_stages_user_login.userloginstage, [name, google login stage]]
+      order: 20
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-invitation-0
+    state: present
+    identifiers:
+      target: !KeyOf flow-invitation
+      order: 0
+    attrs:
+      target: !KeyOf flow-invitation
+      stage: !Find [authentik_stages_invitation.invitationstage, [name, Invite user]]
+      order: 0
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-invitation-5
+    state: present
+    identifiers:
+      target: !KeyOf flow-invitation
+      order: 5
+    attrs:
+      target: !KeyOf flow-invitation
+      stage: !Find [authentik_stages_identification.identificationstage, [name, google invite id]]
+      order: 5
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-invitation-10
+    state: present
+    identifiers:
+      target: !KeyOf flow-invitation
+      order: 10
+    attrs:
+      target: !KeyOf flow-invitation
+      stage: !Find [authentik_stages_prompt.promptstage, [name, default-source-enrollment-prompt]]
+      order: 10
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-invitation-20
+    state: present
+    identifiers:
+      target: !KeyOf flow-invitation
+      order: 20
+    attrs:
+      target: !KeyOf flow-invitation
+      stage: !Find [authentik_stages_user_login.userloginstage, [name, google invite login]]
+      order: 20
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true
+
+  - model: authentik_flows.flowstagebinding
+    id: binding-invitation-100
+    state: present
+    identifiers:
+      target: !KeyOf flow-invitation
+      order: 100
+    attrs:
+      target: !KeyOf flow-invitation
+      stage: !Find [authentik_stages_user_write.userwritestage, [name, default-source-enrollment-write]]
+      order: 100
+      invalid_response_action: retry
+      policy_engine_mode: any
+      re_evaluate_policies: true

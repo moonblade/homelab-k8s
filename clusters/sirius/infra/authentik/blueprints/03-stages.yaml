@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: stages-custom
+  labels:
+    blueprints.goauthentik.io/description: "Custom stages for Google and invitation flows"
+entries:
+  - model: authentik_stages_identification.identificationstage
+    id: stage-google-login-id
+    state: present
+    identifiers:
+      name: google-login
+    attrs:
+      name: google-login
+      case_insensitive_matching: true
+      pretend_user_exists: true
+      show_matched_user: true
+      sources:
+        - !Find [authentik_sources_oauth.oauthsource, [slug, google]]
+
+  - model: authentik_stages_identification.identificationstage
+    id: stage-google-invite-id
+    state: present
+    identifiers:
+      name: google invite id
+    attrs:
+      name: google invite id
+      case_insensitive_matching: true
+      pretend_user_exists: true
+      show_matched_user: true
+      sources:
+        - !Find [authentik_sources_oauth.oauthsource, [slug, google]]
+
+  - model: authentik_stages_user_login.userloginstage
+    id: stage-google-login
+    state: present
+    identifiers:
+      name: google-login
+    attrs:
+      name: google-login
+      geoip_binding: bind_continent
+      network_binding: bind_asn
+      remember_device: days=30
+      remember_me_offset: seconds=0
+      session_duration: seconds=0
+
+  - model: authentik_stages_user_login.userloginstage
+    id: stage-google-login-stage
+    state: present
+    identifiers:
+      name: google login stage
+    attrs:
+      name: google login stage
+      geoip_binding: bind_continent
+      network_binding: bind_asn
+      remember_device: days=30
+      remember_me_offset: seconds=0
+      session_duration: seconds=0
+
+  - model: authentik_stages_user_login.userloginstage
+    id: stage-google-invite-login
+    state: present
+    identifiers:
+      name: google invite login
+    attrs:
+      name: google invite login
+      geoip_binding: bind_continent
+      network_binding: bind_asn
+      remember_device: days=30
+      remember_me_offset: seconds=0
+      session_duration: seconds=0
+
+  - model: authentik_stages_user_write.userwritestage
+    id: stage-google-add-user
+    state: present
+    identifiers:
+      name: google add user
+    attrs:
+      name: google add user
+      create_users_group: !Find [authentik_core.group, [name, user]]
+      user_creation_mode: always_create
+      user_type: external
+
+  - model: authentik_stages_invitation.invitationstage
+    id: stage-invite-user
+    state: present
+    identifiers:
+      name: Invite user
+    attrs:
+      name: Invite user

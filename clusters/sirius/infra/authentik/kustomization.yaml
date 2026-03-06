@@ -14,6 +14,10 @@ configMapGenerator:
     options:
       disableNameSuffixHash: true
     files:
+      - ./blueprints/01-policies.yaml
+      - ./blueprints/02-groups.yaml
+      - ./blueprints/03-stages.yaml
+      - ./blueprints/04-flows.yaml
       - ./blueprints/05-source-google.yaml
       - ./blueprints/10-app-feeder.yaml
       - ./blueprints/10-app-audiobooksearch.yaml
