@@ -23,6 +23,8 @@ spec:
                 --auth.method=proxy \
                 --auth.header=X-authentik-username \
                 -d /config/database.db
+              # Grant admin to mnishamk if user exists
+              filebrowser users update mnishamk --perm.admin=true -d /config/database.db 2>/dev/null || true
           volumeMounts:
             - name: config
               mountPath: /config
