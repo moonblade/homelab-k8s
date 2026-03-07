@@ -251,3 +251,5 @@ Migrated Authentik PostgreSQL from local-path PVC to TrueNAS NFS (/mnt/primary/r
 - Mar 7, 2026
 
 Enabled proxy authentication for filebrowser (browse.moonblade.work). Filebrowser now trusts X-authentik-username header from Authentik outpost, eliminating built-in login since it's already behind SSO.
+
+Updated n8n from 1.76.1 to 2.10.4. Switched from 8gears community Helm chart to official n8n Helm chart (ghcr.io/n8n-io/n8n-helm-chart) for better maintenance.
