@@ -8,35 +8,45 @@ spec:
   chart:
     spec:
       chart: n8n
-      version: "1.0.0"
+      version: "1.0.3"
       sourceRef:
         kind: HelmRepository
         name: n8n
         namespace: n8n
   install:
     crds: Create
+    timeout: 10m
   upgrade:
     crds: CreateReplace
+    timeout: 10m
   values:
     image:
       tag: "2.10.4"
-    main:
-      config:
-        n8n:
-          hide_usage_page: true
-          environment: production
-      secret:
-        n8n:
-          encryption_key: "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"
-      
-      resources:
-        limits:
-          memory: 2048Mi
-          cpu: 1000m
+    
+    # Standalone mode (SQLite, no external DB/Redis required)
+    queueMode:
+      enabled: false
+    
+    # Persistence for SQLite database
+    persistence:
+      enabled: true
+      size: 5Gi
+    
+    # Resources
+    resources:
+      main:
         requests:
-          memory: 512Mi
           cpu: 200m
-      
-      persistence:
-        enabled: true
-        size: 5Gi
+          memory: 512Mi
+        limits:
+          cpu: 1000m
+          memory: 2048Mi
+    
+    # Config
+    config:
+      timezone: Asia/Calcutta
+    
+    # Encryption key for credentials
+    secret:
+      n8n:
+        encryptionKey: "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"

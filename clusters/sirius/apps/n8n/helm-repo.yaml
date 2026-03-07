@@ -6,4 +6,4 @@ metadata:
 spec:
   interval: 1m
   type: oci
-  url: oci://8gears.container-registry.com/library
+  url: oci://ghcr.io/n8n-io/n8n-helm-chart
