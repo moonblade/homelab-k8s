@@ -18,6 +18,8 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
+    image:
+      tag: "2.10.4"
     main:
       config:
         n8n:
