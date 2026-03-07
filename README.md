@@ -247,3 +247,7 @@ Removed more unused apps: totp, deaddrop, deaddrop-downloader, qbittorrent, read
 Migrated feeder from local hostPath to TrueNAS NFS. Split /feeds into /data (/mnt/primary/root/feeder) and /config (/mnt/primary/root/config/feeder) per webtoepub update. Removed deprecated FEEDURL env var.
 
 Migrated Authentik PostgreSQL from local-path PVC to TrueNAS NFS (/mnt/primary/root/storage/authentik/postgresql). Created NFS-backed PV/PVC with daily snapshots and replication to secondary disk. Updated local-path-provisioner base path from /mnt/secondary/storage to /mnt/primary/root/storage.
+
+- Mar 7, 2026
+
+Enabled proxy authentication for filebrowser (browse.moonblade.work). Filebrowser now trusts X-authentik-username header from Authentik outpost, eliminating built-in login since it's already behind SSO.
