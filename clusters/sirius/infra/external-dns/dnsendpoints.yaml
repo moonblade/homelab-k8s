@@ -42,6 +42,11 @@ spec:
     recordType: A
     targets:
     - 100.88.71.45
+  - dnsName: ubuntu.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - ubuntu-1.tailab18b.ts.net
 #  - dnsName: nobrokerrpi.moonblade.work
 #    recordTTL: 60
 #    recordType: CNAME
