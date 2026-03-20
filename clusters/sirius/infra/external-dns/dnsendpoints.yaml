@@ -47,6 +47,16 @@ spec:
     recordType: CNAME
     targets:
     - ubuntu-1.tailab18b.ts.net
+  - dnsName: symphony.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - ubuntu-1.tailab18b.ts.net
+  - dnsName: opencode.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - ubuntu-1.tailab18b.ts.net
 #  - dnsName: nobrokerrpi.moonblade.work
 #    recordTTL: 60
 #    recordType: CNAME
