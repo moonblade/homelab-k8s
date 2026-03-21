@@ -1,3 +1,7 @@
+# NOTE: Library watcher must be DISABLED via UI/API when using NFS volumes.
+# NFS + inotify causes duplicate book entries during file copy operations.
+# The watcher setting is stored in the database (not configurable via env vars).
+# Use auto-scan cron (every 2 hours) instead: Settings > Libraries > Audiobooks > Auto-Scan
 apiVersion: apps/v1
 kind: Deployment
 metadata:
