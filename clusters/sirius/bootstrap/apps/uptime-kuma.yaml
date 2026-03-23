@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: uptime-kuma
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: uptime-kuma
+  namespace: uptime-kuma
+spec:
+  path: clusters/sirius/apps/uptime-kuma
+  interval: 15m
+  prune: true
+  wait: true
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: uptime-kuma
