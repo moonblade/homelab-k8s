@@ -110,3 +110,4 @@ kubectl --context siriusts get nodes
 - **SSO**: Authentik for single sign-on, still being integrated
 - **External DNS**: Cloudflare via external-dns, filters by ingress annotations
 - **Domain**: `*.sirius.moonblade.work`
+- **Monitoring**: Uptime Kuma at status.moonblade.work monitors all services. Use Socket.IO API or browser automation for monitor management.
