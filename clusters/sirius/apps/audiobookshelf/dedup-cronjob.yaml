@@ -1,0 +1,92 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: audiobookshelf-dedup
+spec:
+  schedule: "30 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 600
+      template:
+        spec:
+          containers:
+            - name: dedup
+              image: curlimages/curl:8.14.1
+              env:
+                - name: ABS_URL
+                  value: "http://audiobookshelf.audiobookshelf.svc.cluster.local"
+                - name: ABS_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: audiobookshelf-dedup-secret
+                      key: api-key
+              command:
+                - sh
+                - -c
+                - |
+                  set -e
+
+                  # Get all libraries
+                  LIBRARIES=$(curl -s -f "$ABS_URL/api/libraries" \
+                    -H "Authorization: Bearer $ABS_API_KEY")
+
+                  # Extract library IDs (may include folder IDs, handled below)
+                  LIB_IDS=$(echo "$LIBRARIES" | sed 's/,/\n/g' | grep '"id"' | head -10 | sed 's/.*"id":"\([^"]*\)".*/\1/' | grep -v '{')
+
+                  TOTAL_DELETED=0
+
+                  for LIB_ID in $LIB_IDS; do
+                    # Get all items in this library (skip if ID is invalid)
+                    ITEMS=$(curl -s "$ABS_URL/api/libraries/$LIB_ID/items?limit=0" \
+                      -H "Authorization: Bearer $ABS_API_KEY") || continue
+                    echo "$ITEMS" | grep -q '"results"' || continue
+
+                    echo "Checking library: $LIB_ID"
+
+                    # Find duplicate paths and collect IDs to delete
+                    # For each set of duplicates, keep the one with the earliest addedAt
+                    DELETE_IDS=$(echo "$ITEMS" | sed 's/\[/\n/g; s/\]/\n/g; s/{/\n{/g' | \
+                      grep '"id"' | \
+                      sed 's/.*"id":"\([^"]*\)".*"path":"\([^"]*\)".*"addedAt":\([0-9]*\).*/\1|\2|\3/' | \
+                      grep '|.*|' | \
+                      sort -t'|' -k2,2 -k3,3n | \
+                      awk -F'|' '
+                        {
+                          if (seen[$2]++) {
+                            print $1
+                          }
+                        }
+                      ')
+
+                    if [ -z "$DELETE_IDS" ]; then
+                      echo "  No duplicates found"
+                      continue
+                    fi
+
+                    COUNT=$(echo "$DELETE_IDS" | wc -l | tr -d ' ')
+                    echo "  Found $COUNT duplicate(s) to remove"
+
+                    # Build JSON array of IDs to delete
+                    JSON_IDS=""
+                    for ID in $DELETE_IDS; do
+                      if [ -z "$JSON_IDS" ]; then
+                        JSON_IDS="\"$ID\""
+                      else
+                        JSON_IDS="$JSON_IDS,\"$ID\""
+                      fi
+                    done
+
+                    # Batch delete duplicates (deletes DB entries only, not files)
+                    curl -s -f -X POST "$ABS_URL/api/items/batch/delete" \
+                      -H "Authorization: Bearer $ABS_API_KEY" \
+                      -H "Content-Type: application/json" \
+                      -d "{\"libraryItemIds\": [$JSON_IDS]}"
+
+                    echo "  Deleted $COUNT duplicate entries"
+                    TOTAL_DELETED=$((TOTAL_DELETED + COUNT))
+                  done
+
+                  echo "Done. Total duplicates removed: $TOTAL_DELETED"
+          restartPolicy: OnFailure

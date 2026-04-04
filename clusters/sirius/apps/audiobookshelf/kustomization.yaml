@@ -6,3 +6,5 @@ resources:
   - ./service.yaml
   # - ./ingress.yaml  # Replaced by httproute.yaml
   - ./httproute.yaml
+  - ./secret-sealed.yaml
+  - ./dedup-cronjob.yaml
