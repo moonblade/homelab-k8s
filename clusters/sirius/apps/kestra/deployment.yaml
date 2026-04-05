@@ -15,20 +15,6 @@ spec:
       labels:
         app: kestra
     spec:
-      initContainers:
-      - name: install-plugins
-        image: kestra/kestra:v1.3.7
-        command:
-          - bash
-          - -c
-          - |
-            echo "Installing email plugin to shared volume..."
-            /app/kestra plugins install io.kestra.plugin:plugin-email:1.1.1 --plugins=/plugins
-            echo "Plugin installation complete"
-            ls -la /plugins/
-        volumeMounts:
-        - name: kestra-plugins
-          mountPath: /plugins
       containers:
       - name: kestra
         image: kestra/kestra:v1.3.7
@@ -41,8 +27,8 @@ spec:
               sleep 2
             done
             sleep 3
-            echo "Starting Kestra server with pre-installed plugins..."
-            exec /app/kestra server standalone --worker-thread=4 --flow-path=/etc/kestra/flows --plugins=/plugins
+            echo "Starting Kestra server..."
+            exec /app/kestra server standalone --worker-thread=4 --flow-path=/etc/kestra/flows
         ports:
         - name: http
           containerPort: 8080
@@ -109,8 +95,6 @@ spec:
         - name: kestra-flows
           mountPath: /etc/kestra/flows
           readOnly: true
-        - name: kestra-plugins
-          mountPath: /plugins
         readinessProbe:
           httpGet:
             path: /health
@@ -173,8 +157,6 @@ spec:
       - name: kestra-flows
         configMap:
           name: kestra-flows
-      - name: kestra-plugins
-        emptyDir: {}
       - name: postgres-data
         nfs:
           server: 192.168.1.10
