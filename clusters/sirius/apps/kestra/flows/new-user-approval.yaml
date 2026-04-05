@@ -1,0 +1,107 @@
+# Kestra Flow: New User Approval Workflow
+# This flow receives webhooks from Authentik when new users are created
+# and sends an approval email with approve/deny buttons.
+#
+# Import this flow via Kestra UI or API:
+#   curl -X POST "https://kestra.moonblade.work/api/v1/flows" \
+#     -H "Content-Type: application/x-yaml" \
+#     --data-binary @new-user-approval.yaml
+
+id: new-user-approval
+namespace: homelab
+description: |
+  Receives webhook from Authentik when a new user is created.
+  Sends approval email to admin with approve/deny links.
+  
+  Webhook URL: https://kestra.moonblade.work/api/v1/executions/webhook/homelab/new-user-approval/696b716e3bf4604c7de257725265faf10f55f23e1f04925b7cefcb7217f343c7
+
+labels:
+  app: authentik-approval
+  team: homelab
+
+tasks:
+  - id: log_new_user
+    type: io.kestra.plugin.core.log.Log
+    message: |
+      New user notification received:
+      Username: {{ trigger.body.event_user_username ?? 'unknown' }}
+      Email: {{ trigger.body.event_user_email ?? 'unknown' }}
+      Severity: {{ trigger.body.severity ?? 'unknown' }}
+
+  - id: send_approval_email
+    type: io.kestra.plugin.email.MailSend
+    host: smtp.gmail.com
+    port: 465
+    transportStrategy: SMTPS
+    username: "{{ secret('GMAIL_USERNAME') }}"
+    password: "{{ secret('GMAIL_APP_PASSWORD') }}"
+    from: "{{ secret('GMAIL_USERNAME') }}"
+    to: "{{ secret('ADMIN_EMAIL') }}"
+    subject: "New Authentik User Approval: {{ trigger.body.event_user_username }}"
+    htmlTextContent: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #1a1a2e; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+          .content { background: #f8f9fa; padding: 20px; border: 1px solid #e9ecef; }
+          .user-info { background: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
+          .user-info dt { font-weight: bold; color: #666; }
+          .user-info dd { margin: 0 0 10px 0; font-size: 16px; }
+          .buttons { text-align: center; margin: 25px 0; }
+          .btn { display: inline-block; padding: 14px 32px; margin: 8px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; }
+          .btn-approve { background: #28a745; color: white !important; }
+          .btn-deny { background: #dc3545; color: white !important; }
+          .footer { background: #e9ecef; padding: 15px; border-radius: 0 0 8px 8px; font-size: 12px; color: #666; text-align: center; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1 style="margin:0;">🔐 New User Approval Required</h1>
+          </div>
+          <div class="content">
+            <p>A new user has registered and requires approval for the <strong>audiobook</strong> role.</p>
+            
+            <div class="user-info">
+              <dl>
+                <dt>Username</dt>
+                <dd>{{ trigger.body.event_user_username ?? 'N/A' }}</dd>
+                
+                <dt>Email</dt>
+                <dd>{{ trigger.body.event_user_email ?? 'N/A' }}</dd>
+                
+                <dt>Notification Time</dt>
+                <dd>{{ now() | date("yyyy-MM-dd HH:mm:ss") }} UTC</dd>
+              </dl>
+            </div>
+            
+            <div class="buttons">
+              <a href="https://kestra.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75?username={{ trigger.body.event_user_username | urlencode }}&action=approve" class="btn btn-approve">
+                Approve (Add Audiobook Role)
+              </a>
+              <br>
+              <a href="https://kestra.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75?username={{ trigger.body.event_user_username | urlencode }}&action=deny" class="btn btn-deny">
+                Deny
+              </a>
+            </div>
+            
+            <p style="font-size: 14px; color: #666;">
+              Clicking <strong>Approve</strong> will add the "audiobook" role to this user's attributes in Authentik.<br>
+              Clicking <strong>Deny</strong> will log the denial (user account remains but without audiobook access).
+            </p>
+          </div>
+          <div class="footer">
+            Homelab Authentik User Approval System<br>
+            Powered by Kestra
+          </div>
+        </div>
+      </body>
+      </html>
+
+triggers:
+  - id: authentik_webhook
+    type: io.kestra.plugin.core.trigger.Webhook
+    key: 696b716e3bf4604c7de257725265faf10f55f23e1f04925b7cefcb7217f343c7

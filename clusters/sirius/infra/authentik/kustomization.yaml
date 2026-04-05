@@ -19,6 +19,7 @@ configMapGenerator:
       - ./blueprints/03-stages.yaml
       - ./blueprints/04-flows.yaml
       - ./blueprints/05-source-google.yaml
+      - ./blueprints/06-notification-new-user.yaml
       - ./blueprints/10-app-feeder.yaml
       - ./blueprints/10-app-audiobooksearch.yaml
       - ./blueprints/10-app-jackett.yaml
