@@ -77,9 +77,8 @@ spec:
                 username: sa
                 password: ""
             kestra:
-              server:
-                basicAuth:
-                  enabled: false
+              tutorialFlows:
+                enabled: false
               repository:
                 type: h2
               storage:
