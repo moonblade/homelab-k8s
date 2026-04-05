@@ -257,3 +257,7 @@ Updated n8n from 1.76.1 to 2.10.4. Switched from 8gears community Helm chart to 
 - Mar 23, 2026
 
 Configured Uptime Kuma monitoring for all moonblade.work services. Added 15 monitors covering all public-facing domains (homer, transmission, expense, n8n, audiobook, login) and internal *.sirius.moonblade.work endpoints (jackett, browse, meet, stremio, feeder, abb, weave, transmission, n8n). Internal endpoints bypass Authentik auth complexity while monitoring actual app health. Status page available at status.moonblade.work.
+
+- Apr 5, 2026
+
+Added Kestra workflow orchestration platform. Deployed as standalone with PostgreSQL sidecar for persistence, both backed by TrueNAS NFS storage. Available at kestra.moonblade.work (external) and kestra.sirius.moonblade.work (internal). Added to Homer dashboard.
