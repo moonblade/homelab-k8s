@@ -19,13 +19,13 @@ data:
         type: io.kestra.plugin.core.log.Log
         message: |
           New user notification received:
-          Username: {{ trigger.body.event_user_username ?? 'unknown' }}
-          Email: {{ trigger.body.event_user_email ?? 'unknown' }}
-          Severity: {{ trigger.body.severity ?? 'unknown' }}
+          Username: {{ trigger['body'].event_user_username ?? 'unknown' }}
+          Email: {{ trigger['body'].event_user_email ?? 'unknown' }}
+          Severity: {{ trigger['body'].severity ?? 'unknown' }}
 
       - id: mark_email_sent
         type: io.kestra.plugin.core.http.Request
-        uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/?username={{ trigger.body.event_user_username }}"
+        uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/?username={{ trigger['body'].event_user_username }}"
         method: GET
         allowFailed: true
         headers:
@@ -34,7 +34,7 @@ data:
 
       - id: set_approval_flag
         type: io.kestra.plugin.core.http.Request
-        uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ outputs.mark_email_sent.body | jq('.results[0].pk') | first }}/"
+        uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ outputs.mark_email_sent['body'] | jq('.results[0].pk') | first }}/"
         method: PATCH
         allowFailed: true
         headers:
@@ -42,7 +42,7 @@ data:
           Content-Type: application/json
         body: |
           {
-            "attributes": {{ outputs.mark_email_sent.body | jq('.results[0].attributes + {"approval_email_sent": true}') | first }}
+            "attributes": {{ outputs.mark_email_sent['body'] | jq('.results[0].attributes + {"approval_email_sent": true}') | first }}
           }
 
       - id: send_approval_email
@@ -54,69 +54,48 @@ data:
         password: "{{ secret('GMAIL_APP_PASSWORD') }}"
         from: "{{ secret('GMAIL_USERNAME') }}"
         to: "{{ secret('ADMIN_EMAIL') }}"
-        subject: "New Authentik User Approval: {{ trigger.body.event_user_username }}"
+        subject: "New Authentik User Approval: {{ trigger['body'].event_user_username }}"
         htmlTextContent: |
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <style>
-              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-              .header { background: #1a1a2e; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
-              .content { background: #f8f9fa; padding: 20px; border: 1px solid #e9ecef; }
-              .user-info { background: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
-              .user-info dt { font-weight: bold; color: #666; }
-              .user-info dd { margin: 0 0 10px 0; font-size: 16px; }
-              .buttons { text-align: center; margin: 25px 0; }
-              .btn { display: inline-block; padding: 14px 32px; margin: 8px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; }
-              .btn-approve { background: #28a745; color: white !important; }
-              .btn-deny { background: #dc3545; color: white !important; }
-              .footer { background: #e9ecef; padding: 15px; border-radius: 0 0 8px 8px; font-size: 12px; color: #666; text-align: center; }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <div class="header">
-                <h1 style="margin:0;">🔐 New User Approval Required</h1>
-              </div>
-              <div class="content">
-                <p>A new user has registered and requires approval for the <strong>audiobook</strong> role.</p>
-                
-                <div class="user-info">
-                  <dl>
-                    <dt>Username</dt>
-                    <dd>{{ trigger.body.event_user_username ?? 'N/A' }}</dd>
-                    
-                    <dt>Email</dt>
-                    <dd>{{ trigger.body.event_user_email ?? 'N/A' }}</dd>
-                    
-                    <dt>Notification Time</dt>
-                    <dd>{{ now() | date("yyyy-MM-dd HH:mm:ss") }} UTC</dd>
-                  </dl>
-                </div>
-                
-                <div class="buttons">
-                  <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ trigger.body.event_user_username | urlencode }}&amp;action=approve" class="btn btn-approve">
-                    Approve (Add Audiobook Role)
-                  </a>
-                  <br>
-                  <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ trigger.body.event_user_username | urlencode }}&amp;action=deny" class="btn btn-deny">
-                    Deny
-                  </a>
-                </div>
-                
-                <p style="font-size: 14px; color: #666;">
-                  Clicking <strong>Approve</strong> will add the "audiobook" role to this user's attributes in Authentik.<br>
-                  Clicking <strong>Deny</strong> will log the denial (user account remains but without audiobook access).
-                </p>
-              </div>
-              <div class="footer">
-                Homelab Authentik User Approval System<br>
-                Powered by Kestra
-              </div>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #1a1a2e; color: white; padding: 20px; border-radius: 8px 8px 0 0;">
+              <h1 style="margin:0;">New User Approval Required</h1>
             </div>
-          </body>
-          </html>
+            <div style="background: #f8f9fa; padding: 20px; border: 1px solid #e9ecef;">
+              <p>A new user has registered and requires approval for the <strong>audiobook</strong> role.</p>
+
+              <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <dl>
+                  <dt style="font-weight: bold; color: #666;">Username</dt>
+                  <dd style="margin: 0 0 10px 0; font-size: 16px;">{{ trigger['body'].event_user_username ?? 'N/A' }}</dd>
+
+                  <dt style="font-weight: bold; color: #666;">Email</dt>
+                  <dd style="margin: 0 0 10px 0; font-size: 16px;">{{ trigger['body'].event_user_email ?? 'N/A' }}</dd>
+
+                  <dt style="font-weight: bold; color: #666;">Notification Time</dt>
+                  <dd style="margin: 0 0 10px 0; font-size: 16px;">{{ now() | date("yyyy-MM-dd HH:mm:ss") }} UTC</dd>
+                </dl>
+              </div>
+
+              <div style="text-align: center; margin: 25px 0;">
+                <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ trigger['body'].event_user_username | urlencode }}&amp;action=approve" style="display: inline-block; padding: 14px 32px; margin: 8px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; background: #28a745; color: white;">
+                  Approve (Add Audiobook Role)
+                </a>
+                <br>
+                <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ trigger['body'].event_user_username | urlencode }}&amp;action=deny" style="display: inline-block; padding: 14px 32px; margin: 8px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; background: #dc3545; color: white;">
+                  Deny
+                </a>
+              </div>
+
+              <p style="font-size: 14px; color: #666;">
+                Clicking <strong>Approve</strong> will add the "audiobook" role to this user's attributes in Authentik.<br>
+                Clicking <strong>Deny</strong> will log the denial (user account remains but without audiobook access).
+              </p>
+            </div>
+            <div style="background: #e9ecef; padding: 15px; border-radius: 0 0 8px 8px; font-size: 12px; color: #666; text-align: center;">
+              Homelab Authentik User Approval System<br>
+              Powered by Kestra
+            </div>
+          </div>
 
     triggers:
       - id: authentik_webhook
@@ -168,20 +147,18 @@ data:
 
             - id: check_user_found
               type: io.kestra.plugin.core.flow.If
-              condition: "{{ outputs.get_user.code == 200 and (outputs.get_user.body | jq('.results | length') | first > 0) }}"
+              condition: "{{ outputs.get_user.code == 200 and (outputs.get_user['body'] | jq('.results | length') | first > 0) }}"
               then:
                 - id: update_user_roles
                   type: io.kestra.plugin.core.http.Request
-                  uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ outputs.get_user.body | jq('.results[0].pk') | first }}/"
+                  uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ outputs.get_user['body'] | jq('.results[0].pk') | first }}/"
                   method: PATCH
                   headers:
                     Authorization: "Bearer {{ secret('AUTHENTIK_API_TOKEN') }}"
                     Content-Type: application/json
                   body: |
                     {
-                      "attributes": {
-                        "roles": {{ outputs.get_user.body | jq('(.results[0].attributes.roles // []) + ["audiobook"] | unique') | first }}
-                      }
+                      "attributes": {{ outputs.get_user['body'] | jq('.results[0].attributes + {"roles": ((.results[0].attributes.roles // []) + ["audiobook"] | unique)}') | first }}
                     }
 
                 - id: log_approval_success
@@ -296,24 +273,13 @@ data:
           Authorization: "Bearer {{ secret('AUTHENTIK_API_TOKEN') }}"
           Accept: application/json
 
-      - id: find_pending_users
-        type: io.kestra.plugin.scripts.shell.Commands
-        runner: PROCESS
-        commands:
-          - |
-            echo '{{ outputs.fetch_users.body | jq(".results") | first }}' | jq -c '[.[] | select(
-              (.attributes.roles // [] | index("audiobook")) == null
-              and (.attributes.approval_email_sent // false) == false
-            ) | {username: .username, email: .email}]' > {{ outputDir }}/pending_users.json
-            cat {{ outputDir }}/pending_users.json
-
       - id: check_has_pending
         type: io.kestra.plugin.core.flow.If
-        condition: "{{ read(outputs.find_pending_users.outputFiles['pending_users.json']) != '[]' }}"
+        condition: "{{ outputs.fetch_users['body'] | jq('[.results[] | select((.attributes.roles // [] | index(\"audiobook\")) == null and (.attributes.approval_email_sent // false) == false)] | length > 0') | first }}"
         then:
           - id: for_each_user
             type: io.kestra.plugin.core.flow.EachSequential
-            value: "{{ read(outputs.find_pending_users.outputFiles['pending_users.json']) | jq('.[] | .username') }}"
+            value: "{{ outputs.fetch_users['body'] | jq('[.results[] | select((.attributes.roles // [] | index(\"audiobook\")) == null and (.attributes.approval_email_sent // false) == false) | .username]') | first }}"
             tasks:
               - id: get_user_detail
                 type: io.kestra.plugin.core.http.Request
@@ -323,6 +289,10 @@ data:
                 headers:
                   Authorization: "Bearer {{ secret('AUTHENTIK_API_TOKEN') }}"
                   Accept: application/json
+
+              - id: extract_user_info
+                type: io.kestra.plugin.core.debug.Return
+                format: "{{ currentEachOutput(outputs.get_user_detail).body | jq('.results[0].email') | first }}"
 
               - id: send_approval_email
                 type: io.kestra.plugin.email.MailSend
@@ -335,73 +305,51 @@ data:
                 to: "{{ secret('ADMIN_EMAIL') }}"
                 subject: "New Authentik User Approval: {{ taskrun.value }}"
                 htmlTextContent: |
-                  <!DOCTYPE html>
-                  <html>
-                  <head>
-                    <style>
-                      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-                      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                      .header { background: #1a1a2e; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
-                      .content { background: #f8f9fa; padding: 20px; border: 1px solid #e9ecef; }
-                      .user-info { background: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
-                      .user-info dt { font-weight: bold; color: #666; }
-                      .user-info dd { margin: 0 0 10px 0; font-size: 16px; }
-                      .buttons { text-align: center; margin: 25px 0; }
-                      .btn { display: inline-block; padding: 14px 32px; margin: 8px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; }
-                      .btn-approve { background: #28a745; color: white !important; }
-                      .btn-deny { background: #dc3545; color: white !important; }
-                      .footer { background: #e9ecef; padding: 15px; border-radius: 0 0 8px 8px; font-size: 12px; color: #666; text-align: center; }
-                      .badge { display: inline-block; background: #ffc107; color: #333; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
-                    </style>
-                  </head>
-                  <body>
-                    <div class="container">
-                      <div class="header">
-                        <h1 style="margin:0;">🔐 New User Approval Required</h1>
-                        <span class="badge">via scheduled poll</span>
-                      </div>
-                      <div class="content">
-                        <p>A new user has registered and requires approval for the <strong>audiobook</strong> role.</p>
-
-                        <div class="user-info">
-                          <dl>
-                            <dt>Username</dt>
-                            <dd>{{ taskrun.value }}</dd>
-
-                            <dt>Email</dt>
-                            <dd>{{ outputs.get_user_detail.body | jq('.results[0].email') | first }}</dd>
-
-                            <dt>Detected At</dt>
-                            <dd>{{ now() | date("yyyy-MM-dd HH:mm:ss") }} UTC</dd>
-                          </dl>
-                        </div>
-
-                        <div class="buttons">
-                          <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ taskrun.value | urlencode }}&amp;action=approve" class="btn btn-approve">
-                            Approve (Add Audiobook Role)
-                          </a>
-                          <br>
-                          <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ taskrun.value | urlencode }}&amp;action=deny" class="btn btn-deny">
-                            Deny
-                          </a>
-                        </div>
-
-                        <p style="font-size: 14px; color: #666;">
-                          Clicking <strong>Approve</strong> will add the "audiobook" role to this user's attributes in Authentik.<br>
-                          Clicking <strong>Deny</strong> will log the denial (user account remains but without audiobook access).
-                        </p>
-                      </div>
-                      <div class="footer">
-                        Homelab Authentik User Approval System<br>
-                        Powered by Kestra (polling fallback)
-                      </div>
+                  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="background: #1a1a2e; color: white; padding: 20px; border-radius: 8px 8px 0 0;">
+                      <h1 style="margin:0;">New User Approval Required</h1>
+                      <span style="display: inline-block; background: #ffc107; color: #333; padding: 2px 8px; border-radius: 4px; font-size: 12px;">via scheduled poll</span>
                     </div>
-                  </body>
-                  </html>
+                    <div style="background: #f8f9fa; padding: 20px; border: 1px solid #e9ecef;">
+                      <p>A new user has registered and requires approval for the <strong>audiobook</strong> role.</p>
+
+                      <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <dl>
+                          <dt style="font-weight: bold; color: #666;">Username</dt>
+                          <dd style="margin: 0 0 10px 0; font-size: 16px;">{{ taskrun.value }}</dd>
+
+                          <dt style="font-weight: bold; color: #666;">Email</dt>
+                          <dd style="margin: 0 0 10px 0; font-size: 16px;">{{ currentEachOutput(outputs.extract_user_info).value }}</dd>
+
+                          <dt style="font-weight: bold; color: #666;">Detected At</dt>
+                          <dd style="margin: 0 0 10px 0; font-size: 16px;">{{ now() | date("yyyy-MM-dd HH:mm:ss") }} UTC</dd>
+                        </dl>
+                      </div>
+
+                      <div style="text-align: center; margin: 25px 0;">
+                        <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ taskrun.value | urlencode }}&amp;action=approve" style="display: inline-block; padding: 14px 32px; margin: 8px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; background: #28a745; color: white;">
+                          Approve (Add Audiobook Role)
+                        </a>
+                        <br>
+                        <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ taskrun.value | urlencode }}&amp;action=deny" style="display: inline-block; padding: 14px 32px; margin: 8px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; background: #dc3545; color: white;">
+                          Deny
+                        </a>
+                      </div>
+
+                      <p style="font-size: 14px; color: #666;">
+                        Clicking <strong>Approve</strong> will add the "audiobook" role to this user's attributes in Authentik.<br>
+                        Clicking <strong>Deny</strong> will log the denial (user account remains but without audiobook access).
+                      </p>
+                    </div>
+                    <div style="background: #e9ecef; padding: 15px; border-radius: 0 0 8px 8px; font-size: 12px; color: #666; text-align: center;">
+                      Homelab Authentik User Approval System<br>
+                      Powered by Kestra (polling fallback)
+                    </div>
+                  </div>
 
               - id: mark_email_sent
                 type: io.kestra.plugin.core.http.Request
-                uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ outputs.get_user_detail.body | jq('.results[0].pk') | first }}/"
+                uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ currentEachOutput(outputs.get_user_detail).body | jq('.results[0].pk') | first }}/"
                 method: PATCH
                 allowFailed: true
                 headers:
@@ -409,7 +357,7 @@ data:
                   Content-Type: application/json
                 body: |
                   {
-                    "attributes": {{ outputs.get_user_detail.body | jq('.results[0].attributes + {"approval_email_sent": true}') | first }}
+                    "attributes": {{ currentEachOutput(outputs.get_user_detail).body | jq('.results[0].attributes + {"approval_email_sent": true}') | first }}
                   }
 
               - id: log_email_sent
