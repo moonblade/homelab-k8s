@@ -12,7 +12,7 @@ entries:
     attrs:
       name: kestra-new-user-webhook
       mode: webhook
-      webhook_url: https://kestra.moonblade.work/api/v1/executions/webhook/homelab/new-user-approval/696b716e3bf4604c7de257725265faf10f55f23e1f04925b7cefcb7217f343c7
+      webhook_url: http://kestra.kestra.svc.cluster.local:8080/api/v1/executions/webhook/homelab/new-user-approval/696b716e3bf4604c7de257725265faf10f55f23e1f04925b7cefcb7217f343c7
 
   - model: authentik_policies_event_matcher.eventmatcherpolicy
     id: policy-new-user-created

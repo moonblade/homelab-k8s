@@ -74,11 +74,11 @@ data:
                 </div>
                 
                 <div class="buttons">
-                  <a href="https://kestra.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ trigger.body.event_user_username | urlencode }}&action=approve" class="btn btn-approve">
+                  <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ trigger.body.event_user_username | urlencode }}&amp;action=approve" class="btn btn-approve">
                     Approve (Add Audiobook Role)
                   </a>
                   <br>
-                  <a href="https://kestra.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ trigger.body.event_user_username | urlencode }}&action=deny" class="btn btn-deny">
+                  <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}?username={{ trigger.body.event_user_username | urlencode }}&amp;action=deny" class="btn btn-deny">
                     Deny
                   </a>
                 </div>
@@ -221,5 +221,5 @@ data:
         type: io.kestra.plugin.core.trigger.Webhook
         key: "{{ secret('WEBHOOK_KEY_USER_APPROVAL_ACTION') }}"
         inputs:
-          username: "{{ trigger.parameters.username[0] }}"
-          action: "{{ trigger.parameters.action[0] ?? 'deny' }}"
+          username: "{{ (trigger.parameters.username ?? ['unknown'])[0] }}"
+          action: "{{ (trigger.parameters.action ?? ['deny'])[0] }}"
