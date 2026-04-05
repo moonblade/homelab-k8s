@@ -1,0 +1,132 @@
+# Kestra Flow: User Approval Action Handler
+# Triggered by approve/deny button clicks from email.
+# Updates user attributes in Authentik via API.
+#
+# Import this flow via Kestra UI or API:
+#   curl -X POST "https://kestra.moonblade.work/api/v1/flows" \
+#     -H "Content-Type: application/x-yaml" \
+#     --data-binary @user-approval-action.yaml
+
+id: user-approval-action
+namespace: homelab
+description: |
+  Handles approve/deny actions from the approval email.
+  - Approve: Adds "audiobook" role to user.attributes.roles in Authentik
+  - Deny: Logs the denial (no role change)
+  
+  Webhook URL: https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75
+
+labels:
+  app: authentik-approval
+  team: homelab
+
+inputs:
+  - id: username
+    type: STRING
+    required: true
+    description: Username to approve/deny
+  - id: action
+    type: STRING
+    required: true
+    defaults: "deny"
+    description: Action to take (approve or deny)
+
+tasks:
+  - id: log_action
+    type: io.kestra.plugin.core.log.Log
+    message: "Processing {{ inputs.action }} for user: {{ inputs.username }}"
+
+  - id: process_action
+    type: io.kestra.plugin.core.flow.Switch
+    value: "{{ inputs.action }}"
+    cases:
+      approve:
+        - id: get_user
+          type: io.kestra.plugin.core.http.Request
+          uri: "https://authentik.moonblade.work/api/v3/core/users/?username={{ inputs.username }}"
+          method: GET
+          headers:
+            Authorization: "Bearer {{ secret('AUTHENTIK_API_TOKEN') }}"
+            Accept: application/json
+
+        - id: check_user_found
+          type: io.kestra.plugin.core.flow.If
+          condition: "{{ outputs.get_user.body | jq('.results | length') | first > 0 }}"
+          then:
+            - id: update_user_roles
+              type: io.kestra.plugin.core.http.Request
+              uri: "https://authentik.moonblade.work/api/v3/core/users/{{ outputs.get_user.body | jq('.results[0].pk') | first }}/"
+              method: PATCH
+              headers:
+                Authorization: "Bearer {{ secret('AUTHENTIK_API_TOKEN') }}"
+                Content-Type: application/json
+              body: |
+                {
+                  "attributes": {
+                    "roles": {{ outputs.get_user.body | jq('(.results[0].attributes.roles // []) + ["audiobook"] | unique') | first }}
+                  }
+                }
+
+            - id: log_approval_success
+              type: io.kestra.plugin.core.log.Log
+              message: "Successfully added audiobook role to user: {{ inputs.username }}"
+
+            - id: send_confirmation_email
+              type: io.kestra.plugin.email.MailSend
+              host: smtp.gmail.com
+              port: 465
+              transportStrategy: SMTPS
+              username: "{{ secret('GMAIL_USERNAME') }}"
+              password: "{{ secret('GMAIL_APP_PASSWORD') }}"
+              from: "{{ secret('GMAIL_USERNAME') }}"
+              to: "{{ secret('ADMIN_EMAIL') }}"
+              subject: "User Approved: {{ inputs.username }}"
+              htmlTextContent: |
+                <div style="font-family: sans-serif; padding: 20px;">
+                  <h2 style="color: #28a745;">User Approved Successfully</h2>
+                  <p><strong>Username:</strong> {{ inputs.username }}</p>
+                  <p><strong>Role Added:</strong> audiobook</p>
+                  <p><strong>Time:</strong> {{ now() | date("yyyy-MM-dd HH:mm:ss") }} UTC</p>
+                </div>
+          else:
+            - id: log_user_not_found
+              type: io.kestra.plugin.core.log.Log
+              message: "User not found: {{ inputs.username }}"
+              level: WARN
+
+      deny:
+        - id: log_denial
+          type: io.kestra.plugin.core.log.Log
+          message: "User denied: {{ inputs.username }}"
+
+        - id: send_denial_confirmation
+          type: io.kestra.plugin.email.MailSend
+          host: smtp.gmail.com
+          port: 465
+          transportStrategy: SMTPS
+          username: "{{ secret('GMAIL_USERNAME') }}"
+          password: "{{ secret('GMAIL_APP_PASSWORD') }}"
+          from: "{{ secret('GMAIL_USERNAME') }}"
+          to: "{{ secret('ADMIN_EMAIL') }}"
+          subject: "User Denied: {{ inputs.username }}"
+          htmlTextContent: |
+            <div style="font-family: sans-serif; padding: 20px;">
+              <h2 style="color: #dc3545;">User Denied</h2>
+              <p><strong>Username:</strong> {{ inputs.username }}</p>
+              <p><strong>Time:</strong> {{ now() | date("yyyy-MM-dd HH:mm:ss") }} UTC</p>
+              <p>The user account remains active but was not granted the audiobook role.</p>
+            </div>
+
+    defaults:
+      - id: log_invalid_action
+        type: io.kestra.plugin.core.log.Log
+        message: "Invalid action received: {{ inputs.action }}"
+        level: WARN
+
+triggers:
+  - id: approval_webhook
+    type: io.kestra.plugin.core.trigger.Webhook
+    key: 8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75
+    inputs:
+      username: "{{ trigger.parameters.username[0] }}"
+      action: "{{ trigger.parameters.action[0] ?? 'deny' }}"

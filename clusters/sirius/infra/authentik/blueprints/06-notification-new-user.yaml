@@ -1,0 +1,48 @@
+version: 1
+metadata:
+  name: notification-new-user-webhook
+  labels:
+    blueprints.goauthentik.io/description: "Webhook notification for new user approval workflow"
+entries:
+  - model: authentik_events.notificationtransport
+    id: transport-new-user-webhook
+    state: present
+    identifiers:
+      name: kestra-new-user-webhook
+    attrs:
+      name: kestra-new-user-webhook
+      mode: webhook
+      webhook_url: https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/new-user-approval/696b716e3bf4604c7de257725265faf10f55f23e1f04925b7cefcb7217f343c7
+
+  - model: authentik_policies_event_matcher.eventmatcherpolicy
+    id: policy-new-user-created
+    state: present
+    identifiers:
+      name: New user created
+    attrs:
+      name: New user created
+      action: model_created
+      model: authentik_core.user
+
+  - model: authentik_events.notificationrule
+    id: rule-new-user-approval
+    state: present
+    identifiers:
+      name: New user approval request
+    attrs:
+      name: New user approval request
+      transports:
+        - !KeyOf transport-new-user-webhook
+      severity: notice
+
+  - model: authentik_policies.policybinding
+    id: binding-new-user-rule
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf rule-new-user-approval
+    attrs:
+      policy: !KeyOf policy-new-user-created
+      target: !KeyOf rule-new-user-approval
+      order: 0
+      enabled: true
