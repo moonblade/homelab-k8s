@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kestra
+  labels:
+    app: kestra
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: kestra
+  template:
+    metadata:
+      labels:
+        app: kestra
+    spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: postgres:17.4-alpine
+        command:
+          - sh
+          - -c
+          - |
+            until pg_isready -h localhost -p 5432 -U kestra; do
+              echo "Waiting for PostgreSQL..."
+              sleep 2
+            done
+            echo "PostgreSQL is ready"
+      containers:
+      - name: kestra
+        image: kestra/kestra:v0.22.5
+        command:
+          - sh
+          - -c
+          - /app/kestra server standalone --worker-thread=4
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: management
+          containerPort: 8081
+          protocol: TCP
+        env:
+        - name: KESTRA_CONFIGURATION
+          value: |
+            datasources:
+              postgres:
+                url: jdbc:postgresql://localhost:5432/kestra
+                driverClassName: org.postgresql.Driver
+                username: kestra
+                password: kestra
+            kestra:
+              server:
+                basicAuth:
+                  enabled: false
+              repository:
+                type: postgres
+              storage:
+                type: local
+                local:
+                  basePath: /app/storage
+              queue:
+                type: postgres
+        volumeMounts:
+        - name: kestra-storage
+          mountPath: /app/storage
+        - name: kestra-tmp
+          mountPath: /tmp/kestra
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+      - name: postgres
+        image: postgres:17.4-alpine
+        ports:
+        - name: postgres
+          containerPort: 5432
+          protocol: TCP
+        env:
+        - name: POSTGRES_DB
+          value: kestra
+        - name: POSTGRES_USER
+          value: kestra
+        - name: POSTGRES_PASSWORD
+          value: kestra
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-U", "kestra"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      volumes:
+      - name: kestra-storage
+        nfs:
+          server: 192.168.1.10
+          path: /mnt/primary/root/config/kestra/storage
+          readOnly: false
+      - name: kestra-tmp
+        emptyDir: {}
+      - name: postgres-data
+        nfs:
+          server: 192.168.1.10
+          path: /mnt/primary/root/storage/kestra/postgresql
+          readOnly: false
