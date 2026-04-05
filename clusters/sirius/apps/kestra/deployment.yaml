@@ -19,13 +19,14 @@ spec:
       - name: kestra
         image: kestra/kestra:v0.22.5
         command:
-          - sh
+          - bash
           - -c
           - |
-            until pg_isready -h localhost -p 5432 -U kestra; do
+            until (echo > /dev/tcp/localhost/5432) 2>/dev/null; do
               echo "Waiting for PostgreSQL sidecar..."
               sleep 2
             done
+            sleep 3
             exec /app/kestra server standalone --worker-thread=4
         ports:
         - name: http
