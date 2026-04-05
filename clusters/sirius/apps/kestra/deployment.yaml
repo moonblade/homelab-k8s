@@ -27,6 +27,9 @@ spec:
               sleep 2
             done
             sleep 3
+            echo "Installing email plugin..."
+            /app/kestra plugins install io.kestra.plugin:plugin-email:LATEST
+            echo "Starting Kestra server..."
             exec /app/kestra server standalone --worker-thread=4 --flow-path=/etc/kestra/flows
         ports:
         - name: http
