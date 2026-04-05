@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: dedup
-              image: curlimages/curl:8.14.1
+              image: python:3.13-alpine
               env:
                 - name: ABS_URL
                   value: "http://audiobookshelf.audiobookshelf.svc.cluster.local"
@@ -22,71 +22,111 @@ spec:
                     secretKeyRef:
                       name: audiobookshelf-dedup-secret
                       key: api-key
+              volumeMounts:
+                - name: audiobooks
+                  mountPath: /audiobooks
+                  mountPropagation: HostToContainer
               command:
-                - sh
+                - python3
                 - -c
                 - |
-                  set -e
+                  import json, os, shutil
+                  from urllib.request import Request, urlopen
+                  from collections import defaultdict
+
+                  ABS_URL = os.environ["ABS_URL"]
+                  API_KEY = os.environ["ABS_API_KEY"]
+
+                  def api(path, method="GET", data=None):
+                      url = f"{ABS_URL}{path}"
+                      req = Request(url, method=method)
+                      req.add_header("Authorization", f"Bearer {API_KEY}")
+                      if data is not None:
+                          req.add_header("Content-Type", "application/json")
+                          return json.loads(urlopen(req, json.dumps(data).encode()).read())
+                      return json.loads(urlopen(req).read())
 
                   # Get all libraries
-                  LIBRARIES=$(curl -s -f "$ABS_URL/api/libraries" \
-                    -H "Authorization: Bearer $ABS_API_KEY")
+                  libraries = api("/api/libraries").get("libraries", [])
+                  total_deleted = 0
 
-                  # Extract library IDs (may include folder IDs, handled below)
-                  LIB_IDS=$(echo "$LIBRARIES" | sed 's/,/\n/g' | grep '"id"' | head -10 | sed 's/.*"id":"\([^"]*\)".*/\1/' | grep -v '{')
+                  for lib in libraries:
+                      lib_id = lib["id"]
+                      lib_name = lib["name"]
+                      print(f"Checking library: {lib_name} ({lib_id})")
 
-                  TOTAL_DELETED=0
+                      items = api(f"/api/libraries/{lib_id}/items?limit=0").get("results", [])
 
-                  for LIB_ID in $LIB_IDS; do
-                    # Get all items in this library (skip if ID is invalid)
-                    ITEMS=$(curl -s "$ABS_URL/api/libraries/$LIB_ID/items?limit=0" \
-                      -H "Authorization: Bearer $ABS_API_KEY") || continue
-                    echo "$ITEMS" | grep -q '"results"' || continue
+                      # --- Pass 1: Exact path duplicates (scanner race condition) ---
+                      by_path = defaultdict(list)
+                      for item in items:
+                          by_path[item["path"]].append(item)
 
-                    echo "Checking library: $LIB_ID"
+                      path_delete_ids = []
+                      for path, group in by_path.items():
+                          if len(group) > 1:
+                              # Keep oldest (lowest addedAt), delete rest
+                              group.sort(key=lambda x: x.get("addedAt", 0))
+                              for dup in group[1:]:
+                                  path_delete_ids.append(dup["id"])
+                                  print(f"  [path-dup] Removing {dup['id']} at {path}")
 
-                    # Find duplicate paths and collect IDs to delete
-                    # For each set of duplicates, keep the one with the earliest addedAt
-                    DELETE_IDS=$(echo "$ITEMS" | sed 's/\[/\n/g; s/\]/\n/g; s/{/\n{/g' | \
-                      grep '"id"' | \
-                      sed 's/.*"id":"\([^"]*\)".*"path":"\([^"]*\)".*"addedAt":\([0-9]*\).*/\1|\2|\3/' | \
-                      grep '|.*|' | \
-                      sort -t'|' -k2,2 -k3,3n | \
-                      awk -F'|' '
-                        {
-                          if (seen[$2]++) {
-                            print $1
-                          }
-                        }
-                      ')
+                      # --- Pass 2: Same title + same duration, different paths (beets copies) ---
+                      by_title_dur = defaultdict(list)
+                      # Rebuild items minus path dupes already marked
+                      remaining = [i for i in items if i["id"] not in path_delete_ids]
+                      for item in remaining:
+                          title = item.get("media", {}).get("metadata", {}).get("title", "")
+                          duration = int(item.get("media", {}).get("duration", 0))
+                          if title and duration > 0:
+                              by_title_dur[(title, duration)].append(item)
 
-                    if [ -z "$DELETE_IDS" ]; then
-                      echo "  No duplicates found"
-                      continue
-                    fi
+                      title_delete_ids = []
+                      dirs_to_delete = []
+                      for (title, dur), group in by_title_dur.items():
+                          if len(group) < 2:
+                              continue
 
-                    COUNT=$(echo "$DELETE_IDS" | wc -l | tr -d ' ')
-                    echo "  Found $COUNT duplicate(s) to remove"
+                          # Score paths: prefer deeper (beets-structured Author/Title)
+                          # over shallow (raw download name)
+                          def path_depth(item):
+                              return item["path"].count("/")
 
-                    # Build JSON array of IDs to delete
-                    JSON_IDS=""
-                    for ID in $DELETE_IDS; do
-                      if [ -z "$JSON_IDS" ]; then
-                        JSON_IDS="\"$ID\""
-                      else
-                        JSON_IDS="$JSON_IDS,\"$ID\""
-                      fi
-                    done
+                          group.sort(key=path_depth, reverse=True)
+                          keep = group[0]
+                          for dup in group[1:]:
+                              title_delete_ids.append(dup["id"])
+                              dirs_to_delete.append(dup["path"])
+                              print(f"  [title-dup] \"{title}\" ({dur}s)")
+                              print(f"    Keep: {keep['path']}")
+                              print(f"    Delete: {dup['path']}")
 
-                    # Batch delete duplicates (deletes DB entries only, not files)
-                    curl -s -f -X POST "$ABS_URL/api/items/batch/delete" \
-                      -H "Authorization: Bearer $ABS_API_KEY" \
-                      -H "Content-Type: application/json" \
-                      -d "{\"libraryItemIds\": [$JSON_IDS]}"
+                      # --- Execute deletions ---
+                      all_delete_ids = path_delete_ids + title_delete_ids
+                      if not all_delete_ids:
+                          print("  No duplicates found")
+                          continue
 
-                    echo "  Deleted $COUNT duplicate entries"
-                    TOTAL_DELETED=$((TOTAL_DELETED + COUNT))
-                  done
+                      # Delete from ABS database
+                      api("/api/items/batch/delete", method="POST",
+                          data={"libraryItemIds": all_delete_ids})
+                      print(f"  Removed {len(all_delete_ids)} ABS entries")
 
-                  echo "Done. Total duplicates removed: $TOTAL_DELETED"
+                      # Delete old directories from disk
+                      for dir_path in dirs_to_delete:
+                          if os.path.isdir(dir_path):
+                              shutil.rmtree(dir_path)
+                              print(f"  Deleted from disk: {dir_path}")
+                          else:
+                              print(f"  Not found on disk (already gone): {dir_path}")
+
+                      total_deleted += len(all_delete_ids)
+
+                  print(f"\nDone. Total duplicates removed: {total_deleted}")
+          volumes:
+            - name: audiobooks
+              nfs:
+                server: 192.168.1.10
+                path: /mnt/primary/root/audiobooks
+                readOnly: false
           restartPolicy: OnFailure
