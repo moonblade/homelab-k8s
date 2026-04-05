@@ -137,7 +137,7 @@ data:
           approve:
             - id: get_user
               type: io.kestra.plugin.core.http.Request
-              uri: "https://authentik-server.authentik.svc.cluster.local/api/v3/core/users/?username={{ inputs.username }}"
+              uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/?username={{ inputs.username }}"
               method: GET
               allowFailed: true
               headers:
@@ -150,7 +150,7 @@ data:
               then:
                 - id: update_user_roles
                   type: io.kestra.plugin.core.http.Request
-                  uri: "https://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ outputs.get_user.body | jq('.results[0].pk') | first }}/"
+                  uri: "http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ outputs.get_user.body | jq('.results[0].pk') | first }}/"
                   method: PATCH
                   headers:
                     Authorization: "Bearer {{ secret('AUTHENTIK_API_TOKEN') }}"
