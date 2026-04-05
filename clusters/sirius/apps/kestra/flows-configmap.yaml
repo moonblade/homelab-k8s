@@ -137,19 +137,20 @@ data:
           approve:
             - id: get_user
               type: io.kestra.plugin.core.http.Request
-              uri: "https://authentik.moonblade.work/api/v3/core/users/?username={{ inputs.username }}"
+              uri: "https://authentik-server.authentik.svc.cluster.local/api/v3/core/users/?username={{ inputs.username }}"
               method: GET
+              allowFailed: true
               headers:
                 Authorization: "Bearer {{ secret('AUTHENTIK_API_TOKEN') }}"
                 Accept: application/json
 
             - id: check_user_found
               type: io.kestra.plugin.core.flow.If
-              condition: "{{ outputs.get_user.body | jq('.results | length') | first > 0 }}"
+              condition: "{{ outputs.get_user.code == 200 and (outputs.get_user.body | jq('.results | length') | first > 0) }}"
               then:
                 - id: update_user_roles
                   type: io.kestra.plugin.core.http.Request
-                  uri: "https://authentik.moonblade.work/api/v3/core/users/{{ outputs.get_user.body | jq('.results[0].pk') | first }}/"
+                  uri: "https://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ outputs.get_user.body | jq('.results[0].pk') | first }}/"
                   method: PATCH
                   headers:
                     Authorization: "Bearer {{ secret('AUTHENTIK_API_TOKEN') }}"
@@ -190,7 +191,7 @@ data:
               else:
                 - id: log_user_not_found
                   type: io.kestra.plugin.core.log.Log
-                  message: "User not found: {{ inputs.username }}"
+                  message: "User not found or API error for: {{ inputs.username }}"
                   level: WARN
 
                 - id: result_not_found
