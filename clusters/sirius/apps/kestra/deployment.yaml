@@ -23,7 +23,7 @@ spec:
           - -c
           - |
             echo "Installing email plugin to shared volume..."
-            /app/kestra plugins install io.kestra.plugin:plugin-email:1.1.1 --plugins-path=/plugins
+            /app/kestra plugins install io.kestra.plugin:plugin-email:1.1.1 --plugins=/plugins
             echo "Plugin installation complete"
             ls -la /plugins/
         volumeMounts:
@@ -42,7 +42,7 @@ spec:
             done
             sleep 3
             echo "Starting Kestra server with pre-installed plugins..."
-            exec /app/kestra server standalone --worker-thread=4 --flow-path=/etc/kestra/flows --plugins-path=/plugins
+            exec /app/kestra server standalone --worker-thread=4 --flow-path=/etc/kestra/flows --plugins=/plugins
         ports:
         - name: http
           containerPort: 8080
