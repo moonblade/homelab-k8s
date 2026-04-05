@@ -7,6 +7,8 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: kestra
@@ -19,16 +21,10 @@ spec:
       - name: kestra
         image: kestra/kestra:v1.3.7
         command:
-          - bash
-          - -c
-          - |
-            until (echo > /dev/tcp/localhost/5432) 2>/dev/null; do
-              echo "Waiting for PostgreSQL sidecar..."
-              sleep 2
-            done
-            sleep 3
-            echo "Starting Kestra server..."
-            exec /app/kestra server standalone --worker-thread=4
+          - /app/kestra
+          - server
+          - standalone
+          - --worker-thread=4
         ports:
         - name: http
           containerPort: 8080
@@ -76,26 +72,28 @@ spec:
                   paths:
                     - /etc/kestra/flows
             datasources:
-              postgres:
-                url: jdbc:postgresql://localhost:5432/kestra
-                driverClassName: org.postgresql.Driver
-                username: kestra
-                password: kestra
+              h2:
+                url: jdbc:h2:file:/app/db/kestra;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+                driverClassName: org.h2.Driver
+                username: sa
+                password: ""
             kestra:
               server:
                 basicAuth:
                   enabled: false
               repository:
-                type: postgres
+                type: h2
               storage:
                 type: local
                 local:
                   basePath: /app/storage
               queue:
-                type: postgres
+                type: h2
         volumeMounts:
         - name: kestra-storage
           mountPath: /app/storage
+        - name: kestra-db
+          mountPath: /app/db
         - name: kestra-tmp
           mountPath: /tmp/kestra
         - name: kestra-flows
@@ -122,36 +120,6 @@ spec:
           limits:
             cpu: 2000m
             memory: 4Gi
-      - name: postgres
-        image: postgres:17.4-alpine
-        ports:
-        - name: postgres
-          containerPort: 5432
-          protocol: TCP
-        env:
-        - name: POSTGRES_DB
-          value: kestra
-        - name: POSTGRES_USER
-          value: kestra
-        - name: POSTGRES_PASSWORD
-          value: kestra
-        - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
-        readinessProbe:
-          exec:
-            command: ["pg_isready", "-U", "kestra"]
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        resources:
-          requests:
-            cpu: 100m
-            memory: 256Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
       volumes:
       - name: kestra-storage
         nfs:
@@ -163,8 +131,8 @@ spec:
       - name: kestra-flows
         configMap:
           name: kestra-flows
-      - name: postgres-data
+      - name: kestra-db
         nfs:
           server: 192.168.1.10
-          path: /mnt/primary/root/storage/kestra/postgresql
+          path: /mnt/primary/root/storage/kestra/db
           readOnly: false
