@@ -21,10 +21,9 @@ spec:
       - name: kestra
         image: kestra/kestra:v1.3.7
         command:
-          - /app/kestra
-          - server
-          - standalone
-          - --worker-thread=4
+          - bash
+          - -c
+          - exec /app/kestra server standalone --worker-thread=4
         ports:
         - name: http
           containerPort: 8080
