@@ -15,25 +15,18 @@ spec:
       labels:
         app: kestra
     spec:
-      initContainers:
-      - name: wait-for-postgres
-        image: postgres:17.4-alpine
-        command:
-          - sh
-          - -c
-          - |
-            until pg_isready -h localhost -p 5432 -U kestra; do
-              echo "Waiting for PostgreSQL..."
-              sleep 2
-            done
-            echo "PostgreSQL is ready"
       containers:
       - name: kestra
         image: kestra/kestra:v0.22.5
         command:
           - sh
           - -c
-          - /app/kestra server standalone --worker-thread=4
+          - |
+            until pg_isready -h localhost -p 5432 -U kestra; do
+              echo "Waiting for PostgreSQL sidecar..."
+              sleep 2
+            done
+            exec /app/kestra server standalone --worker-thread=4
         ports:
         - name: http
           containerPort: 8080
