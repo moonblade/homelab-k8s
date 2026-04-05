@@ -27,7 +27,7 @@ spec:
               sleep 2
             done
             sleep 3
-            exec /app/kestra server standalone --worker-thread=4
+            exec /app/kestra server standalone --worker-thread=4 --flow-path=/etc/kestra/flows
         ports:
         - name: http
           containerPort: 8080
@@ -56,6 +56,16 @@ spec:
             secretKeyRef:
               name: kestra-secrets
               key: AUTHENTIK_API_TOKEN
+        - name: SECRET_WEBHOOK_KEY_NEW_USER_APPROVAL
+          valueFrom:
+            secretKeyRef:
+              name: kestra-secrets
+              key: WEBHOOK_KEY_NEW_USER_APPROVAL
+        - name: SECRET_WEBHOOK_KEY_USER_APPROVAL_ACTION
+          valueFrom:
+            secretKeyRef:
+              name: kestra-secrets
+              key: WEBHOOK_KEY_USER_APPROVAL_ACTION
         - name: KESTRA_CONFIGURATION
           value: |
             datasources:
@@ -81,6 +91,9 @@ spec:
           mountPath: /app/storage
         - name: kestra-tmp
           mountPath: /tmp/kestra
+        - name: kestra-flows
+          mountPath: /etc/kestra/flows
+          readOnly: true
         readinessProbe:
           httpGet:
             path: /health
@@ -140,6 +153,9 @@ spec:
           readOnly: false
       - name: kestra-tmp
         emptyDir: {}
+      - name: kestra-flows
+        configMap:
+          name: kestra-flows
       - name: postgres-data
         nfs:
           server: 192.168.1.10
