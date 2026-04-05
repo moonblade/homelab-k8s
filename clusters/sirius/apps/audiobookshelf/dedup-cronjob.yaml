@@ -112,8 +112,12 @@ spec:
                           data={"libraryItemIds": all_delete_ids})
                       print(f"  Removed {len(all_delete_ids)} ABS entries")
 
-                      # Delete old directories from disk
+                      # Delete old directories from disk (only under /audiobooks, never downloads)
+                      SAFE_PREFIX = "/audiobooks/"
                       for dir_path in dirs_to_delete:
+                          if not dir_path.startswith(SAFE_PREFIX):
+                              print(f"  SKIP disk delete (outside {SAFE_PREFIX}): {dir_path}")
+                              continue
                           if os.path.isdir(dir_path):
                               shutil.rmtree(dir_path)
                               print(f"  Deleted from disk: {dir_path}")
