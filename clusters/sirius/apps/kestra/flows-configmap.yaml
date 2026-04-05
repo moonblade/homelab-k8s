@@ -235,6 +235,11 @@ data:
             type: io.kestra.plugin.core.debug.Return
             format: "Error: invalid action '{{ inputs.action }}' for {{ inputs.username }}"
 
+    outputs:
+      - id: response
+        type: STRING
+        value: "{{ outputs.result_approved.value ?? outputs.result_not_found.value ?? outputs.result_denied.value ?? outputs.result_invalid.value ?? 'Unknown error' }}"
+
     triggers:
       - id: approval_webhook
         type: io.kestra.plugin.core.trigger.Webhook
