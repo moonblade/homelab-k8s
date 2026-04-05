@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: kestra
-        image: kestra/kestra:v0.22.5
+        image: kestra/kestra:v1.3.7
         command:
           - bash
           - -c
@@ -28,7 +28,7 @@ spec:
             done
             sleep 3
             echo "Installing email plugin..."
-            /app/kestra plugins install io.kestra.plugin:plugin-email:LATEST
+            /app/kestra plugins install io.kestra.plugin:plugin-email:1.1.1
             echo "Starting Kestra server..."
             exec /app/kestra server standalone --worker-thread=4 --flow-path=/etc/kestra/flows
         ports:
