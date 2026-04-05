@@ -69,7 +69,8 @@ spec:
                 watch:
                   enabled: true
                   paths:
-                    - /etc/kestra/flows
+                    - /app/flows
+                    - /etc/kestra/configmap-flows
             datasources:
               h2:
                 url: jdbc:h2:file:/app/db/kestra;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -94,8 +95,10 @@ spec:
           mountPath: /app/db
         - name: kestra-tmp
           mountPath: /tmp/kestra
+        - name: kestra-flows-dir
+          mountPath: /app/flows
         - name: kestra-flows
-          mountPath: /etc/kestra/flows
+          mountPath: /etc/kestra/configmap-flows
           readOnly: true
         readinessProbe:
           httpGet:
@@ -125,6 +128,8 @@ spec:
           path: /mnt/primary/root/config/kestra/storage
           readOnly: false
       - name: kestra-tmp
+        emptyDir: {}
+      - name: kestra-flows-dir
         emptyDir: {}
       - name: kestra-flows
         configMap:
