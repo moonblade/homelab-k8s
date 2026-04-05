@@ -28,7 +28,7 @@ spec:
             done
             sleep 3
             echo "Starting Kestra server..."
-            exec /app/kestra server standalone --worker-thread=4 --flow-path=/etc/kestra/flows
+            exec /app/kestra server standalone --worker-thread=4
         ports:
         - name: http
           containerPort: 8080
@@ -69,6 +69,12 @@ spec:
               key: WEBHOOK_KEY_USER_APPROVAL_ACTION
         - name: KESTRA_CONFIGURATION
           value: |
+            micronaut:
+              io:
+                watch:
+                  enabled: true
+                  paths:
+                    - /etc/kestra/flows
             datasources:
               postgres:
                 url: jdbc:postgresql://localhost:5432/kestra

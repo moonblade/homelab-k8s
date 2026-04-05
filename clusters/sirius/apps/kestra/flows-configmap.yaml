@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: kestra-flows
 data:
-  new-user-approval.yaml: |
+  main_homelab.new-user-approval.yml: |
     id: new-user-approval
     namespace: homelab
     description: |
@@ -101,7 +101,7 @@ data:
         type: io.kestra.plugin.core.trigger.Webhook
         key: "{{ secret('WEBHOOK_KEY_NEW_USER_APPROVAL') }}"
 
-  user-approval-action.yaml: |
+  main_homelab.user-approval-action.yml: |
     id: user-approval-action
     namespace: homelab
     description: |
