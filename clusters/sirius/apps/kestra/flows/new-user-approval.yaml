@@ -13,7 +13,7 @@ description: |
   Receives webhook from Authentik when a new user is created.
   Sends approval email to admin with approve/deny links.
   
-  Webhook URL: https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/new-user-approval/696b716e3bf4604c7de257725265faf10f55f23e1f04925b7cefcb7217f343c7
+  Webhook URL: https://kestra.moonblade.work/api/v1/executions/webhook/homelab/new-user-approval/696b716e3bf4604c7de257725265faf10f55f23e1f04925b7cefcb7217f343c7
 
 labels:
   app: authentik-approval
@@ -79,11 +79,11 @@ tasks:
             </div>
             
             <div class="buttons">
-              <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75?username={{ trigger.body.event_user_username | urlencode }}&action=approve" class="btn btn-approve">
+              <a href="https://kestra.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75?username={{ trigger.body.event_user_username | urlencode }}&action=approve" class="btn btn-approve">
                 Approve (Add Audiobook Role)
               </a>
               <br>
-              <a href="https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75?username={{ trigger.body.event_user_username | urlencode }}&action=deny" class="btn btn-deny">
+              <a href="https://kestra.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75?username={{ trigger.body.event_user_username | urlencode }}&action=deny" class="btn btn-deny">
                 Deny
               </a>
             </div>

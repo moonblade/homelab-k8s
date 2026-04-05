@@ -14,7 +14,7 @@ description: |
   - Approve: Adds "audiobook" role to user.attributes.roles in Authentik
   - Deny: Logs the denial (no role change)
   
-  Webhook URL: https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75
+  Webhook URL: https://kestra.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833287e0a5b572424399d58f387b0df588f47171ec0319100c6cabf71b75
 
 labels:
   app: authentik-approval

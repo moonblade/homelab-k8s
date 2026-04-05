@@ -40,7 +40,7 @@ Configure these secrets in Kestra (Settings > Secrets):
 
 | Secret Name | Description |
 |-------------|-------------|
-| GMAIL_USERNAME | Gmail address (e.g., mnishamk1995@gmail.com) |
+| GMAIL_USERNAME | Gmail address for sending emails |
 | GMAIL_APP_PASSWORD | Gmail App Password for SMTP |
 | ADMIN_EMAIL | Email to receive approval requests |
 | AUTHENTIK_API_TOKEN | Authentik API token with user write permissions |
@@ -56,7 +56,7 @@ Configure these secrets in Kestra (Settings > Secrets):
 
 | Flow | Webhook URL |
 |------|-------------|
-| new-user-approval | `https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/new-user-approval/696b716e...` |
-| user-approval-action | `https://kestra.sirius.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833...` |
+| new-user-approval | `https://kestra.moonblade.work/api/v1/executions/webhook/homelab/new-user-approval/696b716e...` |
+| user-approval-action | `https://kestra.moonblade.work/api/v1/executions/webhook/homelab/user-approval-action/8f52833...` |
 
 The webhook keys are configured in the flow YAML files and Authentik blueprint.

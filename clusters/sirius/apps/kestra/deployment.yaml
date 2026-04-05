@@ -36,6 +36,26 @@ spec:
           containerPort: 8081
           protocol: TCP
         env:
+        - name: SECRET_GMAIL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: kestra-secrets
+              key: GMAIL_USERNAME
+        - name: SECRET_GMAIL_APP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kestra-secrets
+              key: GMAIL_APP_PASSWORD
+        - name: SECRET_ADMIN_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: kestra-secrets
+              key: ADMIN_EMAIL
+        - name: SECRET_AUTHENTIK_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: kestra-secrets
+              key: AUTHENTIK_API_TOKEN
         - name: KESTRA_CONFIGURATION
           value: |
             datasources:
