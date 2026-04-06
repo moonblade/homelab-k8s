@@ -267,3 +267,5 @@ Added Authentik email approval workflow for new users. When a new user is create
 Added polling fallback flow (poll-new-users) that runs every 5 minutes to catch new users when the Authentik worker fails to deliver webhooks. Uses approval_email_sent flag on user attributes to prevent duplicate emails. Push flow also sets this flag for dedup consistency.
 
 Fixed Kestra flow reliability: upgraded to v1.3.7 embedded H2 database, added basic auth, replaced shell jq with Pebble jq filter, converted email templates to inline styles (Pebble body variable collision fix), fixed EachSequential output references with currentEachOutput(), and fixed approve action to preserve existing user attributes when adding audiobook role.
+
+Updated Authentik audiobook role policy to show "Contact admin to give permissions" denial message using ak_message(). Added Kestra basic-auth config (admin/admin) to KESTRA_CONFIGURATION so credentials persist across H2 database resets.

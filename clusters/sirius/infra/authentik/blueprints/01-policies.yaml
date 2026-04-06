@@ -14,7 +14,10 @@ entries:
     attrs:
       name: Has role "audiobook"
       expression: |
-        return "roles" in request.user.attributes and "audiobook" in request.user.attributes["roles"]
+        if "roles" in request.user.attributes and "audiobook" in request.user.attributes["roles"]:
+            return True
+        ak_message("Contact admin to give permissions")
+        return False
 
   # Policy: Has role "movie"
   - model: authentik_policies_expression.expressionpolicy

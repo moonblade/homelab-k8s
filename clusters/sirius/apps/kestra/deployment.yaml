@@ -78,6 +78,11 @@ spec:
                 username: sa
                 password: ""
             kestra:
+              server:
+                basic-auth:
+                  enabled: true
+                  username: admin
+                  password: admin
               tutorialFlows:
                 enabled: false
               repository:
