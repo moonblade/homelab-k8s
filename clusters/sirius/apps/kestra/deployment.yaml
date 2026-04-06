@@ -81,8 +81,8 @@ spec:
               server:
                 basic-auth:
                   enabled: true
-                  username: admin
-                  password: admin
+                  username: admin@kestra.io
+                  password: kestraAdmin123
               tutorialFlows:
                 enabled: false
               repository:
