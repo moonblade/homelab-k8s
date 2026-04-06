@@ -62,6 +62,16 @@ spec:
             secretKeyRef:
               name: kestra-secrets
               key: WEBHOOK_KEY_USER_APPROVAL_ACTION
+        - name: KESTRA_BASIC_AUTH_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: kestra-secrets
+              key: KESTRA_BASIC_AUTH_USERNAME
+        - name: KESTRA_BASIC_AUTH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kestra-secrets
+              key: KESTRA_BASIC_AUTH_PASSWORD
         - name: KESTRA_CONFIGURATION
           value: |
             micronaut:
@@ -81,8 +91,8 @@ spec:
               server:
                 basic-auth:
                   enabled: true
-                  username: admin@kestra.io
-                  password: kestraAdmin123
+                  username: ${KESTRA_BASIC_AUTH_USERNAME}
+                  password: ${KESTRA_BASIC_AUTH_PASSWORD}
               tutorialFlows:
                 enabled: false
               repository:
