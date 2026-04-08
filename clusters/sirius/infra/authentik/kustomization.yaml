@@ -31,6 +31,7 @@ configMapGenerator:
       - ./blueprints/10-app-stremio.yaml
       - ./blueprints/10-app-jitsi.yaml
       - ./blueprints/10-app-kestra.yaml
+      - ./blueprints/10-app-beszel.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml

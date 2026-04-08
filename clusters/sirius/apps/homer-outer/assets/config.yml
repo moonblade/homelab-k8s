@@ -52,6 +52,13 @@ services:
   - name: "Admin"
     icon: "fas fa-shield-alt"
     items:
+      - name: "Beszel"
+        logo: "https://raw.githubusercontent.com/henrygd/beszel/main/beszel/site/src/assets/logo.svg"
+        subtitle: "Server Monitoring"
+        url: "https://beszel.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Uptime Kuma"
         logo: "https://uptime.kuma.pet/img/icon.svg"
         subtitle: "Service Status Monitoring"
