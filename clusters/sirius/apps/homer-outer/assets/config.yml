@@ -53,7 +53,7 @@ services:
     icon: "fas fa-shield-alt"
     items:
       - name: "Beszel"
-        logo: "https://raw.githubusercontent.com/henrygd/beszel/main/beszel/site/src/assets/logo.svg"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/beszel.webp"
         subtitle: "Server Monitoring"
         url: "https://beszel.moonblade.work"
         type: Ping
