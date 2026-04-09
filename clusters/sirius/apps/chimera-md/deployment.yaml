@@ -25,6 +25,10 @@ spec:
             - name: config
               mountPath: /data/chimera.toml
               subPath: chimera.toml
+            - name: search-index
+              mountPath: /data/search
+            - name: template
+              mountPath: /data/template
       volumes:
         - name: markdown-files
           nfs:
@@ -34,3 +38,7 @@ spec:
         - name: config
           configMap:
             name: chimera-md-config
+        - name: search-index
+          emptyDir: {}
+        - name: template
+          emptyDir: {}
