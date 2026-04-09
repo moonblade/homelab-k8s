@@ -198,3 +198,19 @@ spec:
   - group: ""
     kind: Service
     name: ak-outpost-html-share
+
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-n8n-to-authentik
+  namespace: authentik
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: n8n
+  to:
+  - group: ""
+    kind: Service
+    name: ak-outpost-n8n

@@ -18,8 +18,9 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: n8n
-          port: 80
+        - name: ak-outpost-n8n
+          namespace: authentik
+          port: 9000
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
