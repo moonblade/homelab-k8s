@@ -40,3 +40,17 @@ entries:
       name: Has role "admin"
       expression: |
         return "roles" in request.user.attributes and "admin" in request.user.attributes["roles"]
+
+  # Policy: Has role "mdfileshare"
+  - model: authentik_policies_expression.expressionpolicy
+    id: policy-has-role-mdfileshare
+    state: present
+    identifiers:
+      name: Has role "mdfileshare"
+    attrs:
+      name: Has role "mdfileshare"
+      expression: |
+        if "roles" in request.user.attributes and "mdfileshare" in request.user.attributes["roles"]:
+            return True
+        ak_message("Contact admin to give permissions")
+        return False
