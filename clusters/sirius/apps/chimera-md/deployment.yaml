@@ -12,6 +12,13 @@ spec:
       labels:
         app: chimera-md
     spec:
+      initContainers:
+        - name: init-dirs
+          image: busybox:1.36
+          command: ['sh', '-c', 'mkdir -p /data/search /data/template']
+          volumeMounts:
+            - name: chimera-data
+              mountPath: /data
       containers:
         - name: chimera-md
           image: acbarrentine/chimera-md:latest
