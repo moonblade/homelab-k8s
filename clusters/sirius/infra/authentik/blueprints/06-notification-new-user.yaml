@@ -8,11 +8,11 @@ entries:
     id: transport-new-user-webhook
     state: present
     identifiers:
-      name: kestra-new-user-webhook
+      name: n8n-new-user-webhook
     attrs:
-      name: kestra-new-user-webhook
+      name: n8n-new-user-webhook
       mode: webhook
-      webhook_url: http://kestra.kestra.svc.cluster.local:8080/api/v1/executions/webhook/homelab/new-user-approval/696b716e3bf4604c7de257725265faf10f55f23e1f04925b7cefcb7217f343c7
+      webhook_url: http://n8n.n8n.svc.cluster.local:5678/webhook/authentik-new-user
 
   - model: authentik_policies_event_matcher.eventmatcherpolicy
     id: policy-new-user-created
