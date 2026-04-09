@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chimera-md
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chimera-md
+  template:
+    metadata:
+      labels:
+        app: chimera-md
+    spec:
+      containers:
+        - name: chimera-md
+          image: acbarrentine/chimera-md:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - name: markdown-files
+              mountPath: /data/home
+              readOnly: true
+            - name: config
+              mountPath: /data/chimera.toml
+              subPath: chimera.toml
+      volumes:
+        - name: markdown-files
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/downloads/misc
+            readOnly: true
+        - name: config
+          configMap:
+            name: chimera-md-config

@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-chimera-md
+  labels:
+    blueprints.goauthentik.io/description: "Chimera-md markdown sharing proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: chimera-md-provider
+    state: present
+    identifiers:
+      name: Provider for Chimera-md
+    attrs:
+      name: Provider for Chimera-md
+      mode: proxy
+      external_host: https://share.moonblade.work
+      internal_host: http://chimera-md.chimera-md.svc.cluster.local:8080
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: chimera-md-app
+    state: present
+    identifiers:
+      slug: chimera-md
+    attrs:
+      name: MD Share
+      slug: chimera-md
+      provider: !KeyOf chimera-md-provider
+      policy_engine_mode: any
+      meta_launch_url: https://share.moonblade.work
+
+  - model: authentik_policies.policybinding
+    id: chimera-md-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf chimera-md-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"mdfileshare\""]]
+      target: !KeyOf chimera-md-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: chimera-md-outpost
+    state: present
+    identifiers:
+      name: Chimera-md
+    attrs:
+      name: Chimera-md
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf chimera-md-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info

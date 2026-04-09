@@ -165,3 +165,20 @@ spec:
   - group: ""
     kind: Service
     name: ak-outpost-beszel
+
+---
+# Chimera-md app
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-chimera-md-to-authentik
+  namespace: authentik
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: chimera-md
+  to:
+  - group: ""
+    kind: Service
+    name: ak-outpost-chimera-md
