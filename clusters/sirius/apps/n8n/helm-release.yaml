@@ -45,6 +45,9 @@ spec:
     # Config
     config:
       timezone: Asia/Calcutta
+      extraEnv:
+        - name: N8N_PROXY_HOPS
+          value: "1"
     
     # Encryption key for credentials
     secret:
