@@ -1,0 +1,227 @@
+{
+  "name": "Authentik User Approval Action",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "authentik-user-action",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-action",
+      "name": "Action Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "authentik-user-action"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "approve-check",
+              "leftValue": "={{ $json.query.action }}",
+              "rightValue": "approve",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-action",
+      "name": "Is Approve?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "=http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/?username={{ $json.query.username }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "get-user",
+      "name": "Get User from Authentik",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "authentik-api",
+          "name": "Authentik API Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=http://authentik-server.authentik.svc.cluster.local/api/v3/core/users/{{ $json.results[0].pk }}/",
+        "method": "PATCH",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"attributes\": {\n    {{ Object.entries($json.results[0].attributes || {}).filter(([k]) => k !== 'roles').map(([k,v]) => `\"${k}\": ${JSON.stringify(v)}`).join(',\\n    ') }}{{ Object.keys($json.results[0].attributes || {}).filter(k => k !== 'roles').length > 0 ? ',' : '' }}\n    \"roles\": {{ JSON.stringify([...new Set([...($json.results[0].attributes?.roles || []), 'audiobook'])]) }}\n  }\n}",
+        "options": {}
+      },
+      "id": "update-user",
+      "name": "Add Audiobook Role",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [850, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "authentik-api",
+          "name": "Authentik API Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=<html><body style=\"font-family: sans-serif; text-align: center; padding: 50px;\"><h1 style=\"color: #28a745;\">User Approved</h1><p>{{ $('Action Webhook').item.json.query.username }} has been granted the audiobook role.</p></body></html>",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-approved",
+      "name": "Respond Approved",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=<html><body style=\"font-family: sans-serif; text-align: center; padding: 50px;\"><h1 style=\"color: #dc3545;\">User Denied</h1><p>{{ $json.query.username }} was not granted the audiobook role.</p></body></html>",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-denied",
+      "name": "Respond Denied",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $env.ADMIN_EMAIL }}",
+        "subject": "=User {{ $('Is Approve?').item.json.query.action === 'approve' ? 'Approved' : 'Denied' }}: {{ $('Action Webhook').item.json.query.username }}",
+        "emailType": "html",
+        "html": "=<div style=\"font-family: sans-serif; padding: 20px;\">\n  <h2 style=\"color: {{ $('Is Approve?').item.json.query.action === 'approve' ? '#28a745' : '#dc3545' }};\">User {{ $('Is Approve?').item.json.query.action === 'approve' ? 'Approved' : 'Denied' }}</h2>\n  <p><strong>Username:</strong> {{ $('Action Webhook').item.json.query.username }}</p>\n  <p><strong>Action:</strong> {{ $('Is Approve?').item.json.query.action }}</p>\n  <p><strong>Time:</strong> {{ $now.format('yyyy-MM-dd HH:mm:ss') }} UTC</p>\n</div>",
+        "options": {}
+      },
+      "id": "send-confirmation",
+      "name": "Send Confirmation Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1250, 200],
+      "credentials": {
+        "smtp": {
+          "id": "gmail-smtp",
+          "name": "Gmail SMTP"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Action Webhook": {
+      "main": [
+        [
+          {
+            "node": "Is Approve?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Approve?": {
+      "main": [
+        [
+          {
+            "node": "Get User from Authentik",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Denied",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User from Authentik": {
+      "main": [
+        [
+          {
+            "node": "Add Audiobook Role",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Audiobook Role": {
+      "main": [
+        [
+          {
+            "node": "Respond Approved",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond Approved": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "authentik"
+    }
+  ],
+  "triggerCount": 0,
+  "active": true
+}

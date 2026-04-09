@@ -41,13 +41,6 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-      - name: "Kestra"
-        logo: "https://avatars.githubusercontent.com/u/59033362?s=200&v=4"
-        subtitle: "Workflow Orchestration"
-        url: "https://kestra.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
 
   - name: "Admin"
     icon: "fas fa-shield-alt"
