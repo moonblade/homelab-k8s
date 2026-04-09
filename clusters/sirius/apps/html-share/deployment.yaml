@@ -22,7 +22,15 @@ spec:
             - name: config
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: nginx.conf
+            - name: html-files
+              mountPath: /data
+              readOnly: true
       volumes:
         - name: config
           configMap:
             name: html-share-config
+        - name: html-files
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/downloads/misc
+            readOnly: true
