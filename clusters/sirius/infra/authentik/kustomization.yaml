@@ -33,6 +33,7 @@ configMapGenerator:
       - ./blueprints/10-app-kestra.yaml
       - ./blueprints/10-app-beszel.yaml
       - ./blueprints/10-app-chimera-md.yaml
+      - ./blueprints/10-app-html-share.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
