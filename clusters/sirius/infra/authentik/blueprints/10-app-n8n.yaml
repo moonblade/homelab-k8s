@@ -14,7 +14,7 @@ entries:
       name: Provider for n8n
       mode: proxy
       external_host: https://n8n.moonblade.work
-      internal_host: http://n8n.n8n.svc.cluster.local:80
+      internal_host: http://n8n-main.n8n.svc.cluster.local:5678
       intercept_header_auth: true
       access_token_validity: hours=24
       refresh_token_validity: days=30

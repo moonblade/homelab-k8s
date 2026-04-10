@@ -34,6 +34,7 @@ configMapGenerator:
       - ./blueprints/10-app-beszel.yaml
       - ./blueprints/10-app-chimera-md.yaml
       - ./blueprints/10-app-html-share.yaml
+      - ./blueprints/10-app-n8n.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
