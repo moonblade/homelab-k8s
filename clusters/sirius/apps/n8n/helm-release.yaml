@@ -56,8 +56,7 @@ spec:
         - name: N8N_PROXY_HOPS
           value: "1"
     
-    # Encryption key for credentials - use existing secret
     secretRefs:
       existingSecret: n8n-encryption
       env:
-        N8N_ENCRYPTION_KEY: key
+        N8N_ENCRYPTION_KEY: N8N_ENCRYPTION_KEY
