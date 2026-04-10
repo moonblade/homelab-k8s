@@ -27,6 +27,13 @@ spec:
     queueMode:
       enabled: false
     
+    database:
+      type: sqlite
+      useExternal: false
+    
+    redis:
+      enabled: false
+    
     # Persistence for SQLite database
     persistence:
       enabled: true
@@ -49,7 +56,8 @@ spec:
         - name: N8N_PROXY_HOPS
           value: "1"
     
-    # Encryption key for credentials
+    # Encryption key for credentials - use existing secret
     secretRefs:
+      existingSecret: n8n-encryption
       env:
-        N8N_ENCRYPTION_KEY: "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"
+        N8N_ENCRYPTION_KEY: key
