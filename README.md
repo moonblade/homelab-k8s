@@ -269,3 +269,9 @@ Added polling fallback flow (poll-new-users) that runs every 5 minutes to catch 
 Fixed Kestra flow reliability: upgraded to v1.3.7 embedded H2 database, added basic auth, replaced shell jq with Pebble jq filter, converted email templates to inline styles (Pebble body variable collision fix), fixed EachSequential output references with currentEachOutput(), and fixed approve action to preserve existing user attributes when adding audiobook role.
 
 Updated Authentik audiobook role policy to show "Contact admin to give permissions" denial message using ak_message(). Added Kestra basic-auth config (admin/admin) to KESTRA_CONFIGURATION so credentials persist across H2 database resets.
+
+- Apr 10, 2026
+
+Investigated audiobookshelf duplicate entries issue. Root cause: ABS scanner bug ([#1447](https://github.com/advplyr/audiobookshelf/issues/1447), [#5010](https://github.com/advplyr/audiobookshelf/issues/5010)) creates duplicate DB entries for the same path within a single auto-scan pass (entries created milliseconds apart). Not NFS-specific — confirmed running NFSv4.2 with stable server-side inodes.
+
+Removed the hourly dedup cronjob (`dedup-cronjob.yaml`) and its sealed secret. The cronjob was creating a destructive feedback loop: it deleted duplicate DB entries but not the underlying files, so the next auto-scan recreated them. It also deleted items that users had progress/bookmarks on, causing persistent "Library item not found" errors in ABS logs every 30 minutes. Fix is upstream in unmerged [PR #4621](https://github.com/advplyr/audiobookshelf/pull/4621) — living with occasional duplicates until then.
