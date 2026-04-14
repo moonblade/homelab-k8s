@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chimera-md-public-config
+data:
+  chimera.toml: |
+    site_title = "MD Share (Public)"
+    site_lang = "en"
+    chimera_root = "/data"
+    index_file = "index.md"
+    generate_index = false
+    highlight_style = "an-old-hope"
+    log_level = "Info"
+    max_cache_size = 52428800
+    port = 8080
