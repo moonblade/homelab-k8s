@@ -120,6 +120,13 @@ services:
   - name: "Misc"
     icon: "fas fa-box"
     items:
+      - name: "MD Share (Public)"
+        icon: "fas fa-file-alt"
+        subtitle: "Public markdown sharing"
+        url: "https://read.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Blog"
         logo: "https://cdn.pixabay.com/photo/2022/01/16/16/44/blogger-logo-6942640_1280.png"
         subtitle: "Blog on github"
