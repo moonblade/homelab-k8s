@@ -4,3 +4,4 @@ namespace: kokoro
 resources:
   - deployment.yaml
   - service.yaml
+  - httproute.yaml
