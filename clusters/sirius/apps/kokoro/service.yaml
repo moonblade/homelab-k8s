@@ -7,13 +7,13 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: kokoro-tts
-    port: 8880
-    targetPort: 8880
-    protocol: TCP
-  - name: epub-to-audiobook
-    port: 7860
-    targetPort: 7860
-    protocol: TCP
+    - name: kokoro-tts
+      port: 8880
+      targetPort: 8880
+      protocol: TCP
+    - name: epub-to-audiobook
+      port: 7860
+      targetPort: 7860
+      protocol: TCP
   selector:
     app: kokoro
