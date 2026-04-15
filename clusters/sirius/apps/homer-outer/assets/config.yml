@@ -116,6 +116,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Kokoro TTS"
+        icon: "mdi-book-music"
+        subtitle: "EPUB to Audiobook"
+        url: "https://kokoro.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Misc"
     icon: "fas fa-box"

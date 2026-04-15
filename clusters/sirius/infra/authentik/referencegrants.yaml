@@ -1,5 +1,6 @@
-# ReferenceGrants for Gateway API - allows HTTPRoutes in app namespaces to route to Authentik outpost services
-# This file is in authentik infra (not app dirs) so namespace isn't overwritten by app kustomizations
+# ReferenceGrants for Gateway API - allows HTTPRoutes in app namespaces to route
+# to Authentik outpost services. This file is in authentik infra (not app dirs)
+# so namespace isn't overwritten by app kustomizations
 
 # Feeder app
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -9,13 +10,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: feeder
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: feeder
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-feeder
+    - group: ""
+      kind: Service
+      name: ak-outpost-feeder
 ---
 # YTS-Downloader app
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -25,13 +26,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: yts-downloader
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: yts-downloader
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-yts-search
+    - group: ""
+      kind: Service
+      name: ak-outpost-yts-search
 ---
 # Audiobookbay-downloader app
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -41,14 +42,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: audiobookbay-downloader
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: audiobookbay-downloader
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-audiobook-search
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-audiobook-search
 ---
 # Filebrowser app
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -58,14 +58,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: filebrowser
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: filebrowser
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-filebrowser
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-filebrowser
 ---
 # Jackett app
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -75,14 +74,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: jackett
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: jackett
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-jackett
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-jackett
 ---
 # Weave GitOps (flux-system namespace)
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -92,14 +90,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: flux-system
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: flux-system
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-weave
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-weave
 ---
 # Stremio app
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -109,14 +106,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: stremio
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: stremio
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-stremio
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-stremio
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
@@ -125,14 +121,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: kestra
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: kestra
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-kestra
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-kestra
 ---
 # Jitsi app
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -142,14 +137,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: jitsi
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: jitsi
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-jitsi
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-jitsi
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
@@ -158,14 +152,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: beszel
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: beszel
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-beszel
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-beszel
 ---
 # Chimera-md app
 apiVersion: gateway.networking.k8s.io/v1beta1
@@ -175,14 +168,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: chimera-md
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: chimera-md
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-chimera-md
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-chimera-md
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
@@ -191,14 +183,13 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: html-share
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: html-share
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-html-share
-
+    - group: ""
+      kind: Service
+      name: ak-outpost-html-share
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
@@ -207,10 +198,26 @@ metadata:
   namespace: authentik
 spec:
   from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: n8n
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: n8n
   to:
-  - group: ""
-    kind: Service
-    name: ak-outpost-n8n
+    - group: ""
+      kind: Service
+      name: ak-outpost-n8n
+---
+# Kokoro app
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-kokoro-to-authentik
+  namespace: authentik
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: kokoro
+  to:
+    - group: ""
+      kind: Service
+      name: ak-outpost-kokoro
