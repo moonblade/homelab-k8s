@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kokoro
+  labels:
+    app: kokoro
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: kokoro
+  template:
+    metadata:
+      labels:
+        app: kokoro
+    spec:
+      containers:
+      - name: kokoro-tts
+        image: ghcr.io/remsky/kokoro-fastapi-cpu:latest
+        ports:
+        - name: http
+          containerPort: 8880
+          protocol: TCP
+        env:
+        - name: ONNX_NUM_THREADS
+          value: "2"
+        - name: ONNX_INTER_OP_THREADS
+          value: "1"
+        resources:
+          requests:
+            cpu: 1
+            memory: 2Gi
+          limits:
+            cpu: 2
+            memory: 4Gi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8880
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          timeoutSeconds: 5
+        volumeMounts:
+        - name: audiobooks
+          mountPath: /audiobooks
+      - name: epub-to-audiobook
+        image: ghcr.io/p0n1/epub_to_audiobook:latest
+        command:
+        - python3
+        - /app_src/main_ui.py
+        - --host
+        - 0.0.0.0
+        - --port
+        - "7860"
+        ports:
+        - name: http-ui
+          containerPort: 7860
+          protocol: TCP
+        env:
+        - name: OPENAI_API_KEY
+          value: fake
+        - name: OPENAI_BASE_URL
+          value: http://localhost:8880/v1
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 7860
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        volumeMounts:
+        - name: audiobooks
+          mountPath: /audiobooks
+      volumes:
+      - name: audiobooks
+        nfs:
+          server: 192.168.1.10
+          path: /mnt/primary/root/audiobooks
+          readOnly: false
