@@ -25,7 +25,7 @@ spec:
       # Models to pull at startup (lightweight models for CPU)
       models:
         pull:
-          - qwen2.5:0.5b
+          - gemma3:4b
     
     # Persistence configuration
     persistentVolume:
@@ -35,7 +35,7 @@ spec:
     # Resource configuration for CPU
     resources:
       limits:
-        memory: 4Gi
+        memory: 6Gi
         cpu: 2000m
       requests:
         memory: 2Gi
