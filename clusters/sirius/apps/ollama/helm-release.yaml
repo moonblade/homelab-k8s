@@ -25,8 +25,7 @@ spec:
       # Models to pull at startup (lightweight models for CPU)
       models:
         pull:
-          - tinyllama
-          - gemma:2b
+          - qwen2.5:0.5b
     
     # Persistence configuration
     persistentVolume:
