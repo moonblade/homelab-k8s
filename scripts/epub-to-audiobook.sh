@@ -139,11 +139,21 @@ spec:
 EOF
 
 log "Job created: $JOB_NAME"
-echo ""
-log "Conversion running in background. Monitor with:"
-echo "  kubectl --kubeconfig=$KUBECONFIG logs -n $NAMESPACE job/$JOB_NAME -f"
-echo ""
-log "Check status:"
-echo "  kubectl --kubeconfig=$KUBECONFIG get job -n $NAMESPACE $JOB_NAME"
-echo ""
 log "Output will be at: /audiobooks/$OUTPUT_NAME"
+echo ""
+
+log "Waiting for pod to start..."
+for i in {1..30}; do
+    STATUS=$(kubectl --kubeconfig="$KUBECONFIG" get job -n "$NAMESPACE" "$JOB_NAME" -o jsonpath='{.status.active}' 2>/dev/null || echo "0")
+    [[ "$STATUS" == "1" ]] && break
+    sleep 1
+done
+
+echo ""
+log "Streaming progress (Ctrl+C to detach - conversion continues in background):"
+echo "─────────────────────────────────────────────────────────────"
+
+kubectl --kubeconfig="$KUBECONFIG" logs -n "$NAMESPACE" "job/$JOB_NAME" -f 2>/dev/null || {
+    warn "Logs not yet available. Check manually:"
+    echo "  kubectl --kubeconfig=$KUBECONFIG logs -n $NAMESPACE job/$JOB_NAME -f"
+}
