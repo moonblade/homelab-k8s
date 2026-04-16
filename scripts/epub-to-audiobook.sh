@@ -145,17 +145,33 @@ log "Output will be at: /audiobooks/$OUTPUT_NAME"
 echo ""
 
 log "Waiting for pod to start..."
-for i in {1..30}; do
-    STATUS=$(kubectl --kubeconfig="$KUBECONFIG" get job -n "$NAMESPACE" "$JOB_NAME" -o jsonpath='{.status.active}' 2>/dev/null || echo "0")
-    [[ "$STATUS" == "1" ]] && break
-    sleep 1
+for i in {1..60}; do
+    POD_STATUS=$(kubectl --kubeconfig="$KUBECONFIG" get pods -n "$NAMESPACE" -l "job-name=$JOB_NAME" -o jsonpath='{.items[0].status.phase}' 2>/dev/null || echo "Pending")
+    case "$POD_STATUS" in
+        Running)
+            break
+            ;;
+        Succeeded|Failed)
+            break
+            ;;
+        *)
+            sleep 1
+            ;;
+    esac
 done
 
 echo ""
 log "Streaming progress (Ctrl+C to detach - conversion continues in background):"
 echo "─────────────────────────────────────────────────────────────"
 
-kubectl --kubeconfig="$KUBECONFIG" logs -n "$NAMESPACE" "job/$JOB_NAME" -f 2>/dev/null || {
-    warn "Logs not yet available. Check manually:"
-    echo "  kubectl --kubeconfig=$KUBECONFIG logs -n $NAMESPACE job/$JOB_NAME -f"
+sleep 2
+kubectl --kubeconfig="$KUBECONFIG" logs -n "$NAMESPACE" "job/$JOB_NAME" -f 2>&1 || {
+    echo ""
+    JOB_STATUS=$(kubectl --kubeconfig="$KUBECONFIG" get job -n "$NAMESPACE" "$JOB_NAME" -o jsonpath='{.status.conditions[0].type}' 2>/dev/null)
+    if [[ "$JOB_STATUS" == "Failed" ]]; then
+        error "Job failed. Check logs: kubectl --kubeconfig=$KUBECONFIG logs -n $NAMESPACE job/$JOB_NAME"
+    else
+        warn "Logs not yet available. Check manually:"
+        echo "  kubectl --kubeconfig=$KUBECONFIG logs -n $NAMESPACE job/$JOB_NAME -f"
+    fi
 }
