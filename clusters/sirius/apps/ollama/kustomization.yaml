@@ -4,3 +4,4 @@ namespace: ollama
 resources:
   - helm-repo.yaml
   - helm-release.yaml
+  - httproute.yaml
