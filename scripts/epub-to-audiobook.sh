@@ -19,7 +19,7 @@ set -euo pipefail
 KUBECONFIG="${KUBECONFIG:-$HOME/.kube/sirius.yaml}"
 NAMESPACE="kokoro"
 NFS_SERVER="192.168.1.10"
-NFS_PATH="/mnt/primary/root/audiobooks"
+NFS_PATH="/mnt/primary/root/downloads/ebook-audio"
 DEFAULT_VOICE="am_michael"
 
 # Colors
