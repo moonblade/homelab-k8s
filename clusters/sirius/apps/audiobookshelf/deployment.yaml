@@ -32,6 +32,9 @@ spec:
         - name: thirdaudiobooks
           mountPath: /audiobooks
           mountPropagation: HostToContainer
+        - name: ebook-audio
+          mountPath: /ebook-audio
+          mountPropagation: HostToContainer
         env:
         - name: TZ
           value: America/Toronto
@@ -55,4 +58,9 @@ spec:
         nfs:
           server: 192.168.1.10
           path: /mnt/primary/root/audiobooks
+          readOnly: false
+      - name: ebook-audio
+        nfs:
+          server: 192.168.1.10
+          path: /mnt/primary/root/downloads/ebook-audio
           readOnly: false
