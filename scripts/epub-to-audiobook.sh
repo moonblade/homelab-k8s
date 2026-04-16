@@ -110,16 +110,18 @@ spec:
             - /audiobooks/$OUTPUT_NAME
             - --tts
             - openai
-            - --tts_model
-            - kokoro
             - --voice_name
             - $VOICE
-            - --openai_api_key
-            - fake
-            - --openai_api_base
-            - http://kokoro.kokoro.svc.cluster.local:8880/v1
+            - --model_name
+            - kokoro
+            - --no_prompt
             - --log
-            - DEBUG
+            - INFO
+          env:
+            - name: OPENAI_API_KEY
+              value: fake
+            - name: OPENAI_BASE_URL
+              value: http://kokoro.kokoro.svc.cluster.local:8880/v1
           resources:
             requests:
               cpu: 100m
