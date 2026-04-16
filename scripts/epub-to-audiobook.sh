@@ -20,7 +20,7 @@ KUBECONFIG="${KUBECONFIG:-$HOME/.kube/sirius.yaml}"
 NAMESPACE="kokoro"
 NFS_SERVER="192.168.1.10"
 NFS_PATH="/mnt/primary/root/audiobooks"
-DEFAULT_VOICE="am_adam"
+DEFAULT_VOICE="am_michael"
 
 # Colors
 RED='\033[0;31m'
