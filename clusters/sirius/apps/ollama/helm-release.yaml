@@ -30,9 +30,7 @@ spec:
     # Persistence configuration
     persistentVolume:
       enabled: true
-      size: 20Gi
-      accessModes:
-        - ReadWriteOnce
+      existingClaim: ollama-nfs
     
     # Resource configuration for CPU
     resources:
