@@ -22,72 +22,62 @@ spec:
         app.kubernetes.io/instance: kokoro
     spec:
       containers:
-        - name: kokoro-tts
-          image: ghcr.io/remsky/kokoro-fastapi-cpu:latest
+        - name: epubaudio
+          image: ghcr.io/moonblade/epubtoaudio:latest # {"$imagepolicy": "kokoro:epubtoaudio"}
           ports:
             - name: http
-              containerPort: 8880
+              containerPort: 3002
               protocol: TCP
           env:
-            - name: ONNX_NUM_THREADS
-              value: "2"
-            - name: ONNX_INTER_OP_THREADS
-              value: "1"
+            - name: OLLAMA_HOST
+              value: http://ollama.ollama.svc.cluster.local:11434
+            - name: OLLAMA_MODEL
+              value: qwen2.5:1.5b
+            - name: EPUBTOAUDIO_UPLOAD_PATH
+              value: /data/input
+            - name: EPUBTOAUDIO_OUTPUT_PATH
+              value: /data/output
+            - name: EPUBTOAUDIO_FINAL_PATH
+              value: /ebook-audio
           resources:
             requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
               cpu: 2
               memory: 4Gi
-            limits:
-              cpu: 4
-              memory: 8Gi
           livenessProbe:
             httpGet:
-              path: /health
-              port: 8880
-            initialDelaySeconds: 120
-            periodSeconds: 10
-            timeoutSeconds: 5
-          volumeMounts:
-            - name: audiobooks
-              mountPath: /audiobooks
-        - name: epub-to-audiobook
-          image: ghcr.io/p0n1/epub_to_audiobook:latest
-          command:
-            - python3
-            - /app_src/main_ui.py
-            - --host
-            - 0.0.0.0
-            - --port
-            - "7860"
-          ports:
-            - name: http-ui
-              containerPort: 7860
-              protocol: TCP
-          env:
-            - name: OPENAI_API_KEY
-              value: fake
-            - name: OPENAI_BASE_URL
-              value: http://localhost:8880/v1
-          resources:
-            requests:
-              cpu: 200m
-              memory: 256Mi
-            limits:
-              cpu: 500m
-              memory: 512Mi
-          livenessProbe:
+              path: /voices
+              port: 3002
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          readinessProbe:
             httpGet:
-              path: /
-              port: 7860
+              path: /voices
+              port: 3002
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
           volumeMounts:
-            - name: audiobooks
-              mountPath: /audiobooks
+            - name: ebook-audio
+              mountPath: /ebook-audio
+            - name: data
+              mountPath: /data
+            - name: jobs
+              mountPath: /app/jobs
+            - name: voice-mappings
+              mountPath: /app/voice_mappings
       volumes:
-        - name: audiobooks
+        - name: ebook-audio
           nfs:
             server: 192.168.1.10
-            path: /mnt/primary/root/audiobooks
+            path: /mnt/primary/root/downloads/ebook-audio
             readOnly: false
+        - name: data
+          emptyDir: {}
+        - name: jobs
+          emptyDir: {}
+        - name: voice-mappings
+          emptyDir: {}

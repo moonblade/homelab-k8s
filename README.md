@@ -275,3 +275,7 @@ Updated Authentik audiobook role policy to show "Contact admin to give permissio
 Investigated audiobookshelf duplicate entries issue. Root cause: ABS scanner bug ([#1447](https://github.com/advplyr/audiobookshelf/issues/1447), [#5010](https://github.com/advplyr/audiobookshelf/issues/5010)) creates duplicate DB entries for the same path within a single auto-scan pass (entries created milliseconds apart). Not NFS-specific — confirmed running NFSv4.2 with stable server-side inodes.
 
 Removed the hourly dedup cronjob (`dedup-cronjob.yaml`) and its sealed secret. The cronjob was creating a destructive feedback loop: it deleted duplicate DB entries but not the underlying files, so the next auto-scan recreated them. It also deleted items that users had progress/bookmarks on, causing persistent "Library item not found" errors in ABS logs every 30 minutes. Fix is upstream in unmerged [PR #4621](https://github.com/advplyr/audiobookshelf/pull/4621) — living with occasional duplicates until then.
+
+- Apr 17, 2026
+
+Replaced kokoro app (kokoro-fastapi-cpu + p0n1/epub_to_audiobook) with moonblade/epubtoaudio. New setup uses Ollama (gemma3:4b) for speaker detection instead of bundled Kokoro TTS. Output saved to NFS at /mnt/primary/root/downloads/ebook-audio (same path as audiobookshelf ebook-audio library). Added Flux image automation for auto-updates.
