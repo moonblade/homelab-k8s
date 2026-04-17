@@ -39,6 +39,8 @@ spec:
               value: /data/output
             - name: EPUBTOAUDIO_FINAL_PATH
               value: /ebook-audio
+            - name: EPUBTOAUDIO_BROWSE_PATH
+              value: /browse
           resources:
             requests:
               cpu: 500m
@@ -63,6 +65,9 @@ spec:
           volumeMounts:
             - name: ebook-audio
               mountPath: /ebook-audio
+            - name: feeder-data
+              mountPath: /browse
+              readOnly: true
             - name: data
               mountPath: /data
             - name: jobs
@@ -75,6 +80,11 @@ spec:
             server: 192.168.1.10
             path: /mnt/primary/root/downloads/ebook-audio
             readOnly: false
+        - name: feeder-data
+          nfs:
+            server: 192.168.1.10
+            path: /mnt/primary/root/feeder
+            readOnly: true
         - name: data
           emptyDir: {}
         - name: jobs
