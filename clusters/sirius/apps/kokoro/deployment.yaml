@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: epubaudio
-          image: ghcr.io/moonblade/epubtoaudio:ts_1776389141 # {"$imagepolicy": "kokoro:epubtoaudio"}
+          image: ghcr.io/moonblade/epubtoaudio:ts_1776396170 # {"$imagepolicy": "kokoro:epubtoaudio"}
           ports:
             - name: http
               containerPort: 3002
