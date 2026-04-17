@@ -32,7 +32,7 @@ spec:
             - name: OLLAMA_HOST
               value: http://ollama.ollama.svc.cluster.local:11434
             - name: OLLAMA_MODEL
-              value: qwen2.5:0.5b
+              value: qwen2.5:1.5b
             - name: EPUBTOAUDIO_UPLOAD_PATH
               value: /data/input
             - name: EPUBTOAUDIO_OUTPUT_PATH
