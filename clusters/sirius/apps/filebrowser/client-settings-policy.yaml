@@ -1,0 +1,17 @@
+apiVersion: gateway.nginx.org/v1alpha1
+kind: ClientSettingsPolicy
+metadata:
+  name: filebrowser-client-settings
+  labels:
+    app.kubernetes.io/instance: filebrowser
+    app.kubernetes.io/name: filebrowser
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: filebrowser-internal
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: filebrowser-external
+  body:
+    maxSize: 500m

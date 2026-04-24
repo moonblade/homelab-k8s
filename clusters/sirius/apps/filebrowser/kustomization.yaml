@@ -6,4 +6,5 @@ resources:
   - ./service.yaml
   - ./httproute.yaml
   - ./config.yaml
+  - ./client-settings-policy.yaml
 
