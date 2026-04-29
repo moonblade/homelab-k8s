@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-open-webui
+  labels:
+    blueprints.goauthentik.io/description: "Open WebUI proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: open-webui-provider
+    state: present
+    identifiers:
+      name: Provider for Open WebUI
+    attrs:
+      name: Provider for Open WebUI
+      mode: proxy
+      external_host: https://chat.moonblade.work
+      internal_host: http://open-webui.open-webui.svc.cluster.local:8080
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: open-webui-app
+    state: present
+    identifiers:
+      slug: open-webui
+    attrs:
+      name: Open WebUI
+      slug: open-webui
+      provider: !KeyOf open-webui-provider
+      policy_engine_mode: any
+      meta_launch_url: https://chat.moonblade.work
+
+  # Policy binding - admin role only
+  - model: authentik_policies.policybinding
+    id: open-webui-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf open-webui-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      target: !KeyOf open-webui-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: open-webui-outpost
+    state: present
+    identifiers:
+      name: Open WebUI
+    attrs:
+      name: Open WebUI
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf open-webui-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info
