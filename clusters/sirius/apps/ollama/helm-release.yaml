@@ -22,24 +22,24 @@ spec:
       gpu:
         enabled: false
       
-      # Models to pull at startup (lightweight models for CPU)
+      # Models to pull at startup
       models:
         pull:
-          - gemma3:4b
+          - gemma4:e2b
     
     # Persistence configuration
     persistentVolume:
       enabled: true
       existingClaim: ollama-nfs
     
-    # Resource configuration for CPU
+    # Resource configuration for CPU (gemma4:e2b needs ~10-12GB RAM)
     resources:
       limits:
-        memory: 6Gi
-        cpu: 2000m
+        memory: 14Gi
+        cpu: 4000m
       requests:
-        memory: 2Gi
-        cpu: 1000m
+        memory: 10Gi
+        cpu: 2000m
     
     # Service configuration
     service:
