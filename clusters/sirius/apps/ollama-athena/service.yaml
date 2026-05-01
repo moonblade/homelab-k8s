@@ -1,0 +1,31 @@
+# Service without selector -- uses manual Endpoints to point to external Ollama on Athena LXC
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-athena
+  labels:
+    app.kubernetes.io/instance: ollama-athena
+    app.kubernetes.io/name: ollama-athena
+spec:
+  type: ClusterIP
+  ports:
+    - port: 11434
+      targetPort: 11434
+      protocol: TCP
+      name: http
+---
+# Manual Endpoints pointing to the Athena LXC container
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: ollama-athena
+  labels:
+    app.kubernetes.io/instance: ollama-athena
+    app.kubernetes.io/name: ollama-athena
+subsets:
+  - addresses:
+      - ip: 192.168.1.198
+    ports:
+      - port: 11434
+        protocol: TCP
+        name: http
