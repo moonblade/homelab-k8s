@@ -30,7 +30,7 @@ spec:
               protocol: TCP
           env:
             - name: OLLAMA_HOST
-              value: http://ollama.ollama.svc.cluster.local:11434
+              value: http://ollama-athena.ollama-athena.svc.cluster.local:11434
             - name: OLLAMA_MODEL
               value: qwen2.5:1.5b
             - name: EPUBTOAUDIO_UPLOAD_PATH
