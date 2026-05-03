@@ -21,7 +21,9 @@ spec:
       persistentVolume:
         enabled: true
         size: 20Gi
-      
+
+      retention: "30d"
+
       resources:
         limits:
           memory: 2Gi
@@ -29,38 +31,15 @@ spec:
         requests:
           memory: 512Mi
           cpu: 200m
-      
-      # Mount the bearer token secret
-      extraSecretMounts:
-        - name: arlie-bearer-token
-          secretName: arlie-bearer-token
-          mountPath: /etc/secrets/arlie
-          readOnly: true
-    
-    # Add Arlie scrape config
-    extraScrapeConfigs: |
-      - job_name: 'arlie'
-        scrape_interval: 30s
-        scheme: https
-        metrics_path: /metrics
-        authorization:
-          type: Bearer
-          credentials_file: /etc/secrets/arlie/token
-        static_configs:
-          - targets:
-              - cvchatapp.commvault.com
-              - cvchatapp-mnishamk.azurewebsites.net
-              - cvchatapp-test.azurewebsites.net
 
-    
     alertmanager:
       enabled: false
-    
+
     kube-state-metrics:
       enabled: true
-    
+
     prometheus-node-exporter:
       enabled: true
-    
+
     prometheus-pushgateway:
       enabled: false

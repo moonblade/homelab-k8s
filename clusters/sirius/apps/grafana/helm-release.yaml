@@ -21,21 +21,19 @@ spec:
       existingSecret: grafana-admin
       userKey: admin-user
       passwordKey: admin-password
-    
+
     persistence:
       enabled: true
       size: 10Gi
-    
-    # Disable init container that causes permission issues
+
     initChownData:
       enabled: false
-    
-    # Set security context to run as non-root
+
     securityContext:
       runAsUser: 472
       runAsGroup: 472
       fsGroup: 472
-    
+
     resources:
       limits:
         memory: 1Gi
@@ -43,3 +41,29 @@ spec:
       requests:
         memory: 256Mi
         cpu: 100m
+
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+          - name: Prometheus
+            type: prometheus
+            url: http://prometheus-server.prometheus.svc.cluster.local
+            access: proxy
+            isDefault: true
+
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: default
+            orgId: 1
+            folder: ""
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
+
+    dashboardsConfigMaps:
+      default: grafana-dashboards
