@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: stremio
-          image: stremio/server:latest
+          image: stremio/server:v4.20.17
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 11470
               name: http

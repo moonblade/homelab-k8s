@@ -20,6 +20,7 @@ spec:
       initContainers:
       - name: settings-editor
         image: alpine:3.22.0
+        imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
               name: settings-override
@@ -71,6 +72,7 @@ spec:
       containers:
       - name: transmission
         image: linuxserver/transmission:4.0.6-r4-ls291
+        imagePullPolicy: IfNotPresent
         ports:
         - name: http
           containerPort: 9091
