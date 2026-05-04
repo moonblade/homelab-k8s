@@ -78,12 +78,12 @@ spec:
       volumes:
         - name: ebook-audio
           nfs:
-            server: 192.168.29.10
+            server: nfs.sirius.local
             path: /mnt/primary/root/downloads/ebook-audio
             readOnly: false
         - name: feeder-data
           nfs:
-            server: 192.168.29.10
+            server: nfs.sirius.local
             path: /mnt/primary/root/feeder
             readOnly: true
         - name: data

@@ -107,12 +107,12 @@ spec:
       volumes:
       - name: config
         nfs:
-          server: 192.168.29.10
+          server: nfs.sirius.local
           path: /mnt/primary/root/config/transmission
           readOnly: false
       - name: nfsdownloads
         nfs:
-          server: 192.168.29.10
+          server: nfs.sirius.local
           path: /mnt/primary/root/downloads
           readOnly: false
       - name: settings-override
