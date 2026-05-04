@@ -9,13 +9,13 @@ spec:
     recordType: A
     targets:
     - 100.91.212.59
-    # - 192.168.1.128
+    # - 192.168.29.128
   - dnsName: sirius.moonblade.work
     recordTTL: 60
     recordType: A
     targets:
     - 100.100.145.85
-    # - 192.168.1.150
+    # - 192.168.29.150
   - dnsName: siriusk8s.moonblade.work
     recordTTL: 60
     recordType: CNAME

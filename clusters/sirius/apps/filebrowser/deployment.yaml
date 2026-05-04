@@ -58,12 +58,12 @@ spec:
       volumes:
         - name: storage
           nfs:
-            server: 192.168.1.10
+            server: 192.168.29.10
             path: /mnt/primary/root
             readOnly: false
         - name: config
           nfs:
-            server: 192.168.1.10
+            server: 192.168.29.10
             path: /mnt/primary/root/config/filebrowser
             readOnly: false
         - name: settings-json

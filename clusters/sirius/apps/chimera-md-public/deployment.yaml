@@ -35,7 +35,7 @@ spec:
       volumes:
         - name: markdown-files
           nfs:
-            server: 192.168.1.10
+            server: 192.168.29.10
             path: /mnt/primary/root/downloads/misc-public
             readOnly: true
         - name: config
@@ -43,5 +43,5 @@ spec:
             name: chimera-md-public-config
         - name: chimera-data
           nfs:
-            server: 192.168.1.10
+            server: 192.168.29.10
             path: /mnt/primary/root/config/chimera-md-public

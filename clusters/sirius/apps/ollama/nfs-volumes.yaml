@@ -10,7 +10,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   nfs:
-    server: 192.168.1.10
+    server: 192.168.29.10
     path: /mnt/primary/root/storage/ollama
 ---
 apiVersion: v1
