@@ -60,6 +60,6 @@ spec:
   endpoints:
     - dnsName: ollama-athena.sirius.moonblade.work
       recordTTL: 60
-      recordType: A
+      recordType: CNAME
       targets:
-        - 192.168.29.200
+        - gateway.sirius.moonblade.work

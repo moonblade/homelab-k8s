@@ -81,9 +81,9 @@ spec:
   endpoints:
     - dnsName: kestra.sirius.moonblade.work
       recordTTL: 60
-      recordType: A
+      recordType: CNAME
       targets:
-        - 192.168.29.200
+        - gateway.sirius.moonblade.work
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint

@@ -32,6 +32,11 @@ spec:
     providerSpecific:
       - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
         value: 'true'
+  - dnsName: gateway.sirius.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.29.200
   - dnsName: hades.moonblade.work
     recordTTL: 60
     recordType: A
