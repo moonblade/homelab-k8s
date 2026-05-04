@@ -24,7 +24,7 @@ metadata:
     app.kubernetes.io/name: ollama-athena
 subsets:
   - addresses:
-      - ip: 192.168.1.198
+      - ip: 192.168.29.198
     ports:
       - port: 11434
         protocol: TCP

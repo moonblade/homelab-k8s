@@ -77,4 +77,4 @@ spec:
     recordTTL: 60
     recordType: A
     targets:
-    - 192.168.1.201
+    - 192.168.29.201

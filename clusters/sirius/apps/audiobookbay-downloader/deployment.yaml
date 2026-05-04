@@ -48,17 +48,17 @@ spec:
       volumes:
         - name: config
           nfs:
-            server: 192.168.1.10
+            server: 192.168.29.10
             path: /mnt/primary/root/config/audiobookbay-downloader
             readOnly: false
         - name: downloads
           nfs:
-            server: 192.168.1.10
+            server: 192.168.29.10
             path: /mnt/primary/root/downloads
             readOnly: false
         - name: audiobooks
           nfs:
-            server: 192.168.1.10
+            server: 192.168.29.10
             path: /mnt/primary/root/audiobooks
             readOnly: false
         - name: beetsconfig
