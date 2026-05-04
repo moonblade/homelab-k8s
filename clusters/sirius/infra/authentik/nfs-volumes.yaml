@@ -15,7 +15,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   nfs:
-    server: 192.168.29.10
+    server: nfs.sirius.local
     path: /mnt/primary/root/storage/authentik/postgresql
 
 ---
@@ -48,7 +48,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   nfs:
-    server: 192.168.29.10
+    server: nfs.sirius.local
     path: /mnt/primary/root/storage/authentik/redis
 
 ---

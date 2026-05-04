@@ -139,7 +139,7 @@ spec:
       volumes:
       - name: kestra-storage
         nfs:
-          server: 192.168.29.10
+          server: nfs.sirius.local
           path: /mnt/primary/root/config/kestra/storage
           readOnly: false
       - name: kestra-tmp
@@ -151,6 +151,6 @@ spec:
           name: kestra-flows
       - name: kestra-db
         nfs:
-          server: 192.168.29.10
+          server: nfs.sirius.local
           path: /mnt/primary/root/storage/kestra/db
           readOnly: false

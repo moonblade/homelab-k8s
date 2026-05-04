@@ -10,7 +10,7 @@
 #
 # Prerequisites:
 # - KUBECONFIG pointing to sirius cluster (or use default ~/.kube/sirius.yaml)
-# - Access to NFS share at 192.168.29.10:/mnt/primary/root/audiobooks
+# - Access to NFS share at nfs.sirius.local:/mnt/primary/root/audiobooks
 #   (either direct mount or via kubectl cp)
 
 set -euo pipefail
@@ -18,7 +18,7 @@ set -euo pipefail
 # Configuration
 KUBECONFIG="${KUBECONFIG:-$HOME/.kube/sirius.yaml}"
 NAMESPACE="kokoro"
-NFS_SERVER="192.168.29.10"
+NFS_SERVER="nfs.sirius.local"
 NFS_PATH="/mnt/primary/root/downloads/ebook-audio"
 DEFAULT_VOICE="am_michael"
 

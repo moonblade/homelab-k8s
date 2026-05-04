@@ -65,7 +65,7 @@ spec:
       volumes:
         - name: config
           nfs:
-            server: 192.168.29.10
+            server: nfs.sirius.local
             path: /mnt/primary/root/config/jackett
             readOnly: false
         - name: settings-override

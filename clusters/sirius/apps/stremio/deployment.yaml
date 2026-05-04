@@ -30,5 +30,5 @@ spec:
       volumes:
         - name: stremio-data
           nfs:
-            server: 192.168.29.10
+            server: nfs.sirius.local
             path: /mnt/primary/root/config/stremio
