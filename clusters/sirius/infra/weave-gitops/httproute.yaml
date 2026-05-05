@@ -89,9 +89,9 @@ spec:
   endpoints:
     - dnsName: weave.sirius.moonblade.work
       recordTTL: 60
-      recordType: A
+      recordType: CNAME
       targets:
-        - 192.168.29.200
+        - gateway.sirius.moonblade.work
 ---
 # DNS for external route (Cloudflare tunnel)
 apiVersion: externaldns.k8s.io/v1alpha1
