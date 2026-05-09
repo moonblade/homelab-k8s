@@ -1,0 +1,258 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+data:
+  network-metering.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "title": "Total Internet Bandwidth (Node)",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "Bps",
+              "custom": { "fillOpacity": 10, "lineWidth": 2 }
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(node_network_receive_bytes_total{device=~\"eno1|eth0|enp.*\"}[5m]))",
+              "legendFormat": "Received"
+            },
+            {
+              "expr": "sum(rate(node_network_transmit_bytes_total{device=~\"eno1|eth0|enp.*\"}[5m]))",
+              "legendFormat": "Transmitted"
+            }
+          ]
+        },
+        {
+          "title": "Total Data Transferred (Node - Cumulative)",
+          "type": "stat",
+          "gridPos": { "h": 4, "w": 12, "x": 0, "y": 8 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": { "unit": "bytes" }
+          },
+          "targets": [
+            {
+              "expr": "sum(increase(node_network_receive_bytes_total{device=~\"eno1|eth0|enp.*\"}[$__range]))",
+              "legendFormat": "Total Received"
+            },
+            {
+              "expr": "sum(increase(node_network_transmit_bytes_total{device=~\"eno1|eth0|enp.*\"}[$__range]))",
+              "legendFormat": "Total Transmitted"
+            }
+          ]
+        },
+        {
+          "title": "Estimated Monthly Usage",
+          "type": "stat",
+          "gridPos": { "h": 4, "w": 12, "x": 12, "y": 8 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 2000000000000 },
+                  { "color": "red", "value": 3000000000000 }
+                ]
+              }
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(node_network_receive_bytes_total{device=~\"eno1|eth0|enp.*\"}[24h])) * 86400 * 30 + sum(rate(node_network_transmit_bytes_total{device=~\"eno1|eth0|enp.*\"}[24h])) * 86400 * 30",
+              "legendFormat": "Projected Monthly (RX+TX)"
+            }
+          ]
+        },
+        {
+          "title": "Top Pods by Network Receive Rate",
+          "type": "timeseries",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 12 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "Bps",
+              "custom": { "fillOpacity": 10, "lineWidth": 1 }
+            }
+          },
+          "targets": [
+            {
+              "expr": "topk(10, sum by (pod) (rate(container_network_receive_bytes_total{namespace!=\"\", pod!=\"\"}[5m])))",
+              "legendFormat": "{{pod}}"
+            }
+          ]
+        },
+        {
+          "title": "Top Pods by Network Transmit Rate",
+          "type": "timeseries",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 12 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "Bps",
+              "custom": { "fillOpacity": 10, "lineWidth": 1 }
+            }
+          },
+          "targets": [
+            {
+              "expr": "topk(10, sum by (pod) (rate(container_network_transmit_bytes_total{namespace!=\"\", pod!=\"\"}[5m])))",
+              "legendFormat": "{{pod}}"
+            }
+          ]
+        },
+        {
+          "title": "Total Data by Namespace (Selected Range)",
+          "type": "table",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 22 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": { "unit": "bytes" },
+            "overrides": [
+              {
+                "matcher": { "id": "byName", "options": "namespace" },
+                "properties": [{ "id": "custom.width", "value": 200 }]
+              }
+            ]
+          },
+          "transformations": [
+            { "id": "merge", "options": {} },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": { "Time": true },
+                "renameByName": {
+                  "Value #Received": "Received",
+                  "Value #Transmitted": "Transmitted"
+                }
+              }
+            }
+          ],
+          "targets": [
+            {
+              "expr": "sum by (namespace) (increase(container_network_receive_bytes_total{namespace!=\"\"}[$__range]))",
+              "legendFormat": "{{namespace}}",
+              "refId": "Received",
+              "format": "table",
+              "instant": true
+            },
+            {
+              "expr": "sum by (namespace) (increase(container_network_transmit_bytes_total{namespace!=\"\"}[$__range]))",
+              "legendFormat": "{{namespace}}",
+              "refId": "Transmitted",
+              "format": "table",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "Top Pods by Total Data Received (Selected Range)",
+          "type": "bargauge",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 32 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 1000000000 },
+                  { "color": "red", "value": 10000000000 }
+                ]
+              }
+            }
+          },
+          "options": {
+            "orientation": "horizontal",
+            "displayMode": "gradient",
+            "reduceOptions": { "calcs": ["lastNotNull"] }
+          },
+          "targets": [
+            {
+              "expr": "topk(15, sum by (pod) (increase(container_network_receive_bytes_total{namespace!=\"\", pod!=\"\"}[$__range])))",
+              "legendFormat": "{{pod}}",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "Top Pods by Total Data Transmitted (Selected Range)",
+          "type": "bargauge",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 32 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 1000000000 },
+                  { "color": "red", "value": 10000000000 }
+                ]
+              }
+            }
+          },
+          "options": {
+            "orientation": "horizontal",
+            "displayMode": "gradient",
+            "reduceOptions": { "calcs": ["lastNotNull"] }
+          },
+          "targets": [
+            {
+              "expr": "topk(15, sum by (pod) (increase(container_network_transmit_bytes_total{namespace!=\"\", pod!=\"\"}[$__range])))",
+              "legendFormat": "{{pod}}",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "Per-Namespace Network Rate",
+          "type": "timeseries",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 42 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "Bps",
+              "custom": { "fillOpacity": 20, "lineWidth": 1, "stacking": { "mode": "normal" } }
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum by (namespace) (rate(container_network_receive_bytes_total{namespace!=\"\"}[5m]) + rate(container_network_transmit_bytes_total{namespace!=\"\"}[5m]))",
+              "legendFormat": "{{namespace}}"
+            }
+          ]
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": ["network", "metering", "bandwidth"],
+      "templating": {
+        "list": [
+          {
+            "current": { "selected": false, "text": "Prometheus", "value": "Prometheus" },
+            "hide": 0,
+            "includeAll": false,
+            "name": "datasource",
+            "options": [],
+            "query": "prometheus",
+            "refresh": 1,
+            "type": "datasource"
+          }
+        ]
+      },
+      "time": { "from": "now-24h", "to": "now" },
+      "title": "Network Metering",
+      "uid": "network-metering"
+    }

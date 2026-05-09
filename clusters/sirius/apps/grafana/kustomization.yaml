@@ -6,3 +6,5 @@ resources:
   - helm-release.yaml
   - secret-sealed.yaml
   - secret-oidc-sealed.yaml
+  - dashboard-network.yaml
+  - httproute.yaml

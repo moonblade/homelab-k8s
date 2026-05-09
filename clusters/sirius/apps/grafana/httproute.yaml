@@ -1,42 +1,40 @@
-# Internal route via local DNS - TLS terminated by Gateway
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: ollama-internal
+  name: grafana-internal
   labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: grafana
+    app.kubernetes.io/name: grafana
 spec:
   parentRefs:
     - name: main-gateway
       namespace: nginx-gateway
       sectionName: https
   hostnames:
-    - ollama.sirius.moonblade.work
+    - grafana.sirius.moonblade.work
   rules:
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: ollama
-          port: 11434
+        - name: grafana
+          port: 80
 ---
-# HTTP to HTTPS redirect for internal route
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: ollama-internal-redirect
+  name: grafana-internal-redirect
   labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: grafana
+    app.kubernetes.io/name: grafana
 spec:
   parentRefs:
     - name: main-gateway
       namespace: nginx-gateway
       sectionName: http
   hostnames:
-    - ollama.sirius.moonblade.work
+    - grafana.sirius.moonblade.work
   rules:
     - filters:
         - type: RequestRedirect
@@ -48,17 +46,16 @@ spec:
             type: PathPrefix
             value: /
 ---
-# Internal DNS endpoint
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
 metadata:
-  name: ollama-internal-dns
+  name: grafana-internal-dns
   labels:
-    app.kubernetes.io/instance: ollama
-    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: grafana
+    app.kubernetes.io/name: grafana
 spec:
   endpoints:
-    - dnsName: ollama.sirius.moonblade.work
+    - dnsName: grafana.sirius.moonblade.work
       recordTTL: 60
       recordType: CNAME
       targets:

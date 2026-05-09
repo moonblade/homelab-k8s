@@ -21,4 +21,4 @@ dashboard-token:
 	@kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath="{.data.token}" | base64 -d
 
 cilium:
-	cilium install --set cluster.name=sirius --set operator.replicas=1 --set ipam.mode=kubernetes --set operator.clusterPoolIPv4PodCIDRList="10.42.0.0/16" --set k8sServiceHost=192.168.1.150 --set k8sServicePort=6443
+	cilium install --set cluster.name=sirius --set operator.replicas=1 --set ipam.mode=kubernetes --set operator.clusterPoolIPv4PodCIDRList="10.42.0.0/16" --set k8sServiceHost=192.168.29.150 --set k8sServicePort=6443

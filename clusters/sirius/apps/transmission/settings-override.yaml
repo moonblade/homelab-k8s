@@ -5,8 +5,8 @@ metadata:
 data:
   settings-override.json: |
     {
-      "ratio-limit": 2.0,
+      "ratio-limit": 0.5,
       "ratio-limit-enabled": true,
-      "idle-seeding-limit": 10080,
+      "idle-seeding-limit": 30,
       "idle-seeding-limit-enabled": true
     }

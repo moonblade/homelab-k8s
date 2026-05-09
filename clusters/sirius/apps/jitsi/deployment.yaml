@@ -126,9 +126,9 @@ spec:
             - name: JVB_PORT
               value: "10000"
             - name: JVB_ADVERTISE_IPS
-              value: "192.168.1.150"
+              value: "192.168.29.150"
             - name: DOCKER_HOST_ADDRESS
-              value: "192.168.1.150"
+              value: "192.168.29.150"
             - name: JVB_STUN_SERVERS
               value: "meet-jit-si-turnrelay.jitsi.net:443"
             - name: JVB_TCP_HARVESTER_DISABLED

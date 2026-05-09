@@ -12,6 +12,7 @@ spec:
           containers:
             - name: beets-executor
               image: curlimages/curl:8.14.1
+              imagePullPolicy: IfNotPresent
               command:
                 - curl
                 - -X
