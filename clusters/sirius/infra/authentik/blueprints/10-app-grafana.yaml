@@ -19,6 +19,21 @@ entries:
             "email_verified": True
         }
 
+  - model: authentik_providers_oauth2.scopemapping
+    id: grafana-groups-scope
+    state: present
+    identifiers:
+      name: "Grafana Groups Mapping"
+    attrs:
+      name: "Grafana Groups Mapping"
+      scope_name: groups
+      expression: |
+        roles = request.user.attributes.get("roles", [])
+        groups = [group.name for group in request.user.ak_groups.all()]
+        return {
+            "groups": roles + groups
+        }
+
   - model: authentik_providers_oauth2.oauth2provider
     id: grafana-provider
     state: present
@@ -44,6 +59,7 @@ entries:
       property_mappings:
         - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
         - !KeyOf grafana-email-scope
+        - !KeyOf grafana-groups-scope
         - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
 
   - model: authentik_core.application
