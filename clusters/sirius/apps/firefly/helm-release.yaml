@@ -17,8 +17,7 @@ spec:
     firefly-iii:
       persistence:
         enabled: true
-        storageClassName: local-path
-        storage: 1Gi
+        existingClaim: firefly-app-nfs
       config:
         env:
           DB_HOST: ""
@@ -37,7 +36,6 @@ spec:
     firefly-db:
       enabled: true
       storage:
-        class: local-path
-        dataSize: 1Gi
+        existingClaim: firefly-db-nfs
     importer:
       enabled: false

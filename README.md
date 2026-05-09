@@ -283,3 +283,7 @@ Replaced kokoro app (kokoro-fastapi-cpu + p0n1/epub_to_audiobook) with moonblade
 - May 9, 2026
 
 Added Loki + Promtail logging stack as infra components (base + overlay pattern). Loki runs in SingleBinary mode with 20Gi filesystem storage. Promtail runs as a DaemonSet collecting logs from all pods across the cluster. Enabled Grafana with Loki pre-configured as the default datasource for log exploration.
+
+- May 10, 2026
+
+Deployed Firefly III (chart 0.9.2, app v6.5.9) as a personal finance tracker. Configured remote_user_guard for seamless Authentik SSO (admin-only, no second login). Storage on TrueNAS NFS with daily snapshots and secondary pool replication. Added Authentik proxy provider blueprint, HTTPRoutes for firefly.moonblade.work (external) and firefly.sirius.moonblade.work (internal). Added Firefly III and Grafana to Homer dashboard.

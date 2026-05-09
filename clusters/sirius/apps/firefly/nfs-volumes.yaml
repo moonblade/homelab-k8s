@@ -1,0 +1,66 @@
+# NFS PersistentVolumes and PersistentVolumeClaims for Firefly III
+# Data stored on TrueNAS NFS at /mnt/primary/root/storage/firefly
+
+---
+# PostgreSQL PersistentVolume (NFS)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: firefly-db-nfs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: nfs.sirius.local
+    path: /mnt/primary/root/storage/firefly/db
+
+---
+# PostgreSQL PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: firefly-db-nfs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 5Gi
+  volumeName: firefly-db-nfs-pv
+
+---
+# Firefly III app uploads PersistentVolume (NFS)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: firefly-app-nfs-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: nfs.sirius.local
+    path: /mnt/primary/root/storage/firefly/uploads
+
+---
+# Firefly III app uploads PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: firefly-app-nfs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: firefly-app-nfs-pv
