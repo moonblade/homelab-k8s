@@ -7,4 +7,6 @@ resources:
   - secret-sealed.yaml
   - secret-oidc-sealed.yaml
   - dashboard-network.yaml
+  - dashboard-infra-logs.yaml
+  - dashboard-app-logs.yaml
   - httproute.yaml

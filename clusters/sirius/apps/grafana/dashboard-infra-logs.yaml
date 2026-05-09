@@ -1,0 +1,203 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-infra-logs
+  labels:
+    grafana_dashboard: "1"
+data:
+  infra-logs.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "title": "Log Volume by Namespace",
+          "type": "timeseries",
+          "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } },
+              "unit": "short"
+            }
+          },
+          "options": { "tooltip": { "mode": "multi" } },
+          "targets": [
+            {
+              "expr": "sum by (namespace) (count_over_time({namespace=~\"authentik|cert-manager|external-dns|flux-system|ingress-nginx|kube-system|loki|metallb-system|nginx-gateway|local-path-storage\"}[1m]))",
+              "legendFormat": "{{namespace}}"
+            }
+          ]
+        },
+        {
+          "title": "Authentik Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 6 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"authentik\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Ingress Nginx Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"ingress-nginx\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Nginx Gateway Fabric Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 26 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"nginx-gateway\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Cert Manager Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 36 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"cert-manager\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "External DNS Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 46 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"external-dns\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Flux System Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 56 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"flux-system\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Loki Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 66 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"loki\", container=\"loki\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Promtail Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 66 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"loki\", container=\"promtail\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "MetalLB Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 76 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"metallb-system\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Kube System Logs",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 76 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"kube-system\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": ["loki", "logs", "infrastructure"],
+      "templating": {
+        "list": [
+          {
+            "current": { "selected": false, "text": "Loki", "value": "P8E80F9AEF21F6940" },
+            "hide": 0,
+            "includeAll": false,
+            "label": "Datasource",
+            "multi": false,
+            "name": "datasource",
+            "options": [],
+            "query": "loki",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "type": "datasource"
+          },
+          {
+            "current": { "selected": false, "text": "", "value": "" },
+            "hide": 0,
+            "label": "Search",
+            "name": "search",
+            "options": [{ "selected": true, "text": "", "value": "" }],
+            "query": "",
+            "skipUrlSync": false,
+            "type": "textbox"
+          }
+        ]
+      },
+      "time": { "from": "now-1h", "to": "now" },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Infrastructure Logs",
+      "uid": "infra-logs",
+      "version": 1
+    }

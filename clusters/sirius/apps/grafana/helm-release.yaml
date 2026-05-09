@@ -97,6 +97,24 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/default
+          - name: infra-logs
+            orgId: 1
+            folder: "Infrastructure"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/infra-logs
+          - name: app-logs
+            orgId: 1
+            folder: "Applications"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/app-logs
 
     dashboardsConfigMaps:
       default: grafana-dashboards
+      infra-logs: grafana-dashboard-infra-logs
+      app-logs: grafana-dashboard-app-logs
