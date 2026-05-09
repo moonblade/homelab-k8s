@@ -44,6 +44,29 @@ spec:
         memory: 256Mi
         cpu: 100m
 
+    grafana.ini:
+      server:
+        root_url: https://grafana.moonblade.work
+      auth.generic_oauth:
+        enabled: true
+        name: Authentik
+        allow_sign_up: true
+        client_id: grafana-homelab-oidc
+        client_secret: $__file{/etc/secrets/grafana-oidc/client_secret}
+        scopes: openid email profile
+        auth_url: https://login.moonblade.work/application/o/authorize/
+        token_url: https://login.moonblade.work/application/o/token/
+        api_url: https://login.moonblade.work/application/o/userinfo/
+        role_attribute_path: "contains(groups, 'admin') && 'Admin' || 'Viewer'"
+        auto_login: false
+
+    extraSecretMounts:
+      - name: grafana-oidc
+        secretName: grafana-oidc
+        defaultMode: 0440
+        mountPath: /etc/secrets/grafana-oidc
+        readOnly: true
+
     datasources:
       datasources.yaml:
         apiVersion: 1
