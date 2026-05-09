@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: firefly-iii-stack
-      version: "0.8.1"
+      version: "0.9.2"
       sourceRef:
         kind: HelmRepository
         name: firefly-iii
@@ -17,5 +17,25 @@ spec:
     firefly-iii:
       persistence:
         enabled: true
-        storageClass: local-path
-        size: 1Gi
+        existingClaim: firefly-app-nfs
+      config:
+        env:
+          DB_HOST: ""
+          DB_CONNECTION: pgsql
+          DB_PORT: "5432"
+          DB_DATABASE: firefly
+          DB_USERNAME: firefly
+          DEFAULT_LANGUAGE: "en_US"
+          DEFAULT_LOCALE: "equal"
+          TZ: "Asia/Kolkata"
+          TRUSTED_PROXIES: "**"
+          AUTHENTICATION_GUARD: "remote_user_guard"
+          AUTHENTICATION_GUARD_HEADER: "HTTP_X_AUTHENTIK_USERNAME"
+          AUTHENTICATION_GUARD_EMAIL: "HTTP_X_AUTHENTIK_EMAIL"
+          APP_URL: "https://firefly.moonblade.work"
+    firefly-db:
+      enabled: true
+      storage:
+        existingClaim: firefly-db-nfs
+    importer:
+      enabled: false

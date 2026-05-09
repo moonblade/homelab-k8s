@@ -1,0 +1,104 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: firefly-external
+  labels:
+    app.kubernetes.io/instance: firefly
+    app.kubernetes.io/name: firefly
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - firefly.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ak-outpost-firefly
+          namespace: authentik
+          port: 9000
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: firefly-internal
+  labels:
+    app.kubernetes.io/instance: firefly
+    app.kubernetes.io/name: firefly
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: https
+  hostnames:
+    - firefly.sirius.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: firefly-iii
+          port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: firefly-internal-redirect
+  labels:
+    app.kubernetes.io/instance: firefly
+    app.kubernetes.io/name: firefly
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - firefly.sirius.moonblade.work
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: firefly-internal-dns
+  labels:
+    app.kubernetes.io/instance: firefly
+    app.kubernetes.io/name: firefly
+spec:
+  endpoints:
+    - dnsName: firefly.sirius.moonblade.work
+      recordTTL: 60
+      recordType: CNAME
+      targets:
+        - gateway.sirius.moonblade.work
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: firefly-outer
+  labels:
+    app.kubernetes.io/instance: firefly
+    app.kubernetes.io/name: firefly
+spec:
+  endpoints:
+    - dnsName: firefly.moonblade.work
+      recordTTL: 60
+      recordType: CNAME
+      targets:
+        - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: 'true'

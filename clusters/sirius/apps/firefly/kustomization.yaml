@@ -4,4 +4,6 @@ namespace: firefly
 resources:
   - helm-release.yaml
   - helm-repo.yaml
+  - httproute.yaml
+  - nfs-volumes.yaml
 

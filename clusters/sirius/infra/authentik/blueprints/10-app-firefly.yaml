@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-firefly
+  labels:
+    blueprints.goauthentik.io/description: "Firefly III proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: firefly-provider
+    state: present
+    identifiers:
+      name: Provider for Firefly
+    attrs:
+      name: Provider for Firefly
+      mode: proxy
+      external_host: https://firefly.moonblade.work
+      internal_host: http://firefly-iii.firefly.svc.cluster.local:80
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: firefly-app
+    state: present
+    identifiers:
+      slug: firefly
+    attrs:
+      name: Firefly III
+      slug: firefly
+      provider: !KeyOf firefly-provider
+      policy_engine_mode: any
+      meta_launch_url: https://firefly.moonblade.work
+
+  # Policy binding to allow users with admin role
+  - model: authentik_policies.policybinding
+    id: firefly-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf firefly-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      target: !KeyOf firefly-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: firefly-outpost
+    state: present
+    identifiers:
+      name: Firefly
+    attrs:
+      name: Firefly
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf firefly-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info
