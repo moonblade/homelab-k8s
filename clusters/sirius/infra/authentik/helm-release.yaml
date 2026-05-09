@@ -55,6 +55,11 @@ spec:
             secretKeyRef:
               name: authentik-secrets
               key: google.client_secret
+        - name: GRAFANA_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: authentik-secrets
+              key: grafana.client_secret
 
   valuesFrom:
     - kind: Secret

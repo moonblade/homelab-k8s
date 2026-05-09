@@ -279,3 +279,7 @@ Removed the hourly dedup cronjob (`dedup-cronjob.yaml`) and its sealed secret. T
 - Apr 17, 2026
 
 Replaced kokoro app (kokoro-fastapi-cpu + p0n1/epub_to_audiobook) with moonblade/epubtoaudio. New setup uses Ollama (gemma3:4b) for speaker detection instead of bundled Kokoro TTS. Output saved to NFS at /mnt/primary/root/downloads/ebook-audio (same path as audiobookshelf ebook-audio library). Added Flux image automation for auto-updates.
+
+- May 9, 2026
+
+Added Loki + Promtail logging stack as infra components (base + overlay pattern). Loki runs in SingleBinary mode with 20Gi filesystem storage. Promtail runs as a DaemonSet collecting logs from all pods across the cluster. Enabled Grafana with Loki pre-configured as the default datasource for log exploration.

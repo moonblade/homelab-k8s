@@ -20,6 +20,8 @@ base/
     ├── longhorn/               # Storage (disabled - had issues)
     ├── metallb/                # Bare-metal load balancer
     ├── nginx-gateway-fabric/   # Gateway API implementation
+    ├── loki/                   # Log aggregation (Grafana Loki)
+    ├── promtail/               # Log collector (DaemonSet, ships to Loki)
     ├── sealed-secrets/         # Bitnami SealedSecrets controller
     └── weave-gitops/           # GitOps UI
 ```

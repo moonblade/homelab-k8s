@@ -1,10 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: grafana
+namespace: loki
 resources:
   - helm-repo.yaml
   - helm-release.yaml
-  - secret-sealed.yaml
-  - secret-oidc-sealed.yaml
-  - dashboard-network.yaml
-  - httproute.yaml
