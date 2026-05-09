@@ -1,0 +1,294 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-app-logs
+  labels:
+    grafana_dashboard: "1"
+data:
+  app-logs.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "title": "Log Volume by App",
+          "type": "timeseries",
+          "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } },
+              "unit": "short"
+            }
+          },
+          "options": { "tooltip": { "mode": "multi" } },
+          "targets": [
+            {
+              "expr": "sum by (namespace) (count_over_time({namespace=~\"audiobookbay-downloader|audiobookshelf|beszel|chimera-md|chimera-md-public|expensetracker|feeder|filebrowser|homer|jackett|kokoro|n8n|ollama|ollama-athena|open-webui|prometheus|stremio|transmission|uptime-kuma\"}[1m]))",
+              "legendFormat": "{{namespace}}"
+            }
+          ]
+        },
+        {
+          "title": "Audiobookbay Downloader",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 6 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"audiobookbay-downloader\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Audiobookshelf",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"audiobookshelf\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Feeder (WebToEpub)",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 26 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"feeder\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Kokoro (EPUB to Audiobook)",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 36 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"kokoro\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Transmission",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 46 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"transmission\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Jackett",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 46 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"jackett\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "n8n",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 56 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"n8n\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Open WebUI",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 66 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"open-webui\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Ollama",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 66 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=~\"ollama|ollama-athena\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Beszel",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 76 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"beszel\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Stremio",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 76 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"stremio\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Chimera MD",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 86 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=~\"chimera-md|chimera-md-public\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Filebrowser",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 86 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"filebrowser\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Expense Tracker",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 96 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"expensetracker\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Uptime Kuma",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 96 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"uptime-kuma\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Homer",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 0, "y": 106 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"homer\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        },
+        {
+          "title": "Prometheus",
+          "type": "logs",
+          "gridPos": { "h": 10, "w": 12, "x": 12, "y": 106 },
+          "datasource": { "type": "loki", "uid": "${datasource}" },
+          "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
+          "targets": [
+            {
+              "expr": "{namespace=\"prometheus\"} |= `$search`",
+              "legendFormat": ""
+            }
+          ]
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": ["loki", "logs", "applications"],
+      "templating": {
+        "list": [
+          {
+            "current": { "selected": false, "text": "Loki", "value": "P8E80F9AEF21F6940" },
+            "hide": 0,
+            "includeAll": false,
+            "label": "Datasource",
+            "multi": false,
+            "name": "datasource",
+            "options": [],
+            "query": "loki",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "type": "datasource"
+          },
+          {
+            "current": { "selected": false, "text": "", "value": "" },
+            "hide": 0,
+            "label": "Search",
+            "name": "search",
+            "options": [{ "selected": true, "text": "", "value": "" }],
+            "query": "",
+            "skipUrlSync": false,
+            "type": "textbox"
+          }
+        ]
+      },
+      "time": { "from": "now-1h", "to": "now" },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Application Logs",
+      "uid": "app-logs",
+      "version": 1
+    }
