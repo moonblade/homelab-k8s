@@ -237,3 +237,19 @@ spec:
     - group: ""
       kind: Service
       name: ak-outpost-open-webui
+---
+# Firefly app
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-firefly-to-authentik
+  namespace: authentik
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: firefly
+  to:
+    - group: ""
+      kind: Service
+      name: ak-outpost-firefly

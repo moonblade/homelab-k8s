@@ -37,6 +37,7 @@ configMapGenerator:
       - ./blueprints/10-app-kokoro.yaml
       - ./blueprints/10-app-open-webui.yaml
       - ./blueprints/10-app-grafana.yaml
+      - ./blueprints/10-app-firefly.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
