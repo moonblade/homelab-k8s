@@ -5,6 +5,15 @@ metadata:
   namespace: firefly
 spec:
   interval: 5m
+  timeout: 10m
+  install:
+    disableHooks: true
+    remediation:
+      retries: 3
+  upgrade:
+    disableHooks: true
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: firefly-iii-stack
@@ -20,7 +29,7 @@ spec:
         existingClaim: firefly-app-nfs
       config:
         env:
-          DB_HOST: ""
+          DB_HOST: "firefly-iii-firefly-db"
           DB_CONNECTION: pgsql
           DB_PORT: "5432"
           DB_DATABASE: firefly
