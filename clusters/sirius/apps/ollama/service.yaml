@@ -1,0 +1,31 @@
+# Service without selector -- uses manual Endpoints to point to external Ollama on Hades LXC (GPU)
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  labels:
+    app.kubernetes.io/instance: ollama
+    app.kubernetes.io/name: ollama
+spec:
+  type: ClusterIP
+  ports:
+    - port: 11434
+      targetPort: 11434
+      protocol: TCP
+      name: http
+---
+# Manual Endpoints pointing to the Hades LXC container (192.168.29.74)
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: ollama
+  labels:
+    app.kubernetes.io/instance: ollama
+    app.kubernetes.io/name: ollama
+subsets:
+  - addresses:
+      - ip: 192.168.29.74
+    ports:
+      - port: 11434
+        protocol: TCP
+        name: http

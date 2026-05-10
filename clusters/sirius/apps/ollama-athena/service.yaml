@@ -1,4 +1,4 @@
-# Service without selector -- uses manual Endpoints to point to external Ollama on Athena LXC
+# Service without selector -- uses manual Endpoints to point to external Ollama on Hades LXC
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,7 +14,7 @@ spec:
       protocol: TCP
       name: http
 ---
-# Manual Endpoints pointing to the Athena LXC container
+# Manual Endpoints pointing to the Hades LXC container
 apiVersion: v1
 kind: Endpoints
 metadata:
@@ -24,7 +24,7 @@ metadata:
     app.kubernetes.io/name: ollama-athena
 subsets:
   - addresses:
-      - ip: 192.168.29.198
+      - ip: 192.168.29.74
     ports:
       - port: 11434
         protocol: TCP

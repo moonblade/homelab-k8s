@@ -28,7 +28,7 @@ data:
           "options": { "tooltip": { "mode": "multi" } },
           "targets": [
             {
-              "expr": "sum by (namespace) (count_over_time({namespace=~\"audiobookbay-downloader|audiobookshelf|beszel|chimera-md|chimera-md-public|expensetracker|feeder|filebrowser|homer|jackett|kokoro|n8n|ollama|ollama-athena|open-webui|prometheus|stremio|transmission|uptime-kuma\"}[1m]))",
+              "expr": "sum by (namespace) (count_over_time({namespace=~\"audiobookbay-downloader|audiobookshelf|beszel|chimera-md|chimera-md-public|expensetracker|feeder|filebrowser|homer|jackett|kokoro|n8n|ollama|open-webui|prometheus|stremio|transmission|uptime-kuma\"}[1m]))",
               "legendFormat": "{{namespace}}"
             }
           ]
@@ -145,7 +145,7 @@ data:
           "options": { "showTime": true, "showLabels": true, "showCommonLabels": false, "wrapLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none" },
           "targets": [
             {
-              "expr": "{namespace=~\"ollama|ollama-athena\"} |= `$search`",
+              "expr": "{namespace=~\"ollama\"} |= `$search`",
               "legendFormat": ""
             }
           ]
