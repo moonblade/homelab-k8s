@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: email-expense-tracker-image-pull
+  namespace: email-expense-tracker
+spec:
+  encryptedData:
+    .dockerconfigjson: AgB+T9ybT7mqv4fnEvzyM2tPcofosKCfYLaedgMfzxR0fIBy5y+R1Z9D0lTQF5w8agGgMOcxyL2QX0tLazkAPr7OTv0jnKKsa4qMgZ41aDXKFqCvIIFFZlvBDlxIa1iDMUIMuA1VZ5KJPiqYntXWiBcyqn7+hq+E3gNKocYU2i10dOwSXVYNmjICOlcSrzwPf6jHgo0U+pocKNGzjwMiyiR43I7zlow491hDRAKrmEzQldwZRQ7mlSFr69KH0RWmPBdd4pgm4sFcxUBOU9kS2OmOyVwvxDgpNPb79Vtl3HbB1pfWRETATZYOKtleuubMQAPa8295lcCs3cUeHJ6v+uZnzdJ+1hjj0aMKr/t9dk9/JDcQs994rSOhn8dHM7843f5Poo7TzM39BzUk+71gtyzmKFUKo/0+A0ndGBRE4yv9jII+T7wPeyQ11o26YMrlPzW6GtoBGIMzWjJEOI/2tUImJboD+6qUC0oN3eQoLaj+h0FuIAcP8AvlicL68AjyttQGbrbILV+dCp186l5S3+sUq+8lQI4wiMACM/9W1NmvWHfQPNbFgPl88AxP2hX3Sz5LZTVpvZkIiCihLf9aonNIRVn3+U9Qn457s3E5bSz7P0fjvAzFqF0hQ+wdqqbtaaq+Cup7eX83n0gRG4dXJ4/swlrAkbynydZNsOOb+gRnBNG4Jt+OneClmF6kh5K13IvS566/2O5Nzp77K/LVsJxtMT9QIKNCmoWZCwYmMuR1CPh3eYY1YH8rjarH9D4UQKGFg+/rmR9E+HEEmQvD1dSVt35t2o+mCchz6vsLkpAuuEzIqH0VjBbeMBqDp7gKGi7FGigfOADtR3vokxDTG1k/AOVnqMBX5SW+qCt/1z/MEZc7lag829qalmdlQgVGeaWZCsZ15ABLStMqQtbXA/FHWiZrUnLrwRuLjwvPSBBI6xM=
+  template:
+    metadata:
+      creationTimestamp: null
+      name: email-expense-tracker-image-pull
+      namespace: email-expense-tracker
+    type: kubernetes.io/dockerconfigjson

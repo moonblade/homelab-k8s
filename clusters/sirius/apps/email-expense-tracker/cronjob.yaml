@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: email-expense-executor
+spec:
+  schedule: "*/15 * * * *"
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 180
+      ttlSecondsAfterFinished: 600
+      template:
+        spec:
+          containers:
+            - name: email-expense-executor
+              image: curlimages/curl:8.14.1
+              imagePullPolicy: IfNotPresent
+              command:
+                - curl
+                - -X
+                - POST
+                - http://email-expense-tracker:8000/execute
+          restartPolicy: OnFailure
