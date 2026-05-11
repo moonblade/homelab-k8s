@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: email-expense-tracker
+  labels:
+    app.kubernetes.io/instance: email-expense-tracker
+    app.kubernetes.io/name: email-expense-tracker
+spec:
+  selector:
+    app.kubernetes.io/instance: email-expense-tracker
+    app.kubernetes.io/name: email-expense-tracker
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8000
+      targetPort: http
+  type: ClusterIP
