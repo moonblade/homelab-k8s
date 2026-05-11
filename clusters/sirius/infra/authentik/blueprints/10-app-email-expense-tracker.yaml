@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-email-expense-tracker
+  labels:
+    blueprints.goauthentik.io/description: "Email Expense Tracker proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: email-expense-tracker-provider
+    state: present
+    identifiers:
+      name: Provider for Email Expense Tracker
+    attrs:
+      name: Provider for Email Expense Tracker
+      mode: proxy
+      external_host: https://email-expense.moonblade.work
+      internal_host: http://email-expense-tracker.email-expense-tracker.svc.cluster.local:8000
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: email-expense-tracker-app
+    state: present
+    identifiers:
+      slug: email-expense-tracker
+    attrs:
+      name: Email Expense Tracker
+      slug: email-expense-tracker
+      provider: !KeyOf email-expense-tracker-provider
+      policy_engine_mode: any
+
+  # Policy binding to allow users with admin role only
+  - model: authentik_policies.policybinding
+    id: email-expense-tracker-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf email-expense-tracker-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      target: !KeyOf email-expense-tracker-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: email-expense-tracker-outpost
+    state: present
+    identifiers:
+      name: Email Expense Tracker
+    attrs:
+      name: Email Expense Tracker
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf email-expense-tracker-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info
