@@ -38,9 +38,7 @@ spec:
           DEFAULT_LOCALE: "equal"
           TZ: "Asia/Kolkata"
           TRUSTED_PROXIES: "**"
-          AUTHENTICATION_GUARD: "remote_user_guard"
-          AUTHENTICATION_GUARD_HEADER: "HTTP_X_AUTHENTIK_USERNAME"
-          AUTHENTICATION_GUARD_EMAIL: "HTTP_X_AUTHENTIK_EMAIL"
+          AUTHENTICATION_GUARD: "web"
           APP_URL: "https://firefly.moonblade.work"
     firefly-db:
       enabled: true
