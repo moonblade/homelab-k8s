@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: email-expense-tracker
-          image: ghcr.io/moonblade/email-expense-tracker:ts_1778496740 # {"$imagepolicy": "email-expense-tracker:email-expense-tracker"}
+          image: ghcr.io/moonblade/email-expense-tracker:ts_1778662714 # {"$imagepolicy": "email-expense-tracker:email-expense-tracker"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
