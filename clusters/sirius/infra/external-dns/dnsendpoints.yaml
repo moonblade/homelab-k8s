@@ -42,6 +42,11 @@ spec:
     recordType: A
     targets:
     - 100.64.235.127
+  - dnsName: hermes.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.29.77
   - dnsName: luna.moonblade.work
     recordTTL: 60
     recordType: A
