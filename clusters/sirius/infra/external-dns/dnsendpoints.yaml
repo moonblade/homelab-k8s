@@ -47,6 +47,11 @@ spec:
     recordType: A
     targets:
     - 192.168.29.77
+  - dnsName: ollama.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - hermes.moonblade.work
   - dnsName: luna.moonblade.work
     recordTTL: 60
     recordType: A
