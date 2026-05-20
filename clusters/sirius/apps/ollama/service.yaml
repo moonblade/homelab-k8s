@@ -14,7 +14,7 @@ spec:
       protocol: TCP
       name: http
 ---
-# Manual Endpoints pointing to Hermes Windows VM (192.168.29.77)
+# Manual Endpoints pointing to Hermes Windows VM (192.168.1.77)
 apiVersion: v1
 kind: Endpoints
 metadata:
@@ -24,7 +24,7 @@ metadata:
     app.kubernetes.io/name: ollama
 subsets:
   - addresses:
-      - ip: 192.168.29.77
+      - ip: 192.168.1.77
     ports:
       - port: 11434
         protocol: TCP
