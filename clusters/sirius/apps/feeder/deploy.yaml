@@ -15,6 +15,7 @@ spec:
       containers:
         - name: feeder
           image: ghcr.io/moonblade/feeder:ts_1778757600 # {"$imagepolicy": "feeder:feeder"}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9000
           volumeMounts:
@@ -33,9 +34,9 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: 7234
-            initialDelaySeconds: 300
-            periodSeconds: 300
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 60
       volumes:
         - name: feeder-data
           nfs:
