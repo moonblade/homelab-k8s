@@ -27,6 +27,8 @@ spec:
             - secretRef:
                 name: feeder-env-secret
           env:
+            - name: MAX_BATCH_SIZE
+              value: "30"
             - name: UPDATE_FREQUENCY_SECONDS
               value: "900"
             - name: TEST_FILE
