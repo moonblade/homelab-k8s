@@ -36,7 +36,7 @@ spec:
     recordTTL: 60
     recordType: A
     targets:
-    - 192.168.1.200
+    - 192.168.1.201
   - dnsName: hades.moonblade.work
     recordTTL: 60
     recordType: A
