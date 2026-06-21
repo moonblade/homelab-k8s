@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: dsij-downloader
-              image: ghcr.io/moonblade/dsij:ts_1782027927 # {"$imagepolicy": "dsij:dsij"}
+              image: ghcr.io/moonblade/dsij:ts_1782030515 # {"$imagepolicy": "dsij:dsij"}
               imagePullPolicy: IfNotPresent
               envFrom:
                 - secretRef:
