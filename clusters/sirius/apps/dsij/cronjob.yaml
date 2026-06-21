@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dsij-downloader
+spec:
+  # Every Thursday at 20:10 (matches original crontab: 10 20 * * 4)
+  schedule: "10 20 * * 4"
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 1800
+      ttlSecondsAfterFinished: 3600
+      template:
+        spec:
+          containers:
+            - name: dsij-downloader
+              image: ghcr.io/moonblade/dsij:ts_0000000000 # {"$imagepolicy": "dsij:dsij"}
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - secretRef:
+                    name: dsij-env
+              volumeMounts:
+                - name: dsij-cache
+                  mountPath: /cache
+          restartPolicy: OnFailure
+          volumes:
+            - name: dsij-cache
+              nfs:
+                server: nfs.sirius.local
+                path: /mnt/primary/root/config/dsij
+                readOnly: false
