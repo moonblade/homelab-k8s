@@ -36,6 +36,9 @@ spec:
         - name: ebook-audio
           mountPath: /ebook-audio
           mountPropagation: HostToContainer
+        - name: downloads
+          mountPath: /downloads
+          mountPropagation: HostToContainer
         env:
         - name: TZ
           value: America/Toronto
@@ -64,4 +67,9 @@ spec:
         nfs:
           server: nfs.sirius.local
           path: /mnt/primary/root/downloads/ebook-audio
+          readOnly: false
+      - name: downloads
+        nfs:
+          server: nfs.sirius.local
+          path: /mnt/primary/root/downloads
           readOnly: false
