@@ -1,0 +1,80 @@
+# External: download.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
+# Note: ReferenceGrant is in clusters/sirius/infra/authentik/referencegrants.yaml
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: download-external
+  namespace: download
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - download.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: ak-outpost-download-search
+      namespace: authentik
+      port: 9000
+---
+# Internal: download.sirius.moonblade.work HTTP → HTTPS redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: download-internal-redirect
+  namespace: download
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - download.sirius.moonblade.work
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+# Internal: download.sirius.moonblade.work → download service directly (no auth)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: download-internal
+  namespace: download
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: https
+  hostnames:
+  - download.sirius.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: download
+      port: 80
+---
+# DNS for internal route pointing to Gateway IP
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: download-internal-dns
+  namespace: download
+spec:
+  endpoints:
+  - dnsName: download.sirius.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - gateway.sirius.moonblade.work

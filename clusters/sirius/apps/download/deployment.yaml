@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: download
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: download
+  template:
+    metadata:
+      labels:
+        app: download
+    spec:
+      securityContext:
+        fsGroup: 0
+      containers:
+        - name: download
+          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1782389331
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          envFrom:
+            - secretRef:
+                name: download-secret
+            - configMapRef:
+                name: download-config
+          env:
+            - name: DB_PATH
+              value: /config
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+              subPath: complete
+              mountPropagation: HostToContainer
+            - name: audiobooks
+              mountPath: /audiobooks
+              mountPropagation: HostToContainer
+      volumes:
+        - name: config
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/config/download
+            readOnly: false
+        - name: downloads
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/downloads
+            readOnly: false
+        - name: audiobooks
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/audiobooks
+            readOnly: false

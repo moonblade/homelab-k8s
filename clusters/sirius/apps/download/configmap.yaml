@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: download-config
+data:
+  JACKETT_API_URL: http://jackett.jackett.svc.cluster.local:9117/api/v2.0/indexers/all/results
+  TRANSMISSION_URL: http://transmission.transmission.svc.cluster.local:9091/transmission/rpc
+  BEETS_INPUT_PATH: /downloads
+  BEETSDIR: /config
+  USE_BEETS_IMPORT: "false"
+  TITLE: Download Search
+  LABEL: audiobook
+  AUTH_MODE: "authentik"
+  GOODREADS_ENABLED: "true"
