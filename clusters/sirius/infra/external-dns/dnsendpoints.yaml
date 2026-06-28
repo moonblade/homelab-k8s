@@ -16,6 +16,14 @@ spec:
     targets:
     - 100.100.145.85
     # - 192.168.1.150
+  - dnsName: download.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    providerSpecific:
+      - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+        value: 'true'
   - dnsName: siriusk8s.moonblade.work
     recordTTL: 60
     recordType: CNAME
