@@ -1,0 +1,77 @@
+# External: jellyfin.moonblade.work via Cloudflare tunnel
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jellyfin-external
+  namespace: jellyfin
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - jellyfin.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: jellyfin
+      port: 80
+---
+# Internal: jellyfin.sirius.moonblade.work HTTP → HTTPS redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jellyfin-internal-redirect
+  namespace: jellyfin
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - jellyfin.sirius.moonblade.work
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+# Internal: jellyfin.sirius.moonblade.work HTTPS → jellyfin service
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jellyfin-internal
+  namespace: jellyfin
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: https
+  hostnames:
+  - jellyfin.sirius.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: jellyfin
+      port: 80
+---
+# DNS for internal route pointing to Gateway IP
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: jellyfin-internal-dns
+  namespace: jellyfin
+spec:
+  endpoints:
+  - dnsName: jellyfin.sirius.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - gateway.sirius.moonblade.work
