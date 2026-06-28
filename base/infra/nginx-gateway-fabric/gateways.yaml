@@ -47,10 +47,9 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
-    # Temporarily remove TLS until certificates are ready  
-    # tls:
-    #   mode: Terminate
-    #   certificateRefs:
-    #   - kind: Secret
-    #     name: wildcard-external-cert
-    #     namespace: nginx-gateway
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: wildcard-external-cert
+        namespace: nginx-gateway
