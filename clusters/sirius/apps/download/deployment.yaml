@@ -44,9 +44,6 @@ spec:
             - name: audiobooks
               mountPath: /audiobooks
               mountPropagation: HostToContainer
-            - name: beetsconfig
-              mountPath: /config/config.yaml
-              subPath: config.yaml
       volumes:
         - name: config
           nfs:
@@ -63,6 +60,3 @@ spec:
             server: nfs.sirius.local
             path: /mnt/primary/root/audiobooks
             readOnly: false
-        - name: beetsconfig
-          configMap:
-            name: beetsconfig
