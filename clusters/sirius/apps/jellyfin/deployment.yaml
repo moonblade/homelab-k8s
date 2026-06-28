@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      securityContext:
+        fsGroup: 0
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:10.10.7
+          ports:
+            - containerPort: 8096
+              protocol: TCP
+              name: http
+            - containerPort: 8920
+              protocol: TCP
+            - containerPort: 7359
+              protocol: UDP
+            - containerPort: 1900
+              protocol: UDP
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: Etc/UTC
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /data/downloads
+              mountPropagation: HostToContainer
+            - name: audiobooks
+              mountPath: /data/audiobooks
+              mountPropagation: HostToContainer
+          readinessProbe:
+            exec:
+              command: ["test", "-f", "/config/DONOTDELETE"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: config
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/config/jellyfin
+            readOnly: false
+        - name: downloads
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/downloads/complete
+            readOnly: false
+        - name: audiobooks
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/audiobooks
+            readOnly: false
