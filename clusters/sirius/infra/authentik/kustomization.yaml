@@ -22,6 +22,7 @@ configMapGenerator:
       - ./blueprints/06-notification-new-user.yaml
       - ./blueprints/10-app-feeder.yaml
       - ./blueprints/10-app-audiobooksearch.yaml
+      - ./blueprints/10-app-download.yaml
       - ./blueprints/10-app-jackett.yaml
       - ./blueprints/10-app-yts-search.yaml
       - ./blueprints/10-app-filebrowser.yaml
