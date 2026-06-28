@@ -9,6 +9,6 @@ data:
   BEETSDIR: /config
   USE_BEETS_IMPORT: "false"
   TITLE: Download Search
-  LABEL: audiobook
+  LABEL: downloads
   AUTH_MODE: "authentik"
   GOODREADS_ENABLED: "true"
