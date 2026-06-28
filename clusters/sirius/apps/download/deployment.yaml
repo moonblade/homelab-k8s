@@ -29,10 +29,9 @@ spec:
             - name: DB_PATH
               value: /config
           readinessProbe:
-            httpGet:
-              path: /
-              port: 9000
-            initialDelaySeconds: 10
+            exec:
+              command: ["test", "-f", "/config/app_config.json"]
+            initialDelaySeconds: 5
             periodSeconds: 10
           volumeMounts:
             - name: config
