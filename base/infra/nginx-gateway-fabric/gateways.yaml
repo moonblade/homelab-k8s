@@ -33,6 +33,9 @@ spec:
       - kind: Secret
         name: wildcard-sirius-cert
         namespace: nginx-gateway
+      - kind: Secret
+        name: wildcard-external-cert
+        namespace: nginx-gateway
   # External HTTP listener
   - name: http-external
     port: 8080
