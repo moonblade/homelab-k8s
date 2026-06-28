@@ -20,10 +20,11 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
-  # HTTPS listener (port 443) - for TLS termination  
+  # HTTPS listener (port 443) - for *.sirius.moonblade.work TLS termination
   - name: https
     port: 443
     protocol: HTTPS
+    hostname: "*.sirius.moonblade.work"
     allowedRoutes:
       namespaces:
         from: All
@@ -33,6 +34,17 @@ spec:
       - kind: Secret
         name: wildcard-sirius-cert
         namespace: nginx-gateway
+  # HTTPS listener (port 443) - for *.moonblade.work TLS termination
+  - name: https-moonblade
+    port: 443
+    protocol: HTTPS
+    hostname: "*.moonblade.work"
+    allowedRoutes:
+      namespaces:
+        from: All
+    tls:
+      mode: Terminate
+      certificateRefs:
       - kind: Secret
         name: wildcard-external-cert
         namespace: nginx-gateway
