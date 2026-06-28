@@ -25,3 +25,4 @@ spec:
   dnsNames:
   - "*.moonblade.work"
   - "moonblade.work"
+  - "*.home.moonblade.work"
