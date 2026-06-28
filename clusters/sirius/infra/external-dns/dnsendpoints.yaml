@@ -77,6 +77,11 @@ spec:
     recordType: CNAME
     targets:
     - ubuntu-1.tailab18b.ts.net
+  - dnsName: jellyfin.local.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.1.201
 #  - dnsName: nobrokerrpi.moonblade.work
 #    recordTTL: 60
 #    recordType: CNAME
