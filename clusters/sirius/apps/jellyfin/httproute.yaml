@@ -62,6 +62,48 @@ spec:
     - name: jellyfin
       port: 80
 ---
+# Local-only: jellyfin.local.moonblade.work HTTP → HTTPS redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jellyfin-local-redirect
+  namespace: jellyfin
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - jellyfin.local.moonblade.work
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+# Local-only: jellyfin.local.moonblade.work HTTPS → jellyfin service (no Cloudflare)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jellyfin-local
+  namespace: jellyfin
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: https
+  hostnames:
+  - jellyfin.local.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: jellyfin
+      port: 80
+---
 # DNS for internal route pointing to Gateway IP
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
