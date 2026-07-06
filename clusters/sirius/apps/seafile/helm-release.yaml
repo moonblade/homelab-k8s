@@ -1,3 +1,66 @@
+# MariaDB for Seafile (bitnami chart, NFS-backed storage)
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: seafile-mariadb
+  namespace: seafile
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: mariadb
+      version: "19.x"
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: seafile
+  install:
+    timeout: 10m
+  upgrade:
+    timeout: 10m
+  values:
+    auth:
+      database: seafile_db
+      username: seafile
+      existingSecret: seafile-secret
+    primary:
+      persistence:
+        existingClaim: seafile-db-nfs
+    image:
+      pullPolicy: IfNotPresent
+---
+# Redis for Seafile (bitnami chart, ephemeral — cache only)
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: seafile-redis
+  namespace: seafile
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: redis
+      version: "20.x"
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: seafile
+  install:
+    timeout: 10m
+  upgrade:
+    timeout: 10m
+  values:
+    auth:
+      enabled: false
+    master:
+      persistence:
+        enabled: false
+    replica:
+      replicaCount: 0
+    image:
+      pullPolicy: IfNotPresent
+---
+# Seafile CE
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -5,6 +68,9 @@ metadata:
   namespace: seafile
 spec:
   interval: 1h
+  dependsOn:
+    - name: seafile-mariadb
+    - name: seafile-redis
   chart:
     spec:
       chart: ce
@@ -24,7 +90,7 @@ spec:
       configs:
         image: seafileltd/seafile-mc:13.0-latest
         seafileDataVolume:
-          storage: 20Gi
+          disablePVC: true
 
       env:
         TIME_ZONE: "Asia/Calcutta"
@@ -52,16 +118,9 @@ spec:
 
       extraResources: {}
       extraEnv: []
-      extraVolumes: []
-
-    mariadb:
-      enabled: true
-      auth:
-        database: seafile_db
-        username: seafile
-        existingSecret: seafile-secret
-
-    redis:
-      enabled: true
-      auth:
-        enabled: false
+      extraVolumes:
+        - name: seafile-data
+          mountPath: /shared
+          volumeInfo:
+            persistentVolumeClaim:
+              claimName: seafile-data

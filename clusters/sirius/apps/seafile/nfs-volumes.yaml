@@ -1,0 +1,68 @@
+# NFS PersistentVolumes and PersistentVolumeClaims for Seafile
+# Data stored on TrueNAS NFS at /mnt/primary/root/storage/seafile
+
+---
+# MariaDB PersistentVolume (NFS)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: seafile-db-nfs-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: nfs.sirius.local
+    path: /mnt/primary/root/storage/seafile/db
+
+---
+# MariaDB PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seafile-db-nfs
+  namespace: seafile
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: seafile-db-nfs-pv
+
+---
+# Seafile app data PersistentVolume (NFS)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: seafile-data-nfs-pv
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: nfs.sirius.local
+    path: /mnt/primary/root/storage/seafile/data
+
+---
+# Seafile app data PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seafile-data
+  namespace: seafile
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 50Gi
+  volumeName: seafile-data-nfs-pv

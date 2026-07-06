@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: seafile
 resources:
   - helm-repo.yaml
+  - nfs-volumes.yaml
   - helm-release.yaml
   - httproute.yaml
   - secret-sealed.yaml
