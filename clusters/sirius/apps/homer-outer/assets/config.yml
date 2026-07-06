@@ -48,6 +48,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Seafile"
+        logo: "https://de.seafile.com/wp-content/themes/seafileger/img/svg/seafile_logo_proposed.svg"
+        subtitle: "File Sync and Share"
+        url: "https://drive.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
 
   - name: "Admin"
     icon: "fas fa-shield-alt"
