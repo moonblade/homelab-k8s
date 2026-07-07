@@ -1,0 +1,37 @@
+# Redis for Seafile — plain Deployment using official redis image
+# Ephemeral (cache only — no persistence needed)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seafile-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seafile-redis
+  template:
+    metadata:
+      labels:
+        app: seafile-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.4
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+          args: ["--save", "", "--appendonly", "no"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seafile-redis-master
+spec:
+  selector:
+    app: seafile-redis
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+  type: ClusterIP

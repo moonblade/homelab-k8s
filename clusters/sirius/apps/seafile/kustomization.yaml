@@ -4,6 +4,8 @@ namespace: seafile
 resources:
   - helm-repo.yaml
   - nfs-volumes.yaml
+  - mariadb.yaml
+  - redis.yaml
   - helm-release.yaml
   - httproute.yaml
   - secret-sealed.yaml

@@ -1,0 +1,69 @@
+# MariaDB for Seafile — plain Deployment using official mariadb image
+# NFS-backed storage via seafile-db-nfs PVC
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seafile-mariadb
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: seafile-mariadb
+  template:
+    metadata:
+      labels:
+        app: seafile-mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:11.4
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: seafile-secret
+                  key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
+            - name: MARIADB_DATABASE
+              value: seafile_db
+            - name: MARIADB_USER
+              value: seafile
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: seafile-secret
+                  key: SEAFILE_MYSQL_DB_PASSWORD
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mariadb-admin ping -uroot -p"$MARIADB_ROOT_PASSWORD" --silent
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 12
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: seafile-db-nfs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seafile-mariadb
+spec:
+  selector:
+    app: seafile-mariadb
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP

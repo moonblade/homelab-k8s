@@ -1,68 +1,5 @@
-# MariaDB for Seafile (bitnami chart, NFS-backed storage)
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
-metadata:
-  name: seafile-mariadb
-  namespace: seafile
-spec:
-  interval: 1h
-  chart:
-    spec:
-      chart: mariadb
-      version: "19.1.x"
-      sourceRef:
-        kind: HelmRepository
-        name: bitnami
-        namespace: seafile
-  install:
-    timeout: 10m
-  upgrade:
-    timeout: 10m
-  values:
-    image:
-      registry: registry.bitnami.com
-      pullPolicy: IfNotPresent
-    auth:
-      database: seafile_db
-      username: seafile
-      existingSecret: seafile-secret
-    primary:
-      persistence:
-        existingClaim: seafile-db-nfs
----
-# Redis for Seafile (bitnami chart, ephemeral — cache only)
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
-metadata:
-  name: seafile-redis
-  namespace: seafile
-spec:
-  interval: 1h
-  chart:
-    spec:
-      chart: redis
-      version: "20.1.x"
-      sourceRef:
-        kind: HelmRepository
-        name: bitnami
-        namespace: seafile
-  install:
-    timeout: 10m
-  upgrade:
-    timeout: 10m
-  values:
-    image:
-      registry: registry.bitnami.com
-      pullPolicy: IfNotPresent
-    auth:
-      enabled: false
-    master:
-      persistence:
-        enabled: false
-    replica:
-      replicaCount: 0
----
-# Seafile CE
+# Seafile CE HelmRelease
+# MariaDB and Redis are deployed as plain Deployments (see mariadb.yaml, redis.yaml)
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -70,9 +7,6 @@ metadata:
   namespace: seafile
 spec:
   interval: 1h
-  dependsOn:
-    - name: seafile-mariadb
-    - name: seafile-redis
   chart:
     spec:
       chart: ce
