@@ -1,0 +1,126 @@
+# MariaDB for Seafile (bitnami chart, NFS-backed storage)
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: seafile-mariadb
+  namespace: seafile
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: mariadb
+      version: "19.x"
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: seafile
+  install:
+    timeout: 10m
+  upgrade:
+    timeout: 10m
+  values:
+    auth:
+      database: seafile_db
+      username: seafile
+      existingSecret: seafile-secret
+    primary:
+      persistence:
+        existingClaim: seafile-db-nfs
+    image:
+      pullPolicy: IfNotPresent
+---
+# Redis for Seafile (bitnami chart, ephemeral — cache only)
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: seafile-redis
+  namespace: seafile
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: redis
+      version: "20.x"
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: seafile
+  install:
+    timeout: 10m
+  upgrade:
+    timeout: 10m
+  values:
+    auth:
+      enabled: false
+    master:
+      persistence:
+        enabled: false
+    replica:
+      replicaCount: 0
+    image:
+      pullPolicy: IfNotPresent
+---
+# Seafile CE
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: seafile
+  namespace: seafile
+spec:
+  interval: 1h
+  dependsOn:
+    - name: seafile-mariadb
+    - name: seafile-redis
+  chart:
+    spec:
+      chart: ce
+      version: "13.0.3"
+      sourceRef:
+        kind: HelmRepository
+        name: seafile
+        namespace: seafile
+  install:
+    timeout: 15m
+  upgrade:
+    timeout: 15m
+  values:
+    seafile:
+      initMode: true
+
+      configs:
+        image: seafileltd/seafile-mc:13.0-latest
+        seafileDataVolume:
+          disablePVC: true
+
+      env:
+        TIME_ZONE: "Asia/Calcutta"
+        SEAFILE_LOG_TO_STDOUT: "true"
+        SITE_ROOT: "/"
+        SEAFILE_SERVER_HOSTNAME: "drive.moonblade.work"
+        SEAFILE_SERVER_PROTOCOL: "https"
+
+        SEAFILE_MYSQL_DB_HOST: "seafile-mariadb"
+        SEAFILE_MYSQL_DB_PORT: "3306"
+        SEAFILE_MYSQL_DB_USER: "seafile"
+        SEAFILE_MYSQL_DB_CCNET_DB_NAME: "ccnet_db"
+        SEAFILE_MYSQL_DB_SEAFILE_DB_NAME: "seafile_db"
+        SEAFILE_MYSQL_DB_SEAHUB_DB_NAME: "seahub_db"
+
+        CACHE_PROVIDER: "redis"
+        REDIS_HOST: "seafile-redis-master"
+        REDIS_PORT: "6379"
+
+        ENABLE_NOTIFICATION_SERVER: "false"
+        ENABLE_SEADOC: "false"
+        ENABLE_SEAFILE_AI: "false"
+
+        INIT_SEAFILE_ADMIN_EMAIL: "admin@moonblade.work"
+
+      extraResources: {}
+      extraEnv: []
+      extraVolumes:
+        - name: seafile-data
+          mountPath: /shared
+          volumeInfo:
+            persistentVolumeClaim:
+              claimName: seafile-data
