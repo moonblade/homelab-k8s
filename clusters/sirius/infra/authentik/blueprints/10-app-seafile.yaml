@@ -44,3 +44,17 @@ entries:
       policy_engine_mode: any
       meta_launch_url: https://drive.moonblade.work
       meta_icon: https://de.seafile.com/wp-content/themes/seafileger/img/svg/seafile_logo_proposed.svg
+
+  # Policy binding: only users with the "audiobook" role can access Seafile
+  - model: authentik_policies.policybinding
+    id: seafile-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf seafile-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"audiobook\""]]
+      target: !KeyOf seafile-app
+      order: 0
+      enabled: true
+      timeout: 30
