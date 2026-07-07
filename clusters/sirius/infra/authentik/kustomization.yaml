@@ -39,7 +39,8 @@ configMapGenerator:
       - ./blueprints/10-app-open-webui.yaml
       - ./blueprints/10-app-grafana.yaml
       - ./blueprints/10-app-firefly.yaml
-      - ./blueprints/10-app-email-expense-tracker.yaml
+       - ./blueprints/10-app-email-expense-tracker.yaml
+       - ./blueprints/10-app-seafile.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
