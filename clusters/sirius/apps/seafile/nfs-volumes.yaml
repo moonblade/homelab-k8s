@@ -42,7 +42,7 @@ metadata:
   name: seafile-data-nfs-pv
 spec:
   capacity:
-    storage: 50Gi
+    storage: 1Ti
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
@@ -64,5 +64,5 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: 50Gi
+      storage: 1Ti
   volumeName: seafile-data-nfs-pv
