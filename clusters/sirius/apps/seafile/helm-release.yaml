@@ -21,7 +21,7 @@ spec:
     timeout: 15m
   values:
     seafile:
-      initMode: true
+      initMode: false
 
       configs:
         image: seafileltd/seafile-mc:13.0-latest
