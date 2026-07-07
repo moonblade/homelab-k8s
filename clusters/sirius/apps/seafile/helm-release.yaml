@@ -29,7 +29,7 @@ spec:
           disablePVC: true
 
       env:
-        TIME_ZONE: "Asia/Calcutta"
+        TIME_ZONE: "Asia/Kolkata"
         SEAFILE_LOG_TO_STDOUT: "true"
         SITE_ROOT: "/"
         SEAFILE_SERVER_HOSTNAME: "drive.moonblade.work"
