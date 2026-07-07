@@ -53,5 +53,10 @@ spec:
         INIT_SEAFILE_ADMIN_EMAIL: "admin@moonblade.work"
 
       extraResources: {}
-      extraEnv: []
+      extraEnv:
+        - name: SEAFILE_OAUTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: seafile-secret
+              key: OAUTH_CLIENT_SECRET
       extraVolumes: []

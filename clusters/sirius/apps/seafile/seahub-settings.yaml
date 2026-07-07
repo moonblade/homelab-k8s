@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: seahub-settings-extra
+  namespace: seafile
+data:
+  seahub_settings_extra.py: |
+    # OAuth2 / OIDC via Authentik
+    # This file is appended to seahub_settings.py at container start
+    import os
+
+    ENABLE_OAUTH = True
+    OAUTH_ENABLE_INSECURE_TRANSPORT = True
+
+    OAUTH_CLIENT_ID = "a164377c1dbc3fe9e1f1c430780f47bce1f32259"
+    OAUTH_CLIENT_SECRET = os.environ.get("SEAFILE_OAUTH_CLIENT_SECRET", "")
+    OAUTH_REDIRECT_URL = "https://drive.moonblade.work/oauth/callback/"
+
+    OAUTH_PROVIDER = "authentik"
+    OAUTH_AUTHORIZATION_URL = "https://login.moonblade.work/application/o/authorize/"
+    OAUTH_TOKEN_URL = "https://login.moonblade.work/application/o/token/"
+    OAUTH_USER_INFO_URL = "https://login.moonblade.work/application/o/userinfo/"
+    OAUTH_SCOPE = ["openid", "email", "profile"]
+
+    OAUTH_ATTRIBUTE_MAP = {
+        "sub": (True, "uid"),
+        "name": (False, "name"),
+        "email": (False, "contact_email"),
+    }
+
+    OAUTH_CREATE_UNKNOWN_USER = True
+    OAUTH_ACTIVATE_USER_AFTER_CREATION = True

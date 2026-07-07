@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-seafile
+  labels:
+    blueprints.goauthentik.io/description: "Seafile OAuth2 application"
+entries:
+  - model: authentik_providers_oauth2.oauth2provider
+    id: seafile-provider
+    state: present
+    identifiers:
+      name: Provider for Seafile
+    attrs:
+      name: Provider for Seafile
+      client_id: a164377c1dbc3fe9e1f1c430780f47bce1f32259
+      client_secret: !Env SEAFILE_CLIENT_SECRET
+      client_type: confidential
+      sub_mode: user_email
+      redirect_uris:
+        - url: https://drive.moonblade.work/oauth/callback/
+          matching_mode: strict
+        - url: https://drive.sirius.moonblade.work/oauth/callback/
+          matching_mode: strict
+      access_token_validity: minutes=5
+      refresh_token_validity: days=30
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
+
+  - model: authentik_core.application
+    id: seafile-app
+    state: present
+    identifiers:
+      slug: seafile
+    attrs:
+      name: Seafile
+      slug: seafile
+      provider: !KeyOf seafile-provider
+      policy_engine_mode: any
+      meta_launch_url: https://drive.moonblade.work
+      meta_icon: https://de.seafile.com/wp-content/themes/seafileger/img/svg/seafile_logo_proposed.svg

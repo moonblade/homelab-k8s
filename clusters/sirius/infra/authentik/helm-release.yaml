@@ -60,6 +60,11 @@ spec:
             secretKeyRef:
               name: authentik-secrets
               key: grafana.client_secret
+        - name: SEAFILE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: authentik-secrets
+              key: seafile.client_secret
 
   valuesFrom:
     - kind: Secret
