@@ -6,6 +6,7 @@ resources:
   - nfs-volumes.yaml
   - mariadb.yaml
   - redis.yaml
+  - seahub-settings.yaml
   - helm-release.yaml
   - httproute.yaml
   - secret-sealed.yaml
