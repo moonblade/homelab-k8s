@@ -13,7 +13,7 @@ data:
     OAUTH_ENABLE_INSECURE_TRANSPORT = True
 
     OAUTH_CLIENT_ID = "a164377c1dbc3fe9e1f1c430780f47bce1f32259"
-    OAUTH_CLIENT_SECRET = os.environ.get("SEAFILE_OAUTH_CLIENT_SECRET", "")
+    OAUTH_CLIENT_SECRET = os.environ.get("OAUTH_CLIENT_SECRET", "")
     OAUTH_REDIRECT_URL = "https://drive.moonblade.work/oauth/callback/"
 
     OAUTH_PROVIDER = "authentik"
