@@ -1,0 +1,68 @@
+# NFS PersistentVolumes and PersistentVolumeClaims for Immich
+# Data stored on TrueNAS NFS at /mnt/primary/root/storage/immich
+
+---
+# PostgreSQL PersistentVolume (NFS)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-db-nfs-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: nfs.sirius.local
+    path: /mnt/primary/root/storage/immich/db
+
+---
+# PostgreSQL PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-db-nfs
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: immich-db-nfs-pv
+
+---
+# Immich library PersistentVolume (NFS) - 2Ti for photos
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-library-nfs-pv
+spec:
+  capacity:
+    storage: 2Ti
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: nfs.sirius.local
+    path: /mnt/primary/root/storage/immich/library
+
+---
+# Immich library PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-library-nfs
+  namespace: immich
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 2Ti
+  volumeName: immich-library-nfs-pv
