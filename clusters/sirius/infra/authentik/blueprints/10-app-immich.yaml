@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-immich
+  labels:
+    blueprints.goauthentik.io/description: "Immich OAuth2 application"
+entries:
+  - model: authentik_providers_oauth2.oauth2provider
+    id: immich-provider
+    state: present
+    identifiers:
+      name: Provider for Immich
+    attrs:
+      name: Provider for Immich
+      client_id: 83cd84bd233126b51ce376d36b3cc3c9b4e34688
+      client_secret: !Env IMMICH_CLIENT_SECRET
+      client_type: confidential
+      sub_mode: user_email
+      redirect_uris:
+        # Mobile app (iOS + Android)
+        - url: app.immich:///oauth-callback
+          matching_mode: strict
+        # External web
+        - url: https://photos.moonblade.work/auth/login
+          matching_mode: strict
+        - url: https://photos.moonblade.work/user-settings
+          matching_mode: strict
+        # Internal web
+        - url: https://photos.sirius.moonblade.work/auth/login
+          matching_mode: strict
+        - url: https://photos.sirius.moonblade.work/user-settings
+          matching_mode: strict
+      access_token_validity: minutes=5
+      refresh_token_validity: days=30
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
+
+  - model: authentik_core.application
+    id: immich-app
+    state: present
+    identifiers:
+      slug: immich
+    attrs:
+      name: Immich
+      slug: immich
+      provider: !KeyOf immich-provider
+      policy_engine_mode: any
+      meta_launch_url: https://photos.moonblade.work/auth/login?autoLaunch=1
+      meta_icon: https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo.svg

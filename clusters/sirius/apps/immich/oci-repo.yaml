@@ -1,0 +1,13 @@
+# OCI repository for Immich helm chart
+# HTTP-based helm repo has been deprecated; use OCI instead
+# https://github.com/immich-app/immich-charts/blob/main/README.md
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: immich
+  namespace: immich
+spec:
+  interval: 1h
+  url: oci://ghcr.io/immich-app/immich-charts/immich
+  ref:
+    tag: "0.13.1"
