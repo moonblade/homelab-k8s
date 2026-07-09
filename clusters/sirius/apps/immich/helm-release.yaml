@@ -45,6 +45,10 @@ spec:
         library:
           existingClaim: immich-library-nfs
 
+      # Store config as a Secret (not ConfigMap) since it contains OAuth credentials
+      configurationKind: Secret
+      existingConfiguration: immich-config
+
     valkey:
       enabled: true
       controllers:

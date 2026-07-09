@@ -41,6 +41,7 @@ configMapGenerator:
       - ./blueprints/10-app-firefly.yaml
       - ./blueprints/10-app-email-expense-tracker.yaml
       - ./blueprints/10-app-seafile.yaml
+      - ./blueprints/10-app-immich.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
