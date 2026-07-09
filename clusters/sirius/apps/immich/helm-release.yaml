@@ -12,7 +12,7 @@ spec:
       chart: immich
       version: "0.13.1"
       sourceRef:
-        kind: OCIRepository
+        kind: HelmRepository
         name: immich
         namespace: immich
   install:
