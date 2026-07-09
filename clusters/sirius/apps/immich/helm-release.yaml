@@ -26,7 +26,7 @@ spec:
           main:
             image:
               tag: v1.134.0
-            imagePullPolicy: IfNotPresent
+              pullPolicy: IfNotPresent
             env:
               REDIS_HOSTNAME: "immich-valkey"
               IMMICH_MACHINE_LEARNING_URL: "http://immich-machine-learning:3003"
