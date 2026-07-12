@@ -73,6 +73,8 @@ spec:
               image:
                 repository: ghcr.io/immich-app/immich-server
                 pullPolicy: IfNotPresent
+              env:
+                IMMICH_MEDIA_LOCATION: /data
 
     machine-learning:
       enabled: true
