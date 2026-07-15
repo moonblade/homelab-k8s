@@ -82,11 +82,6 @@ spec:
     recordType: A
     targets:
     - 192.168.1.201
-  - dnsName: hermes.cv.moonblade.work
-    recordTTL: 60
-    recordType: A
-    targets:
-    - 55.226.218.14
 
 #  - dnsName: nobrokerrpi.moonblade.work
 #    recordTTL: 60
