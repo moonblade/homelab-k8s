@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cert-sync
+  namespace: cert-sync
+spec:
+  # Run weekly on Sunday at 03:00 — cert-manager auto-renews 30 days before
+  # expiry, so weekly sync is more than sufficient
+  schedule: "0 3 * * 0"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 120
+      ttlSecondsAfterFinished: 3600
+      template:
+        spec:
+          serviceAccountName: cert-sync
+          restartPolicy: OnFailure
+          volumes:
+            - name: ssh-key
+              secret:
+                secretName: cert-sync-ssh-key
+                defaultMode: 0400
+          containers:
+            - name: cert-sync
+              image: alpine/k8s:1.31.2
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -e
+
+                  HADES_IP="192.168.1.73"
+                  NPM_CERT_DIR="/root/workspace/nginx-proxy-manager/letsencrypt/live/npm-1"
+                  SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /ssh/id_ed25519"
+
+                  echo "Extracting wildcard-external-cert from nginx-gateway..."
+                  TLS_CRT=$(kubectl get secret wildcard-external-cert -n nginx-gateway -o jsonpath='{.data.tls\.crt}' | base64 -d)
+                  TLS_KEY=$(kubectl get secret wildcard-external-cert -n nginx-gateway -o jsonpath='{.data.tls\.key}' | base64 -d)
+
+                  if [ -z "$TLS_CRT" ] || [ -z "$TLS_KEY" ]; then
+                    echo "ERROR: failed to extract cert or key"
+                    exit 1
+                  fi
+
+                  echo "Syncing cert to Hades NPM at $HADES_IP..."
+                  printf '%s' "$TLS_CRT" | ssh $SSH_OPTS root@$HADES_IP \
+                    "cat > $NPM_CERT_DIR/fullchain.pem && chmod 644 $NPM_CERT_DIR/fullchain.pem"
+
+                  printf '%s' "$TLS_KEY" | ssh $SSH_OPTS root@$HADES_IP \
+                    "cat > $NPM_CERT_DIR/privkey.pem && chmod 600 $NPM_CERT_DIR/privkey.pem"
+
+                  # Extract just the leaf cert for cert.pem
+                  printf '%s' "$TLS_CRT" | ssh $SSH_OPTS root@$HADES_IP \
+                    "awk '/-----BEGIN CERTIFICATE-----/{p=1} p{print} /-----END CERTIFICATE-----/{if(p==1){exit}}' > $NPM_CERT_DIR/cert.pem && chmod 644 $NPM_CERT_DIR/cert.pem"
+
+                  # Reload nginx inside the NPM container (no full restart needed)
+                  ssh $SSH_OPTS root@$HADES_IP \
+                    "docker exec nginx-proxy-manager-app-1 nginx -s reload && echo 'nginx reloaded'"
+
+                  echo "Cert sync complete."
+              volumeMounts:
+                - name: ssh-key
+                  mountPath: /ssh
+                  readOnly: true
