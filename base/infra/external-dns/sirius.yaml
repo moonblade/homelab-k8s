@@ -27,11 +27,10 @@ spec:
               name: cloudflare-creds
               key: api_token
         args:
-        - --source=ingress
         - --source=crd
         - --source=service
         - --domain-filter=moonblade.work
-        - --policy=upsert-only
+        - --policy=sync
         - --provider=cloudflare
         - --label-filter=external-dns-exclude notin (true)
       securityContext:
