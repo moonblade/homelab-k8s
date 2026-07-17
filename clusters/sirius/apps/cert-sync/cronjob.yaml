@@ -24,11 +24,14 @@ spec:
           containers:
             - name: cert-sync
               image: alpine/k8s:1.31.2
+              imagePullPolicy: IfNotPresent
               command:
                 - /bin/sh
                 - -c
                 - |
                   set -e
+
+                  apk add --no-cache openssh-client -q
 
                   HADES_IP="192.168.1.73"
                   NPM_CERT_DIR="/root/workspace/nginx-proxy-manager/letsencrypt/live/npm-1"
