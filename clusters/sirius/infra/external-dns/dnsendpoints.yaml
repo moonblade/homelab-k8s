@@ -56,7 +56,7 @@ spec:
     recordTTL: 60
     recordType: CNAME
     targets:
-    - luna.moonblade.wok
+    - luna.moonblade.work
   - dnsName: luna.moonblade.work
     recordTTL: 60
     recordType: A
