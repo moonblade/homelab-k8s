@@ -77,6 +77,16 @@ spec:
     - path:
         type: PathPrefix
         value: /
+    filters:
+      - type: RequestHeaderModifier
+        requestHeaderModifier:
+          add:
+            - name: X-authentik-username
+              value: admin
+            - name: X-authentik-uid
+              value: admin
+            - name: X-authentik-role
+              value: admin
     backendRefs:
     - name: audiobookbay-downloader
       port: 80
