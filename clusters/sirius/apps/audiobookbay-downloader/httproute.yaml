@@ -23,6 +23,22 @@ spec:
       namespace: authentik
       port: 9000
 ---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: abbsearch-outer-dns
+  namespace: audiobookbay-downloader
+spec:
+  endpoints:
+  - dnsName: abbsearch.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    providerSpecific:
+    - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+      value: 'true'
+---
 # Internal: abb.sirius.moonblade.work HTTP → HTTPS redirect
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
