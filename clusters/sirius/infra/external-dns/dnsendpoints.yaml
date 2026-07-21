@@ -82,6 +82,12 @@ spec:
     recordType: A
     targets:
     - 192.168.1.201
+  - dnsName: truenas.home.moonblade.work
+    recordTTL: 60
+    recordType: A
+    targets:
+    - 192.168.1.10
+
 
 #  - dnsName: nobrokerrpi.moonblade.work
 #    recordTTL: 60
