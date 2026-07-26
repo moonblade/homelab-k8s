@@ -57,6 +57,16 @@ spec:
     recordType: CNAME
     targets:
     - luna.moonblade.work
+  - dnsName: hermes-ui.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - luna.moonblade.work
+  - dnsName: hermes-dashboard.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - luna.moonblade.work
   - dnsName: luna.moonblade.work
     recordTTL: 60
     recordType: A
