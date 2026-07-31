@@ -7,7 +7,7 @@ data:
   TRANSMISSION_URL: http://transmission.transmission.svc.cluster.local:9091/transmission/rpc
   BEETS_INPUT_PATH: /downloads
   BEETSDIR: /config
-  USE_BEETS_IMPORT: "true"
+  USE_BEETS_IMPORT: "false"
   TITLE: AudioBookBay Search
   LABEL: audiobook
   AUTH_MODE: "authentik"
