@@ -60,6 +60,11 @@ spec:
             secretKeyRef:
               name: authentik-secrets
               key: immich.client_secret
+        - name: STIRLING_PDF_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: authentik-secrets
+              key: stirling-pdf.client_secret
 
   valuesFrom:
     - kind: Secret

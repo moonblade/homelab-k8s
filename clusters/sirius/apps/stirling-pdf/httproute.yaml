@@ -1,6 +1,4 @@
-# External: pdf.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
-# Note: ReferenceGrant is in clusters/sirius/infra/authentik/referencegrants.yaml
-
+# External: pdf.moonblade.work via Cloudflare tunnel → stirling-pdf directly (auth handled by OIDC)
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -19,11 +17,10 @@ spec:
         type: PathPrefix
         value: /
     backendRefs:
-    - name: ak-outpost-stirling-pdf
-      namespace: authentik
-      port: 9000
+    - name: stirling-pdf
+      port: 80
 ---
-# Internal: pdf.sirius.moonblade.work → stirling-pdf service directly (no auth)
+# Internal: pdf.sirius.moonblade.work → stirling-pdf service directly
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:

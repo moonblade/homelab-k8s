@@ -19,12 +19,40 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: DOCKER_ENABLE_SECURITY
-              value: "false"
             - name: INSTALL_BOOK_AND_ADVANCED_HTML_OPS
               value: "false"
             - name: LANGS
               value: "en_GB"
+            - name: SYSTEM_BACKENDURL
+              value: "https://pdf.moonblade.work"
+            # Security / OIDC
+            - name: DOCKER_ENABLE_SECURITY
+              value: "true"
+            - name: SECURITY_ENABLELOGIN
+              value: "true"
+            - name: SECURITY_LOGINMETHOD
+              value: "oauth2"
+            - name: SECURITY_OAUTH2_ENABLED
+              value: "true"
+            - name: SECURITY_OAUTH2_PROVIDER
+              value: "authentik"
+            - name: SECURITY_OAUTH2_ISSUER
+              value: "https://login.moonblade.work/application/o/stirling-pdf/"
+            - name: SECURITY_OAUTH2_CLIENTID
+              value: "stirling-pdf-homelab-oidc"
+            - name: SECURITY_OAUTH2_CLIENTSECRET
+              valueFrom:
+                secretKeyRef:
+                  name: stirling-pdf-oidc
+                  key: client_secret
+            - name: SECURITY_OAUTH2_SCOPES
+              value: "openid, profile, email"
+            - name: SECURITY_OAUTH2_USEASUSERNAME
+              value: "preferred_username"
+            - name: SECURITY_OAUTH2_AUTOCREATEUSER
+              value: "true"
+            - name: SECURITY_OAUTH2_BLOCKREGISTRATION
+              value: "false"
           livenessProbe:
             httpGet:
               path: /actuator/health
