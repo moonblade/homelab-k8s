@@ -1,5 +1,12 @@
 # PROJECT KNOWLEDGE BASE
 
+## AGENT WORKFLOW
+
+**For any procedural task** (adding an app, configuring Authentik, sealing secrets, etc.):
+1. **Search basic memory first** — use the `basic-memory` MCP tool with a relevant query before exploring the repo. Saved guides exist for common tasks.
+2. **If not found** — explore the repo/cluster to learn the pattern, then **save it to basic memory** under `homelab/` before proceeding.
+3. This avoids redundant exploration and keeps institutional knowledge growing.
+
 **Generated:** 2026-02-21
 **Commit:** 450ddbb
 **Branch:** main
