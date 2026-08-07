@@ -3,34 +3,24 @@ version: 1
 metadata:
   name: app-stirling-pdf
   labels:
-    blueprints.goauthentik.io/description: "Stirling PDF OIDC application"
+    blueprints.goauthentik.io/description: "Stirling PDF proxy application"
 entries:
-  - model: authentik_providers_oauth2.oauth2provider
+  - model: authentik_providers_proxy.proxyprovider
     id: stirling-pdf-provider
     state: present
     identifiers:
       name: Provider for Stirling PDF
     attrs:
       name: Provider for Stirling PDF
-      client_id: stirling-pdf-homelab-oidc
-      client_secret: !Env STIRLING_PDF_CLIENT_SECRET
-      client_type: confidential
-      sub_mode: user_email
-      redirect_uris:
-        - url: https://pdf.moonblade.work/login/oauth2/code/authentik
-          matching_mode: strict
-        - url: https://pdf.sirius.moonblade.work/login/oauth2/code/authentik
-          matching_mode: strict
-      access_token_validity: minutes=5
+      mode: proxy
+      external_host: https://pdf.moonblade.work
+      internal_host: http://stirling-pdf.stirling-pdf.svc.cluster.local:80
+      intercept_header_auth: true
+      access_token_validity: hours=24
       refresh_token_validity: days=30
-      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
       authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
-      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
-      property_mappings:
-        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
-        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
-        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
 
   - model: authentik_core.application
     id: stirling-pdf-app
@@ -56,3 +46,24 @@ entries:
       order: 0
       enabled: true
       timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: stirling-pdf-outpost
+    state: present
+    identifiers:
+      name: stirling-pdf
+    attrs:
+      name: stirling-pdf
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf stirling-pdf-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info
