@@ -27,14 +27,14 @@ spec:
               value: "en_GB"
           livenessProbe:
             httpGet:
-              path: /
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
             failureThreshold: 5
           readinessProbe:
             httpGet:
-              path: /
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
