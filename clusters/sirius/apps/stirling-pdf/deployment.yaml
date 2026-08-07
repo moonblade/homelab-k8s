@@ -56,9 +56,16 @@ spec:
               value: "true"
             - name: SECURITY_OAUTH2_BLOCKREGISTRATION
               value: "false"
-            # Use internal cluster URL for JWKS to avoid external DNS timeout
-            - name: SECURITY_OAUTH2_JWKS_URI
+            # Override Spring Security OIDC provider URLs to use internal cluster DNS
+            # avoids external Cloudflare tunnel timeout when fetching JWKS
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_AUTHENTIK_JWK_SET_URI
               value: "http://authentik-server.authentik.svc.cluster.local/application/o/stirling-pdf/jwks/"
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_AUTHENTIK_TOKEN_URI
+              value: "http://authentik-server.authentik.svc.cluster.local/application/o/stirling-pdf/token/"
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_AUTHENTIK_AUTHORIZATION_URI
+              value: "https://login.moonblade.work/application/o/authorize/"
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_AUTHENTIK_USER_INFO_URI
+              value: "http://authentik-server.authentik.svc.cluster.local/application/o/userinfo/"
           volumeMounts:
             - name: config
               mountPath: /configs
