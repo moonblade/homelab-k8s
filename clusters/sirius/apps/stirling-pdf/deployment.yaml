@@ -53,6 +53,9 @@ spec:
               value: "true"
             - name: SECURITY_OAUTH2_BLOCKREGISTRATION
               value: "false"
+            # Use internal cluster URL for JWKS to avoid external DNS timeout
+            - name: SECURITY_OAUTH2_JWKS_URI
+              value: "http://authentik-server.authentik.svc.cluster.local/application/o/stirling-pdf/jwks/"
           livenessProbe:
             httpGet:
               path: /actuator/health
