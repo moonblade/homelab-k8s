@@ -24,6 +24,8 @@ spec:
           env:
             - name: DOCKER_ENABLE_SECURITY
               value: "false"
+            - name: SECURITY_ENABLELOGIN
+              value: "false"
             - name: INSTALL_BOOK_AND_ADVANCED_HTML_OPS
               value: "false"
             - name: LANGS
