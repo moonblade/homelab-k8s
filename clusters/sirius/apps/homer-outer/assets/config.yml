@@ -148,6 +148,13 @@ services:
   - name: "Misc"
     icon: "fas fa-box"
     items:
+      - name: "Stirling PDF"
+        logo: "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-tools-icon.svg"
+        subtitle: "PDF tools"
+        url: "https://pdf.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "MD Share (Public)"
         icon: "fas fa-file-alt"
         subtitle: "Public markdown sharing"
