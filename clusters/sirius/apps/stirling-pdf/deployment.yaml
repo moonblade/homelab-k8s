@@ -4,6 +4,9 @@ metadata:
   name: stirling-pdf
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
+    rollingUpdate: null
   selector:
     matchLabels:
       app: stirling-pdf
@@ -56,6 +59,9 @@ spec:
             # Use internal cluster URL for JWKS to avoid external DNS timeout
             - name: SECURITY_OAUTH2_JWKS_URI
               value: "http://authentik-server.authentik.svc.cluster.local/application/o/stirling-pdf/jwks/"
+          volumeMounts:
+            - name: config
+              mountPath: /configs
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -70,3 +76,9 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 5
+      volumes:
+        - name: config
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/config/stirling-pdf
+            readOnly: false
