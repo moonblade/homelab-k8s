@@ -29,9 +29,6 @@ spec:
               value: "false"
             - name: LANGS
               value: "en_GB"
-          volumeMounts:
-            - name: config
-              mountPath: /configs
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -46,9 +43,4 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 5
-      volumes:
-        - name: config
-          nfs:
-            server: nfs.sirius.local
-            path: /mnt/primary/root/config/stirling-pdf
-            readOnly: false
+
