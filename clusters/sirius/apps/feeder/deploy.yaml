@@ -39,6 +39,8 @@ spec:
               port: 9000
             initialDelaySeconds: 30
             periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 20
       volumes:
         - name: feeder-data
           nfs:
