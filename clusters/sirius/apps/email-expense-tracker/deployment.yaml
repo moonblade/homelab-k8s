@@ -19,7 +19,11 @@ spec:
     spec:
       containers:
         - name: email-expense-tracker
-          image: ghcr.io/moonblade/email-expense-tracker:ts_1792078468 # {"$imagepolicy": "email-expense-tracker:email-expense-tracker"}
+<<<<<<< Updated upstream
+          image: ghcr.io/moonblade/email-expense-tracker:ts_1792078860 # {"$imagepolicy": "email-expense-tracker:email-expense-tracker"}
+=======
+          image: ghcr.io/moonblade/email-expense-tracker:ts_1792078860 # {"$imagepolicy": "email-expense-tracker:email-expense-tracker"}
+>>>>>>> Stashed changes
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
