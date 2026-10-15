@@ -287,3 +287,7 @@ Added Loki + Promtail logging stack as infra components (base + overlay pattern)
 - May 10, 2026
 
 Deployed Firefly III (chart 0.9.2, app v6.5.9) as a personal finance tracker. Configured remote_user_guard for seamless Authentik SSO (admin-only, no second login). Storage on TrueNAS NFS with daily snapshots and secondary pool replication. Added Authentik proxy provider blueprint, HTTPRoutes for firefly.moonblade.work (external) and firefly.sirius.moonblade.work (internal). Added Firefly III and Grafana to Homer dashboard.
+
+- Oct 15, 2026
+
+Added Firefly Pico (cioraneanu/firefly-pico:1.12.0) to the firefly namespace as a quick-entry companion app for Firefly III, mainly for iPhone use. Stores its own SQLite data on a local-path PVC and talks to the existing Firefly III service internally. Exposed at pico.moonblade.work (external, behind Authentik SSO via a new proxy provider/outpost blueprint) and pico.sirius.moonblade.work (internal). Added to Homer dashboard.
