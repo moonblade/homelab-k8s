@@ -6,4 +6,7 @@ resources:
   - helm-repo.yaml
   - httproute.yaml
   - nfs-volumes.yaml
+  - pico-deployment.yaml
+  - pico-service.yaml
+  - pico-httproute.yaml
 

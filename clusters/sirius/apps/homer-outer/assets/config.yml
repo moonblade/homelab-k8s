@@ -48,6 +48,13 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
+      - name: "Firefly Pico"
+        logo: "https://raw.githubusercontent.com/cioraneanu/firefly-pico/main/public/icon.png"
+        subtitle: "Firefly III Quick Entry"
+        url: "https://pico.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Seafile"
         logo: "https://de.seafile.com/wp-content/themes/seafileger/img/svg/seafile_logo_proposed.svg"
         subtitle: "File Sync and Share"
