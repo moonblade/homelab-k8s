@@ -20,13 +20,17 @@ spec:
           env:
             - name: LOG_LEVEL
               value: info
+            - name: BROWSER_TIMEOUT
+              value: "40000"
+            - name: TEST_URL
+              value: "https://www.royalroad.com"
           resources:
             requests:
-              memory: 256Mi
-              cpu: 100m
+              memory: 512Mi
+              cpu: 250m
             limits:
-              memory: 1Gi
-              cpu: 500m
+              memory: 2Gi
+              cpu: 1000m
 ---
 apiVersion: v1
 kind: Service
