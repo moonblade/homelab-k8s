@@ -11,3 +11,4 @@ resources:
   - ./filebrowser.yaml
   - ./cronjob.yaml
   - ./imageupdate.yaml
+  - ./flaresolverr.yaml
