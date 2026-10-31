@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: firefly-tracker-html
 data:
-  index.html: |
+  index.html.tmpl: |
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -103,9 +103,6 @@ data:
       .btn-cancel { background: none; border: 1px solid var(--border); color: var(--muted);
         padding: 4px 8px; border-radius: 5px; font-size: 12px; cursor: pointer; }
       .empty { color: var(--muted); text-align: center; padding: 32px; font-style: italic; font-size: 13px; }
-      .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border);
-        border-top-color: var(--blue); border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; }
-      @keyframes spin { to { transform: rotate(360deg); } }
     </style>
     </head>
     <body>
@@ -157,7 +154,7 @@ data:
     </div>
     <script>
     const FIREFLY_URL   = "https://firefly.sirius.moonblade.work";
-    const FIREFLY_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMGFjMzdmYTBhM2JmYTcwMTAwOThjYjI3MTczZjBlMDgzZGQ1Y2ZmZTE4M2RlZWJiMzg2ZDdkY2Y3ZTU4OTY4YWQwOWE1NTc4ZTFkNmQzMGEiLCJpYXQiOjE3NzgzODA0NDguMzQwOTg5LCJuYmYiOjE3NzgzODA0NDguMzQwOTkxLCJleHAiOjE4MDk5MTY0NDguMjU2NzY3LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.Oy32142upF_xvinahSihCkmLKVZ0Vd4lt-X_Mto1qhjbn3kTsTRNB2MlYpAZUSSKpN7_5uV0D0iY1LmekSmPr1P5gLsa4FV3KQAmcVAUanBWpRLwON42o7SAHKjWfxRXm2S20Sp-OI6ZK8CsLB5QfdMw_JLYZtbI6iE2SCOtUQuxPqLPBpEa6keBpELSdV16W1MW3lSTHAuLuQtJnHYFEh_crOHnRhIQHFL0UDWIMK0A8eHwt_KQwbt8CeHs_CsoO03NAKESvyJAx5tAHJw0HF5zf1stB2uOWLg6PSuEfgLPdhCsxSIGZn-lYl96-1HsfnxRiTaU_aibs_fBladjQ8eVORl3nH9QyJ0z0xukD3_CaH88yHpnU15ZZxgR8BMVltkMvmUSyptNBmZuTUVhXFF6qJJLKOdB3sTG0ODw1ACLvV3G9U3PaDi1cuFNyRjuP65qvgJMSMZfzuesZhgnxD6mHSTjNzo5WfFun2kEUTzaiO826cSu20cVIZiR-_3aYKDtdA4IqP_P-362hgxp6pPO1emawkzhgYxh4Pq6Sza6XERx40yj4gEA4ShnFthg0KboJ7czOTBS4f5SPYSK4b11rMMQNdTqRc4DwyY3v-1sCfuRiuLxmcGA3eduFyhHppFV260jSa4HVbRtJ9qY6ERGJJY41ALLziAwMCr0Ed4";
+    const FIREFLY_TOKEN = "${FIREFLY_TOKEN}";
     const COLORS = [
       "#58a6ff","#3fb950","#bc8cff","#ffa657","#79c0ff",
       "#56d364","#ff7b72","#e3b341","#d2a8ff","#ffb077",
@@ -242,7 +239,6 @@ data:
             });
           }
         }
-        // Uncategorized (non-ignored) first, then date desc
         allTx.sort((a, b) => {
           const ai = (!a.category && !a.tags.includes("ignore")) ? 0 : 1;
           const bi = (!b.category && !b.tags.includes("ignore")) ? 0 : 1;
@@ -272,21 +268,16 @@ data:
       }));
     }
 
-    function render() {
-      renderStats();
-      drawPie();
-      renderLegend();
-      renderTxList();
-    }
+    function render() { renderStats(); drawPie(); renderLegend(); renderTxList(); }
 
     function renderStats() {
       const active = allTx.filter(t => !t.tags.includes("ignore"));
       const total  = active.reduce((s,t) => s + t.amount, 0);
       const uncat  = active.filter(t => !t.category).length;
       const ign    = allTx.filter(t => t.tags.includes("ignore")).length;
-      document.getElementById("statTotal").textContent  = fmtINR(total);
-      document.getElementById("statUncat").textContent  = uncat;
-      document.getElementById("statCount").textContent  = allTx.length;
+      document.getElementById("statTotal").textContent   = fmtINR(total);
+      document.getElementById("statUncat").textContent   = uncat;
+      document.getElementById("statCount").textContent   = allTx.length;
       document.getElementById("statIgnored").textContent = ign;
       const badge = document.getElementById("uncatBadge");
       badge.style.display = "";
@@ -350,19 +341,16 @@ data:
         filtered = filtered.filter(t => t.category === cf && !t.tags.includes("ignore"));
       }
       if (!filtered.length) { list.innerHTML = '<div class="empty">No transactions</div>'; return; }
-
       list.innerHTML = "";
       for (const tx of filtered) {
-        const ign  = tx.tags.includes("ignore");
+        const ign    = tx.tags.includes("ignore");
         const isOpen = openPickerKey === tx.jid;
-        const div = document.createElement("div");
+        const div    = document.createElement("div");
         div.className = "tx-item" + (!tx.category && !ign ? " uncat" : "") + (ign ? " ignored" : "");
-
         const catBadge = tx.category
           ? '<span class="tx-cat">' + esc(tx.category) + '</span>'
           : '<span class="tx-cat none">Uncategorized</span>';
         const ignBadge = ign ? '<span class="tx-tag-ign">ignored</span>' : "";
-
         let pickerHtml = "";
         if (isOpen) {
           const opts = categoryNames.map(c =>
@@ -375,22 +363,17 @@ data:
             '<button class="btn-cancel" onclick="closePicker()">✕</button>' +
             '</div>';
         }
-
         div.innerHTML =
           '<div>' +
             '<div class="tx-desc">' + esc(tx.desc) + '</div>' +
-            '<div class="tx-meta">' +
-              '<span class="tx-date">' + tx.date + '</span>' +
-              catBadge + ignBadge +
-            '</div>' +
+            '<div class="tx-meta"><span class="tx-date">' + tx.date + '</span>' + catBadge + ignBadge + '</div>' +
             pickerHtml +
           '</div>' +
           '<div class="tx-right">' +
             '<span class="tx-amount">−' + fmtINR(tx.amount) + '</span>' +
             '<div class="tx-actions">' +
               '<button class="btn-sm" title="Categorize" onclick="openPicker(\'' + tx.jid + '\')">🏷</button>' +
-              '<button class="btn-sm' + (ign ? ' ign' : '') + '" title="' + (ign ? 'Un-ignore' : 'Ignore') + '" onclick="toggleIgnore(\'' + tx.id + '\',\'' + tx.jid + '\')">' +
-              (ign ? '👁' : '🚫') + '</button>' +
+              '<button class="btn-sm' + (ign ? ' ign' : '') + '" onclick="toggleIgnore(\'' + tx.id + '\',\'' + tx.jid + '\')">' + (ign ? '👁' : '🚫') + '</button>' +
             '</div>' +
           '</div>';
         list.appendChild(div);
@@ -413,8 +396,7 @@ data:
         const tx = allTx.find(t => t.jid === jid);
         if (tx) tx.category = cat;
         openPickerKey = null;
-        buildCategories();
-        render();
+        buildCategories(); render();
         setStatus("Saved ✓");
       } catch(e) { setStatus("Save failed: " + e.message, true); }
     }
@@ -431,13 +413,11 @@ data:
           body: JSON.stringify({ transactions: [{ transaction_journal_id: parseInt(jid), tags: newTags }] }),
         });
         tx.tags = newTags;
-        buildCategories();
-        render();
+        buildCategories(); render();
         setStatus(hasIgnore ? "Un-ignored ✓" : "Ignored ✓");
       } catch(e) { setStatus("Update failed: " + e.message, true); }
     }
 
-    // Month nav
     document.getElementById("prevMonth").addEventListener("click", () => {
       currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth()-1, 1);
       updateMonthLabel(); loadData();
@@ -450,8 +430,6 @@ data:
       document.getElementById("monthLabel").textContent =
         currentDate.toLocaleDateString("en-IN", { month: "long", year: "numeric" });
     }
-
-    // Filter buttons
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
@@ -490,6 +468,24 @@ spec:
         app.kubernetes.io/instance: firefly-pico
         app.kubernetes.io/name: firefly-pico
     spec:
+      initContainers:
+        - name: envsubst
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - envsubst '${FIREFLY_TOKEN}' < /tmpl/index.html.tmpl > /html/index.html
+          env:
+            - name: FIREFLY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: firefly-tracker-secret
+                  key: FIREFLY_TOKEN
+          volumeMounts:
+            - name: tmpl
+              mountPath: /tmpl
+            - name: html
+              mountPath: /html
       containers:
         - name: firefly-pico
           image: nginx:1.27-alpine
@@ -521,6 +517,8 @@ spec:
               cpu: 50m
               memory: 32Mi
       volumes:
-        - name: html
+        - name: tmpl
           configMap:
             name: firefly-tracker-html
+        - name: html
+          emptyDir: {}

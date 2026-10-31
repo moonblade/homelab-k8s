@@ -9,4 +9,5 @@ resources:
   - pico-deployment.yaml
   - pico-service.yaml
   - pico-httproute.yaml
+  - pico-secret-sealed.yaml
 
