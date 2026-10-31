@@ -247,9 +247,11 @@ function applyData(txRaw,catRaw,depRaw) {
       amount:parseFloat(s.amount),date:(s.date||"").substring(0,10),
       category:s.category_name||null,tags:s.tags||[],type:"deposit"});
   allTx.sort((a,b)=>{
-    if(a.type!==b.type)return a.type==="withdrawal"?-1:1;
-    const ai=(!a.category&&!isExcluded(a))?0:1,bi=(!b.category&&!isExcluded(b))?0:1;
-    if(ai!==bi)return ai-bi; return b.date.localeCompare(a.date);
+    // Uncategorized withdrawals first, then everything else by date descending
+    const aUncat=a.type==="withdrawal"&&!a.category&&!isExcluded(a);
+    const bUncat=b.type==="withdrawal"&&!b.category&&!isExcluded(b);
+    if(aUncat!==bUncat)return aUncat?-1:1;
+    return b.date.localeCompare(a.date);
   });
   buildCategories(); render();
 }
