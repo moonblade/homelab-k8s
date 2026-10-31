@@ -126,9 +126,7 @@
 
 <div class="stats">
   <div class="stat"><div class="s-label">Total Spent</div><div class="s-value c-blue" id="statTotal">—</div></div>
-  <div class="stat"><div class="s-label">Uncategorized</div><div class="s-value c-yellow" id="statUncat">—</div></div>
   <div class="stat"><div class="s-label">Transactions</div><div class="s-value" id="statCount">—</div></div>
-  <div class="stat"><div class="s-label">Ignored</div><div class="s-value" id="statIgnored">—</div></div>
 </div>
 
 <div class="main-grid">
@@ -197,6 +195,9 @@ let activeFilter="all", activeLegendCat=null, pieSlices=[];
 
 function isExcluded(tx) { return tx.tags.some(t=>IGNORE_TAGS.includes(t)); }
 function fmtINR(v) {
+  return "₹"+Math.round(v).toLocaleString("en-IN");
+}
+function fmtINRShort(v) {
   if (v>=100000) return "₹"+(v/100000).toFixed(1)+"L";
   if (v>=1000)   return "₹"+(v/1000).toFixed(1)+"K";
   return "₹"+Math.round(v);
@@ -281,12 +282,8 @@ function render() { renderStats(); drawPie(); renderLegend(); renderTxList(); }
 function renderStats() {
   const withdrawals=allTx.filter(t=>t.type==="withdrawal"&&!isExcluded(t));
   const total=withdrawals.reduce((s,t)=>s+t.amount,0);
-  const uncat=withdrawals.filter(t=>!t.category).length;
-  const ign=allTx.filter(t=>isExcluded(t)).length;
   document.getElementById("statTotal").textContent=fmtINR(total);
-  document.getElementById("statUncat").textContent=uncat;
   document.getElementById("statCount").textContent=withdrawals.length;
-  document.getElementById("statIgnored").textContent=ign;
   document.getElementById("uncatBadge").style.display="none";
 }
 
@@ -295,7 +292,7 @@ function drawPie() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   const total=categories.reduce((s,c)=>s+c.total,0);
   if(!total){document.getElementById("pieCenterAmt").textContent="₹0";pieSlices=[];return;}
-  document.getElementById("pieCenterAmt").textContent=fmtINR(total);
+  document.getElementById("pieCenterAmt").textContent=fmtINRShort(total);
   const cx=canvas.width/2,cy=canvas.height/2,outerR=cx-8,innerR=outerR*0.54,GAP=0.025;
   let angle=-Math.PI/2; pieSlices=[];
   for(const s of categories){
@@ -330,7 +327,7 @@ function renderLegend() {
   for(const cat of categories){
     const pct=total>0?Math.round((cat.total/total)*100):0,item=document.createElement("div");
     item.className="legend-item"+(activeLegendCat&&activeLegendCat!==cat.name?" dimmed":"");
-    item.innerHTML='<span class="legend-dot" style="background:'+cat.color+'"></span><span class="legend-name">'+esc(cat.name)+'</span><span class="legend-amt">'+fmtINR(cat.total)+'</span><span class="legend-pct">'+pct+'%</span>';
+    item.innerHTML='<span class="legend-dot" style="background:'+cat.color+'"></span><span class="legend-name">'+esc(cat.name)+'</span><span class="legend-amt">'+fmtINRShort(cat.total)+'</span><span class="legend-pct">'+pct+'%</span>';
     item.addEventListener("click",()=>{activeLegendCat=activeLegendCat===cat.name?null:cat.name;renderLegend();drawPie();renderTxList();});
     el.appendChild(item);
   }
