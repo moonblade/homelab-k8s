@@ -15,6 +15,7 @@ spec:
       initContainers:
       - name: settings-editor
         image: alpine
+        imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
               name: settings-override
