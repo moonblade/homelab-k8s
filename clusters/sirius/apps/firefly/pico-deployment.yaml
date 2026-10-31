@@ -3,6 +3,14 @@ kind: ConfigMap
 metadata:
   name: firefly-tracker-html
 data:
+  nginx.conf: |
+    server {
+      listen 80;
+      root /usr/share/nginx/html;
+      index index.html;
+      add_header Access-Control-Allow-Private-Network "true" always;
+      add_header Access-Control-Allow-Origin "*" always;
+    }
   index.html.tmpl: |
     <!DOCTYPE html>
     <html lang="en">
@@ -216,40 +224,83 @@ data:
       return results;
     }
 
+    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+    function cacheKey() {
+      const { start } = monthRange(currentDate);
+      return "firefly_cache_" + start;
+    }
+
+    function loadCache() {
+      try {
+        const raw = localStorage.getItem(cacheKey());
+        if (!raw) return null;
+        const { ts, txData, catData } = JSON.parse(raw);
+        return { ts, txData, catData };
+      } catch(e) { return null; }
+    }
+
+    function saveCache(txData, catData) {
+      try {
+        localStorage.setItem(cacheKey(), JSON.stringify({ ts: Date.now(), txData, catData }));
+      } catch(e) {}
+    }
+
+    function applyData(txRaw, catRaw) {
+      categoryNames = catRaw.map(c => c.attributes.name).sort();
+      allTx = [];
+      for (const t of txRaw) {
+        for (const s of t.attributes.transactions) {
+          allTx.push({
+            id: t.id,
+            jid: String(s.transaction_journal_id),
+            desc: s.description || "—",
+            amount: parseFloat(s.amount),
+            date: (s.date || "").substring(0, 10),
+            category: s.category_name || null,
+            tags: s.tags || [],
+          });
+        }
+      }
+      allTx.sort((a, b) => {
+        const ai = (!a.category && !a.tags.includes("ignore")) ? 0 : 1;
+        const bi = (!b.category && !b.tags.includes("ignore")) ? 0 : 1;
+        if (ai !== bi) return ai - bi;
+        return b.date.localeCompare(a.date);
+      });
+      buildCategories();
+      render();
+    }
+
     async function loadData() {
-      setStatus("Loading…");
       const { start, end } = monthRange(currentDate);
+
+      // Show cached data immediately if available
+      const cached = loadCache();
+      if (cached) {
+        const age = Math.round((Date.now() - cached.ts) / 1000);
+        applyData(cached.txData, cached.catData);
+        setStatus("Cached · " + age + "s ago · refreshing…");
+      } else {
+        setStatus("Loading…");
+      }
+
+      // Fetch fresh data in background
       try {
         const [txRaw, catRaw] = await Promise.all([
           fetchPages("/api/v1/transactions?type=withdrawal&start=" + start + "&end=" + end),
           fetchPages("/api/v1/categories"),
         ]);
-        categoryNames = catRaw.map(c => c.attributes.name).sort();
-        allTx = [];
-        for (const t of txRaw) {
-          for (const s of t.attributes.transactions) {
-            allTx.push({
-              id: t.id,
-              jid: String(s.transaction_journal_id),
-              desc: s.description || "—",
-              amount: parseFloat(s.amount),
-              date: (s.date || "").substring(0, 10),
-              category: s.category_name || null,
-              tags: s.tags || [],
-            });
-          }
-        }
-        allTx.sort((a, b) => {
-          const ai = (!a.category && !a.tags.includes("ignore")) ? 0 : 1;
-          const bi = (!b.category && !b.tags.includes("ignore")) ? 0 : 1;
-          if (ai !== bi) return ai - bi;
-          return b.date.localeCompare(a.date);
-        });
-        buildCategories();
-        render();
+        saveCache(txRaw, catRaw);
+        applyData(txRaw, catRaw);
         setStatus("Updated " + new Date().toLocaleTimeString("en-IN", {hour:"2-digit",minute:"2-digit"}));
       } catch(e) {
-        setStatus("Error: " + e.message, true);
+        if (cached) {
+          const age = Math.round((Date.now() - cached.ts) / 1000);
+          setStatus("Cached · " + age + "s ago (refresh failed)", true);
+        } else {
+          setStatus("Error: " + e.message, true);
+        }
       }
     }
 
@@ -497,6 +548,9 @@ spec:
           volumeMounts:
             - name: html
               mountPath: /usr/share/nginx/html
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: nginx.conf
           livenessProbe:
             httpGet:
               path: /
@@ -520,5 +574,14 @@ spec:
         - name: tmpl
           configMap:
             name: firefly-tracker-html
+            items:
+              - key: index.html.tmpl
+                path: index.html.tmpl
+        - name: nginx-conf
+          configMap:
+            name: firefly-tracker-html
+            items:
+              - key: nginx.conf
+                path: nginx.conf
         - name: html
           emptyDir: {}
