@@ -228,7 +228,8 @@ async function fetchPages(path) {
   return results;
 }
 
-function cacheKey() { const {start}=monthRange(currentDate); return "pico_cache_"+start; }
+const CACHE_VERSION="v3";
+function cacheKey() { const {start}=monthRange(currentDate); return "pico_cache_"+CACHE_VERSION+"_"+start; }
 function loadCache() { try{const r=localStorage.getItem(cacheKey());return r?JSON.parse(r):null;}catch(e){return null;} }
 function saveCache(txRaw,catRaw,depRaw) { try{localStorage.setItem(cacheKey(),JSON.stringify({ts:Date.now(),txRaw,catRaw,depRaw}));}catch(e){} }
 
