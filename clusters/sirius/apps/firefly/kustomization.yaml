@@ -11,3 +11,10 @@ resources:
   - pico-httproute.yaml
   - pico-secret-sealed.yaml
 
+configMapGenerator:
+  - name: firefly-tracker-html
+    options:
+      disableNameSuffixHash: true
+    files:
+      - index.html.tmpl=pico-index.html.tmpl
+      - nginx.conf=pico-nginx.conf
