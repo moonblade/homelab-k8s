@@ -187,9 +187,12 @@ function catIcon(n) { return CAT_ICONS[n] || "🏷️"; }
 
 const JUNK_CATS   = new Set(["--- quit ---","ctrl-c","ctrl-d","--quit--","--pick--"]);
 const IGNORE_TAGS = ["ignore","self-transfer"];
+// Shared pastel palette — must match scriptable/firefly-widget.js COLORS array exactly.
+// Colors assigned by rank (index 0 = biggest category), not by name.
 const COLORS = [
-  "#58a6ff","#3fb950","#bc8cff","#ffa657","#79c0ff","#56d364",
-  "#ff7b72","#e3b341","#d2a8ff","#ffb077","#45b8ac","#c74375","#EFC050","#FF6F61",
+  "#4FC3F7","#FFB347","#69D99A","#FF7F7F","#B39DDB",
+  "#F06292","#4DB6AC","#FFD54F","#7986CB","#A5D6A7",
+  "#FF8A65","#4DD0E1",
 ];
 
 let currentDate=new Date(), allTx=[], categories=[], categoryNames=[];
@@ -279,7 +282,7 @@ function buildCategories() {
   const map={};
   for (const tx of allTx) { if(tx.type!=="withdrawal"||isExcluded(tx))continue; const k=tx.category||"Uncategorized"; map[k]=(map[k]||0)+tx.amount; }
   let ci=0;
-  categories=Object.entries(map).sort((a,b)=>b[1]-a[1]).map(([name,total])=>({name,total,color:name==="Uncategorized"?"#d29922":COLORS[ci++%COLORS.length]}));
+  categories=Object.entries(map).sort((a,b)=>b[1]-a[1]).map(([name,total])=>({name,total,color:name==="Uncategorized"?"#8b949e":COLORS[ci++%COLORS.length]}));
 }
 
 function render() { renderStats(); drawPie(); renderLegend(); renderTxList(); }
