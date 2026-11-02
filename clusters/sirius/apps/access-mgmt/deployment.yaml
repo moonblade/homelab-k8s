@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: access-mgmt
+  labels:
+    app.kubernetes.io/instance: access-mgmt
+    app.kubernetes.io/name: access-mgmt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: access-mgmt
+      app.kubernetes.io/name: access-mgmt
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: access-mgmt
+        app.kubernetes.io/name: access-mgmt
+    spec:
+      containers:
+        - name: access-mgmt
+          image: ghcr.io/moonblade/access-mgmt:latest # {"$imagepolicy": "access-mgmt:access-mgmt"}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: access-mgmt-env
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      imagePullSecrets:
+        - name: access-mgmt-image-pull
