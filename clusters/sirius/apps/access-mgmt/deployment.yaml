@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: access-mgmt
-          image: ghcr.io/moonblade/access-mgmt:ts_1793635880 # {"$imagepolicy": "access-mgmt:access-mgmt"}
+          image: ghcr.io/moonblade/access-mgmt:ts_1793637440 # {"$imagepolicy": "access-mgmt:access-mgmt"}
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
