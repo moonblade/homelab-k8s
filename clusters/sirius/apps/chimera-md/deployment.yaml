@@ -22,7 +22,6 @@ spec:
           volumeMounts:
             - name: markdown-files
               mountPath: /data/home
-              readOnly: true
             - name: config
               mountPath: /data/chimera.toml
               subPath: chimera.toml
@@ -37,7 +36,6 @@ spec:
           nfs:
             server: nfs.sirius.local
             path: /mnt/primary/root/downloads/misc
-            readOnly: true
         - name: config
           configMap:
             name: chimera-md-config
