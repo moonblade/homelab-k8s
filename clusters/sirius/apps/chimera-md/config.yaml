@@ -8,7 +8,7 @@ data:
     site_lang = "en"
     chimera_root = "/data"
     index_file = "index.md"
-    generate_index = false
+    generate_index = true
     highlight_style = "an-old-hope"
     log_level = "Info"
     max_cache_size = 52428800
