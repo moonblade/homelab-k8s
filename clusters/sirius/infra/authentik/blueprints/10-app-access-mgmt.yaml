@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-access-mgmt
+  labels:
+    blueprints.goauthentik.io/description: "Access Management proxy application (admin only)"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: access-mgmt-provider
+    state: present
+    identifiers:
+      name: Provider for Access Management
+    attrs:
+      name: Provider for Access Management
+      mode: proxy
+      external_host: https://access.moonblade.work
+      internal_host: http://access-mgmt.access-mgmt.svc.cluster.local:8000
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: access-mgmt-app
+    state: present
+    identifiers:
+      slug: access-mgmt
+    attrs:
+      name: Access Management
+      slug: access-mgmt
+      provider: !KeyOf access-mgmt-provider
+      policy_engine_mode: any
+      meta_launch_url: https://access.moonblade.work
+
+  - model: authentik_policies.policybinding
+    id: access-mgmt-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf access-mgmt-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      target: !KeyOf access-mgmt-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: access-mgmt-outpost
+    state: present
+    identifiers:
+      name: Access Management
+    attrs:
+      name: Access Management
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf access-mgmt-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info

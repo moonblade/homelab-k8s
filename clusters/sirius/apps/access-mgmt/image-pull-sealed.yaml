@@ -1,0 +1,14 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: access-mgmt-image-pull
+  namespace: access-mgmt
+spec:
+  encryptedData:
+    .dockerconfigjson: AgAhnzRX7IqTmDEVdgSET3pDqyUf5nKA2pgIBzkDT9MaX+XcVdPq/9Y1RBxZN//gQfuvZTy+pvFiygwZzpc+d3soTUadJWTINDIK3eJYmZyaRd4HFRoGtFlayW7a5kiNgDsxy/umnvdAdThcil/h+esFNEJiTbyywa4zpDV0rUadtTtLZAn99c7Ac6mCZcN3MciIDrNEcmGHB0FxPKWZP/24ot55XrE9wSu/2oWQ8XZqWa/z0ti7wgIo8VTSY+6F+7Ay7MOkGOZcsf7zt11Jfrv8YNTfJII8dtlR4koG370xr5vh/amyYtrl5TYBXvh10QvPKjS1yiK42zTKUmFz0Z0d7sEQYX0q2RndIrLZE2nCYeuh4SFwP4Uu8/G34DFuJnGeTn2fHBO4keFt6VOPuci0caoghLBo4bMO7t2Phc8H5X6EMiHesBw6v6vTydSdFVEP7wyb2v9JmS+jkXdv447zmP+JUm2S+4aG00ffTWQkhrcHepM5fEYK799/iBwSCU32rV4GLcfQuVYyhlQRtzqs9sJRagDxvmxqEuRk8oWu8FQjoDu/fjCm0zNOA5w8ZqXxRf7ywtGfaMIUn6xXPpQ6Chb2CCdSAxB3UAUoo2uV/fSW6ZQJQIxpv2MCZ/YIOq2UNX/CG+xiQDyvaV9sFXHpp3cHa7niIRd1EXDJ8QL6w6BNsIEXQ7d99tFSNd15AMp2RcdjZa7cC94vJMoPw3S1+RMiNEzlGpOp/e1zfeGHVg0KP4iFPtjnO4GkipxjYLueKefYtRPsCFebWSQB3jR1rgpTIQFFdI7l0t3q26w8Ba+/HGRMYPuE9Z07FuPi390tCI4vj5g+5JrLJifn8FDdgJf5lvfpMRf0KlPky8iQ3Ru+rRq7dcYsWeny3yuDe8PHn6W7lQEj92IjGkhmDRP9ff9FLTKEao0qnULZOspqy8k=
+  template:
+    metadata:
+      name: access-mgmt-image-pull
+      namespace: access-mgmt
+    type: kubernetes.io/dockerconfigjson

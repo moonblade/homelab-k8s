@@ -1,0 +1,104 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: access-mgmt-external
+  labels:
+    app.kubernetes.io/instance: access-mgmt
+    app.kubernetes.io/name: access-mgmt
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - access.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ak-outpost-access-management
+          namespace: authentik
+          port: 9000
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: access-mgmt-internal
+  labels:
+    app.kubernetes.io/instance: access-mgmt
+    app.kubernetes.io/name: access-mgmt
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: https
+  hostnames:
+    - access.sirius.moonblade.work
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: access-mgmt
+          port: 8000
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: access-mgmt-internal-redirect
+  labels:
+    app.kubernetes.io/instance: access-mgmt
+    app.kubernetes.io/name: access-mgmt
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: nginx-gateway
+      sectionName: http
+  hostnames:
+    - access.sirius.moonblade.work
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: access-mgmt-internal-dns
+  labels:
+    app.kubernetes.io/instance: access-mgmt
+    app.kubernetes.io/name: access-mgmt
+spec:
+  endpoints:
+    - dnsName: access.sirius.moonblade.work
+      recordTTL: 60
+      recordType: CNAME
+      targets:
+        - gateway.sirius.moonblade.work
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: access-mgmt-outer
+  labels:
+    app.kubernetes.io/instance: access-mgmt
+    app.kubernetes.io/name: access-mgmt
+spec:
+  endpoints:
+    - dnsName: access.moonblade.work
+      recordTTL: 60
+      recordType: CNAME
+      targets:
+        - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: 'true'

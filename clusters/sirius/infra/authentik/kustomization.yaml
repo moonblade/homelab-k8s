@@ -44,6 +44,7 @@ configMapGenerator:
       - ./blueprints/10-app-seafile.yaml
       - ./blueprints/10-app-immich.yaml
       - ./blueprints/10-app-stirling-pdf.yaml
+      - ./blueprints/10-app-access-mgmt.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml
