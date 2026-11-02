@@ -23,3 +23,39 @@ entries:
       name: audiobookshelf
       parent: !KeyOf group-user
       attributes: {}
+
+  - model: authentik_core.group
+    id: group-admin
+    state: present
+    identifiers:
+      name: admin
+    attrs:
+      name: admin
+      attributes: {}
+
+  - model: authentik_core.group
+    id: group-audiobook
+    state: present
+    identifiers:
+      name: audiobook
+    attrs:
+      name: audiobook
+      attributes: {}
+
+  - model: authentik_core.group
+    id: group-mdfileshare
+    state: present
+    identifiers:
+      name: mdfileshare
+    attrs:
+      name: mdfileshare
+      attributes: {}
+
+  - model: authentik_core.group
+    id: group-movie
+    state: present
+    identifiers:
+      name: movie
+    attrs:
+      name: movie
+      attributes: {}
