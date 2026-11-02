@@ -14,7 +14,7 @@ entries:
     attrs:
       name: Has role "audiobook"
       expression: |
-        if "roles" in request.user.attributes and "audiobook" in request.user.attributes["roles"]:
+        if ak_is_group_member(request.user, name="audiobook"):
             return True
         ak_message("Contact admin to give permissions")
         return False
@@ -28,7 +28,7 @@ entries:
     attrs:
       name: Has role "movie"
       expression: |
-        return "roles" in request.user.attributes and "movie" in request.user.attributes["roles"]
+        return ak_is_group_member(request.user, name="movie")
 
   # Policy: Has role "admin"
   - model: authentik_policies_expression.expressionpolicy
@@ -39,7 +39,7 @@ entries:
     attrs:
       name: Has role "admin"
       expression: |
-        return "roles" in request.user.attributes and "admin" in request.user.attributes["roles"]
+        return ak_is_group_member(request.user, name="admin")
 
   # Policy: Has role "mdfileshare"
   - model: authentik_policies_expression.expressionpolicy
@@ -50,7 +50,7 @@ entries:
     attrs:
       name: Has role "mdfileshare"
       expression: |
-        if "roles" in request.user.attributes and "mdfileshare" in request.user.attributes["roles"]:
+        if ak_is_group_member(request.user, name="mdfileshare"):
             return True
         ak_message("Contact admin to give permissions")
         return False
