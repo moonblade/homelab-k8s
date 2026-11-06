@@ -1,0 +1,95 @@
+# External: ha.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
+# Note: ReferenceGrant is in clusters/sirius/infra/authentik/referencegrants.yaml
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: home-assistant-external
+  namespace: home-assistant
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - ha.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: ak-outpost-home-assistant
+      namespace: authentik
+      port: 9000
+---
+# Internal: ha.sirius.moonblade.work HTTP → HTTPS redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: home-assistant-internal-redirect
+  namespace: home-assistant
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: http
+  hostnames:
+  - ha.sirius.moonblade.work
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+---
+# Internal: ha.sirius.moonblade.work → home-assistant service directly
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: home-assistant-internal
+  namespace: home-assistant
+spec:
+  parentRefs:
+  - name: main-gateway
+    namespace: nginx-gateway
+    sectionName: https
+  hostnames:
+  - ha.sirius.moonblade.work
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: home-assistant
+      port: 8123
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: home-assistant-internal-dns
+  namespace: home-assistant
+spec:
+  endpoints:
+  - dnsName: ha.sirius.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - gateway.sirius.moonblade.work
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: home-assistant-outer
+  namespace: home-assistant
+spec:
+  endpoints:
+  - dnsName: ha.moonblade.work
+    recordTTL: 60
+    recordType: CNAME
+    targets:
+    - 46b0a967-3b0f-493a-88e7-6f1cc9f8852b.cfargotunnel.com
+    providerSpecific:
+    - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+      value: 'true'
