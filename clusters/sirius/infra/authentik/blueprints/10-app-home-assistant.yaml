@@ -13,7 +13,7 @@ entries:
     attrs:
       name: Provider for Home Assistant
       mode: proxy
-      external_host: https://ha.moonblade.work
+      external_host: https://assistant.moonblade.work
       internal_host: http://home-assistant.home-assistant.svc.cluster.local:8123
       intercept_header_auth: true
       access_token_validity: hours=24
@@ -32,7 +32,7 @@ entries:
       slug: home-assistant
       provider: !KeyOf home-assistant-provider
       policy_engine_mode: any
-      meta_launch_url: https://ha.moonblade.work
+      meta_launch_url: https://assistant.moonblade.work
 
   - model: authentik_policies.policybinding
     id: home-assistant-policy-binding

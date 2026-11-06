@@ -1,4 +1,4 @@
-# External: ha.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
+# External: assistant.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
 # Note: ReferenceGrant is in clusters/sirius/infra/authentik/referencegrants.yaml
 
 apiVersion: gateway.networking.k8s.io/v1
@@ -12,7 +12,7 @@ spec:
     namespace: nginx-gateway
     sectionName: http
   hostnames:
-  - ha.moonblade.work
+  - assistant.moonblade.work
   rules:
   - matches:
     - path:
@@ -23,7 +23,7 @@ spec:
       namespace: authentik
       port: 9000
 ---
-# Internal: ha.sirius.moonblade.work HTTP → HTTPS redirect
+# Internal: assistant.sirius.moonblade.work HTTP → HTTPS redirect
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -35,7 +35,7 @@ spec:
     namespace: nginx-gateway
     sectionName: http
   hostnames:
-  - ha.sirius.moonblade.work
+  - assistant.sirius.moonblade.work
   rules:
   - filters:
     - type: RequestRedirect
@@ -43,7 +43,7 @@ spec:
         scheme: https
         statusCode: 301
 ---
-# Internal: ha.sirius.moonblade.work → home-assistant service directly
+# Internal: assistant.sirius.moonblade.work → home-assistant service directly
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -55,7 +55,7 @@ spec:
     namespace: nginx-gateway
     sectionName: https
   hostnames:
-  - ha.sirius.moonblade.work
+  - assistant.sirius.moonblade.work
   rules:
   - matches:
     - path:
@@ -72,7 +72,7 @@ metadata:
   namespace: home-assistant
 spec:
   endpoints:
-  - dnsName: ha.sirius.moonblade.work
+  - dnsName: assistant.sirius.moonblade.work
     recordTTL: 60
     recordType: CNAME
     targets:
@@ -85,7 +85,7 @@ metadata:
   namespace: home-assistant
 spec:
   endpoints:
-  - dnsName: ha.moonblade.work
+  - dnsName: assistant.moonblade.work
     recordTTL: 60
     recordType: CNAME
     targets:

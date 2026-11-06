@@ -69,7 +69,7 @@ services:
       - name: "Home Assistant"
         logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/home-assistant.webp"
         subtitle: "Home Automation"
-        url: "https://ha.moonblade.work"
+        url: "https://assistant.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
