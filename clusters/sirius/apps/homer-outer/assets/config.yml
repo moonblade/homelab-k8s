@@ -66,6 +66,13 @@ services:
   - name: "Admin"
     icon: "fas fa-shield-alt"
     items:
+      - name: "Home Assistant"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/home-assistant.webp"
+        subtitle: "Home Automation"
+        url: "https://assistant.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Beszel"
         logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/beszel.webp"
         subtitle: "Server Monitoring"
