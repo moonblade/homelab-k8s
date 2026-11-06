@@ -60,17 +60,7 @@ spec:
               memory: 1Gi
       volumes:
         - name: config
-          persistentVolumeClaim:
-            claimName: home-assistant-config
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: home-assistant-config
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: local-path
-  resources:
-    requests:
-      storage: 10Gi
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/config/home-assistant
+            readOnly: false
