@@ -395,7 +395,7 @@ function renderTxList() {
       const ignBadge=ign?'<span class="tx-tag-ign">'+(tx.tags.includes("self-transfer")?"↔":"🚫")+'</span>':"";
       const origLine=picoName?'<div class="tx-orig" title="'+esc(tx.desc)+'">orig: '+esc(tx.desc)+'</div>':'';
       const noteRow=editingNoteJid===tx.jid
-        ?'<div class="edit-note-wrap"><input class="edit-note-input" id="note-inp-'+tx.jid+'" type="text" value="'+esc(picoName||'')+'" placeholder="Display name…">'<button class="btn-save-note note-save-btn">Save</button><button class="btn-cancel-note note-cancel-btn">✕</button></div>'
+        ?'<div class="edit-note-wrap"><input class="edit-note-input" id="note-inp-'+tx.jid+'" type="text" value="'+esc(picoName||'')+'" placeholder="Display name…"><button class="btn-save-note note-save-btn">Save</button><button class="btn-cancel-note note-cancel-btn">✕</button></div>'
         :'';
       div.innerHTML=
         '<div style="min-width:0"><div class="tx-desc">'+esc(displayName)+'</div>'+origLine+
