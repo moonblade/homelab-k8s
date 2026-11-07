@@ -110,6 +110,21 @@
   .cat-grid-icon { font-size: 26px; line-height: 1; }
   .cat-grid-label { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.3; word-break: break-word; }
   .cat-grid-btn.selected .cat-grid-label { color: var(--blue); font-weight: 600; }
+  /* Note / rename styles */
+  .tx-orig { font-size: 11px; color: var(--muted); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .edit-note-wrap { margin-top: 6px; display: flex; gap: 6px; align-items: center; }
+  .edit-note-input { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 5px 8px; border-radius: 6px; font-size: 12px; outline: none; }
+  .edit-note-input:focus { border-color: var(--blue); }
+  .btn-save-note { background: var(--blue); border: 1px solid var(--blue); color: #0d1117; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; }
+  .btn-cancel-note { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+  /* Received / deposit styles */
+  .dep-item { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 7px; border: 1px solid transparent; border-left: 3px solid var(--green); padding-left: 8px; }
+  .dep-item:hover { background: rgba(63,185,80,0.04); border-color: var(--border); border-left-color: var(--green); }
+  .dep-desc { font-size: 13px; color: var(--text); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dep-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+  .dep-date { font-size: 11px; color: var(--muted); }
+  .dep-source { font-size: 11px; padding: 1px 6px; border-radius: 8px; background: rgba(63,185,80,0.12); color: var(--green); font-weight: 500; }
+  .dep-amount { font-size: 14px; font-weight: 600; font-family: monospace; color: var(--green); }
 </style>
 </head>
 <body>
@@ -152,9 +167,11 @@
         <span class="badge" id="uncatBadge" style="display:none"></span>
       </div>
       <div class="filter-bar">
-        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="all">All</button>
+        <button class="filter-btn active" data-filter="spends">Spends</button>
         <button class="filter-btn" data-filter="uncategorized">Uncategorized</button>
         <button class="filter-btn" data-filter="ignored">Ignored</button>
+        <button class="filter-btn" data-filter="received">Received</button>
       </div>
       <div class="tx-list" id="txList"><div class="empty">Loading…</div></div>
     </div>
@@ -196,7 +213,8 @@ const COLORS = [
 ];
 
 let currentDate=new Date(), allTx=[], categories=[], categoryNames=[];
-let activeFilter="all", activeLegendCat=null, pieSlices=[];
+let activeFilter="spends", activeLegendCat=null, pieSlices=[];
+let editingNoteJid=null;
 
 function isExcluded(tx) { return tx.tags.some(t=>IGNORE_TAGS.includes(t)); }
 function fmtINR(v) {
@@ -233,7 +251,7 @@ async function fetchPages(path) {
   return results;
 }
 
-const CACHE_VERSION="v3";
+const CACHE_VERSION="v4";
 function cacheKey() { const {start}=monthRange(currentDate); return "pico_cache_"+CACHE_VERSION+"_"+start; }
 function loadCache() { try{const r=localStorage.getItem(cacheKey());return r?JSON.parse(r):null;}catch(e){return null;} }
 function saveCache(txRaw,catRaw,depRaw) { try{localStorage.setItem(cacheKey(),JSON.stringify({ts:Date.now(),txRaw,catRaw,depRaw}));}catch(e){} }
@@ -242,11 +260,11 @@ function applyData(txRaw,catRaw,depRaw) {
   categoryNames=catRaw.map(c=>c.attributes.name).filter(n=>!JUNK_CATS.has(n)).sort();
   allTx=[];
   for (const t of txRaw) for (const s of t.attributes.transactions)
-    allTx.push({id:t.id,jid:String(s.transaction_journal_id),desc:s.description||"—",
+    allTx.push({id:t.id,jid:String(s.transaction_journal_id),desc:s.description||"—",notes:s.notes||null,
       amount:parseFloat(s.amount),date:(s.date||"").substring(0,10),
       category:s.category_name||null,tags:s.tags||[],type:"withdrawal"});
   for (const t of (depRaw||[])) for (const s of t.attributes.transactions)
-    allTx.push({id:t.id,jid:String(s.transaction_journal_id),desc:s.description||"—",
+    allTx.push({id:t.id,jid:String(s.transaction_journal_id),desc:s.description||"—",notes:s.notes||null,
       amount:parseFloat(s.amount),date:(s.date||"").substring(0,10),
       category:s.category_name||null,tags:s.tags||[],type:"deposit"});
   allTx.sort((a,b)=>{
@@ -344,32 +362,65 @@ function renderLegend() {
 function renderTxList() {
   const list=document.getElementById("txList");
   let filtered=[...allTx];
-  if(activeFilter==="ignored"){
+  if(activeFilter==="all"){
+    filtered=filtered.filter(t=>!isExcluded(t));
+  } else if(activeFilter==="received"){
+    filtered=filtered.filter(t=>t.type==="deposit");
+  } else if(activeFilter==="ignored"){
     filtered=filtered.filter(t=>isExcluded(t));
   } else {
-    filtered=filtered.filter(t=>!isExcluded(t));
-    if(activeFilter==="uncategorized")filtered=filtered.filter(t=>t.type==="withdrawal"&&!t.category);
-    if(activeLegendCat){const cf=activeLegendCat==="Uncategorized"?null:activeLegendCat;filtered=filtered.filter(t=>t.type==="withdrawal"&&t.category===cf);}
+    // Spends + Uncategorized: only withdrawals, no excluded
+    filtered=filtered.filter(t=>t.type!=="deposit"&&!isExcluded(t));
+    if(activeFilter==="uncategorized")filtered=filtered.filter(t=>!t.category);
+    if(activeLegendCat){const cf=activeLegendCat==="Uncategorized"?null:activeLegendCat;filtered=filtered.filter(t=>t.category===cf);}
   }
   if(!filtered.length){list.innerHTML='<div class="empty">No transactions</div>';return;}
   list.innerHTML="";
   for(const tx of filtered){
     const ign=isExcluded(tx),isDeposit=tx.type==="deposit",div=document.createElement("div");
-    div.className="tx-item"+(!tx.category&&!ign&&!isDeposit?" uncat":"")+(ign?" ignored":"");
-    const catBadge=tx.category?'<span class="tx-cat">'+catIcon(tx.category)+" "+esc(tx.category)+'</span>':(isDeposit?'':'<span class="tx-cat none">Uncategorized</span>');
-    const ignBadge=ign?'<span class="tx-tag-ign">'+(tx.tags.includes("self-transfer")?"↔ transfer":"🚫 ignored")+'</span>':"";
-    const amtClass="tx-amount"+(isDeposit?" deposit":"");
-    div.innerHTML=
-      '<div style="min-width:0"><div class="tx-desc">'+esc(tx.desc)+'</div><div class="tx-meta"><span class="tx-date">'+tx.date+'</span>'+catBadge+ignBadge+'</div></div>'+
-      '<div class="tx-right"><span class="'+amtClass+'">'+fmtINR(tx.amount)+'</span>'+(isDeposit?'':'<div class="tx-actions"><button class="btn-sm cat-btn">'+catIcon(tx.category)+'</button><button class="btn-sm ign-btn'+(ign?' ign':'')+'">'+( ign?'👁':'🚫')+'</button></div>')+' </div>';
-    if(!isDeposit){
+    if(isDeposit){
+      div.className="dep-item";
+      const displayName=tx.notes||tx.desc;
+      const origRow=tx.notes?'<span class="dep-source">'+esc(tx.desc)+'</span>':'';
+      div.innerHTML=
+        '<div style="min-width:0"><div class="dep-desc">'+esc(displayName)+'</div>'+
+        '<div class="dep-meta"><span class="dep-date">'+tx.date+'</span>'+origRow+'</div></div>'+
+        '<div class="tx-right"><span class="dep-amount">+'+fmtINR(tx.amount)+'</span></div>';
+    } else {
+      div.className="tx-item"+(!tx.category&&!ign?" uncat":"")+(ign?" ignored":"");
+      const displayName=tx.notes||tx.desc;
+      const catBadge=tx.category?'<span class="tx-cat">'+catIcon(tx.category)+" "+esc(tx.category)+'</span>':'<span class="tx-cat none">Uncategorized</span>';
+      const ignBadge=ign?'<span class="tx-tag-ign">'+(tx.tags.includes("self-transfer")?"↔ transfer":"🚫 ignored")+'</span>':"";
+      const origLine=tx.notes?'<div class="tx-orig" title="Original bank description">orig: '+esc(tx.desc)+'</div>':'';
+      const noteRow=editingNoteJid===tx.jid
+        ?'<div class="edit-note-wrap"><input class="edit-note-input" id="note-inp-'+tx.jid+'" type="text" value="'+esc(tx.notes||tx.desc)+'" placeholder="Display name…"><button class="btn-save-note note-save-btn">Save</button><button class="btn-cancel-note note-cancel-btn">✕</button></div>'
+        :'';
+      div.innerHTML=
+        '<div style="min-width:0"><div class="tx-desc">'+esc(displayName)+'</div>'+origLine+
+        '<div class="tx-meta"><span class="tx-date">'+tx.date+'</span>'+catBadge+ignBadge+'</div>'+noteRow+'</div>'+
+        '<div class="tx-right"><span class="tx-amount">'+fmtINR(tx.amount)+'</span>'+
+        '<div class="tx-actions"><button class="btn-sm cat-btn" title="Category">'+catIcon(tx.category)+'</button>'+
+        '<button class="btn-sm note-btn" title="Rename">✏️</button>'+
+        '<button class="btn-sm ign-btn'+(ign?' ign':'')+'">'+( ign?'👁':'🚫')+'</button></div></div>';
       div.querySelector(".cat-btn").addEventListener("click",()=>openModal(tx.id,tx.jid,tx.category||""));
       div.querySelector(".ign-btn").addEventListener("click",()=>toggleIgnore(tx.id,tx.jid));
+      div.querySelector(".note-btn").addEventListener("click",()=>{
+        editingNoteJid=editingNoteJid===tx.jid?null:tx.jid;
+        renderTxList();
+        if(editingNoteJid){setTimeout(()=>{const inp=document.getElementById("note-inp-"+tx.jid);if(inp){inp.focus();inp.select();}},0);}
+      });
+      if(editingNoteJid===tx.jid){
+        div.querySelector(".note-save-btn").addEventListener("click",()=>saveNote(tx.id,tx.jid));
+        div.querySelector(".note-cancel-btn").addEventListener("click",()=>{editingNoteJid=null;renderTxList();});
+        div.querySelector(".edit-note-input").addEventListener("keydown",e=>{
+          if(e.key==="Enter")saveNote(tx.id,tx.jid);
+          if(e.key==="Escape"){editingNoteJid=null;renderTxList();}
+        });
+      }
     }
     list.appendChild(div);
   }
 }
-
 function openModal(txId,jid,currentCat) {
   const grid=document.getElementById("catGrid");grid.innerHTML="";
   categoryNames.forEach(c=>{
@@ -383,6 +434,19 @@ function openModal(txId,jid,currentCat) {
 }
 function closeModal() { document.getElementById("catModal").classList.remove("open"); }
 document.getElementById("catModal").addEventListener("click",e=>{if(e.target===document.getElementById("catModal"))closeModal();});
+
+async function saveNote(txId,jid) {
+  const inp=document.getElementById("note-inp-"+jid);if(!inp)return;
+  const noteVal=inp.value.trim();
+  const tx=allTx.find(t=>t.jid===jid);if(!tx)return;
+  setStatus("Saving…");
+  try {
+    await api("/api/v1/transactions/"+txId,{method:"PUT",body:JSON.stringify({transactions:[{transaction_journal_id:parseInt(jid),notes:noteVal||null}]})});
+    tx.notes=noteVal||null;
+    editingNoteJid=null;
+    render();setStatus("Saved ✓");
+  } catch(e){setStatus("Save failed: "+e.message,true);}
+}
 
 async function saveCategory(txId,jid,cat) {
   closeModal(); setStatus("Saving…");
@@ -406,8 +470,8 @@ async function toggleIgnore(txId,jid) {
   } catch(e){setStatus("Update failed: "+e.message,true);}
 }
 
-document.getElementById("prevMonth").addEventListener("click",()=>{currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()-1,1);updateMonthLabel();loadData();});
-document.getElementById("nextMonth").addEventListener("click",()=>{currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+1,1);updateMonthLabel();loadData();});
+document.getElementById("prevMonth").addEventListener("click",()=>{editingNoteJid=null;currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()-1,1);updateMonthLabel();loadData();});
+document.getElementById("nextMonth").addEventListener("click",()=>{editingNoteJid=null;currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+1,1);updateMonthLabel();loadData();});
 function updateMonthLabel(){document.getElementById("monthLabel").textContent=currentDate.toLocaleDateString("en-IN",{month:"long",year:"numeric"});}
 document.querySelectorAll(".filter-btn").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
