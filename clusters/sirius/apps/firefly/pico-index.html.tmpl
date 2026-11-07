@@ -87,6 +87,7 @@
     transition: all 0.15s; line-height: 1; }
   .btn-sm:hover { border-color: var(--blue); }
   .btn-sm.ign { border-color: var(--muted); background: rgba(139,148,158,0.1); }
+  .btn-sm.uncat-btn { border-color: rgba(210,153,34,0.4); }
   .empty { color: var(--muted); text-align: center; padding: 32px; font-style: italic; font-size: 13px; }
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75);
     z-index: 100; align-items: flex-end; justify-content: center; }
@@ -380,26 +381,27 @@ function renderTxList() {
     const ign=isExcluded(tx),isDeposit=tx.type==="deposit",div=document.createElement("div");
     if(isDeposit){
       div.className="dep-item";
-      const displayName=tx.notes||tx.desc;
-      const origRow=tx.notes?'<span class="dep-source">'+esc(tx.desc)+'</span>':'';
+      const picoName=getPicoNote(tx.notes);
+      const displayName=picoName||tx.desc;
+      const origRow=picoName?'<span class="dep-source">'+esc(tx.desc)+'</span>':'';
       div.innerHTML=
         '<div style="min-width:0"><div class="dep-desc">'+esc(displayName)+'</div>'+
         '<div class="dep-meta"><span class="dep-date">'+tx.date+'</span>'+origRow+'</div></div>'+
         '<div class="tx-right"><span class="dep-amount">+'+fmtINR(tx.amount)+'</span></div>';
     } else {
       div.className="tx-item"+(!tx.category&&!ign?" uncat":"")+(ign?" ignored":"");
-      const displayName=tx.notes||tx.desc;
-      const catBadge=tx.category?'<span class="tx-cat">'+catIcon(tx.category)+" "+esc(tx.category)+'</span>':'<span class="tx-cat none">Uncategorized</span>';
-      const ignBadge=ign?'<span class="tx-tag-ign">'+(tx.tags.includes("self-transfer")?"↔ transfer":"🚫 ignored")+'</span>':"";
-      const origLine=tx.notes?'<div class="tx-orig" title="Original bank description">orig: '+esc(tx.desc)+'</div>':'';
+      const picoName=getPicoNote(tx.notes);
+      const displayName=picoName||tx.desc;
+      const ignBadge=ign?'<span class="tx-tag-ign">'+(tx.tags.includes("self-transfer")?"↔":"🚫")+'</span>':"";
+      const origLine=picoName?'<div class="tx-orig" title="'+esc(tx.desc)+'">orig: '+esc(tx.desc)+'</div>':'';
       const noteRow=editingNoteJid===tx.jid
-        ?'<div class="edit-note-wrap"><input class="edit-note-input" id="note-inp-'+tx.jid+'" type="text" value="'+esc(tx.notes||tx.desc)+'" placeholder="Display name…"><button class="btn-save-note note-save-btn">Save</button><button class="btn-cancel-note note-cancel-btn">✕</button></div>'
+        ?'<div class="edit-note-wrap"><input class="edit-note-input" id="note-inp-'+tx.jid+'" type="text" value="'+esc(picoName||'')+'" placeholder="Display name…">'<button class="btn-save-note note-save-btn">Save</button><button class="btn-cancel-note note-cancel-btn">✕</button></div>'
         :'';
       div.innerHTML=
         '<div style="min-width:0"><div class="tx-desc">'+esc(displayName)+'</div>'+origLine+
-        '<div class="tx-meta"><span class="tx-date">'+tx.date+'</span>'+catBadge+ignBadge+'</div>'+noteRow+'</div>'+
+        '<div class="tx-meta"><span class="tx-date">'+tx.date+'</span>'+ignBadge+'</div>'+noteRow+'</div>'+
         '<div class="tx-right"><span class="tx-amount">'+fmtINR(tx.amount)+'</span>'+
-        '<div class="tx-actions"><button class="btn-sm cat-btn" title="Category">'+catIcon(tx.category)+'</button>'+
+        '<div class="tx-actions"><button class="btn-sm cat-btn'+(tx.category?'':' uncat-btn')+'" title="'+(tx.category||'Uncategorized')+'">'+catIcon(tx.category)+'</button>'+
         '<button class="btn-sm note-btn" title="Rename">✏️</button>'+
         '<button class="btn-sm ign-btn'+(ign?' ign':'')+'">'+( ign?'👁':'🚫')+'</button></div></div>';
       div.querySelector(".cat-btn").addEventListener("click",()=>openModal(tx.id,tx.jid,tx.category||""));
@@ -435,14 +437,27 @@ function openModal(txId,jid,currentCat) {
 function closeModal() { document.getElementById("catModal").classList.remove("open"); }
 document.getElementById("catModal").addEventListener("click",e=>{if(e.target===document.getElementById("catModal"))closeModal();});
 
+// Helpers: read/write only the "pico: " line inside notes, leave rest intact
+function getPicoNote(notes) {
+  if(!notes)return null;
+  const m=(notes||'').split('\n').find(l=>l.startsWith('pico: '));
+  return m?m.slice(6).trim()||null:null;
+}
+function setPicoNote(notes, val) {
+  const lines=(notes||'').split('\n').filter(l=>!l.startsWith('pico: '));
+  if(val)lines.push('pico: '+val);
+  return lines.join('\n').trim()||null;
+}
+
 async function saveNote(txId,jid) {
   const inp=document.getElementById("note-inp-"+jid);if(!inp)return;
   const noteVal=inp.value.trim();
   const tx=allTx.find(t=>t.jid===jid);if(!tx)return;
   setStatus("Saving…");
   try {
-    await api("/api/v1/transactions/"+txId,{method:"PUT",body:JSON.stringify({transactions:[{transaction_journal_id:parseInt(jid),notes:noteVal||null}]})});
-    tx.notes=noteVal||null;
+    const newNotes=setPicoNote(tx.notes,noteVal||null);
+    await api("/api/v1/transactions/"+txId,{method:"PUT",body:JSON.stringify({transactions:[{transaction_journal_id:parseInt(jid),notes:newNotes}]})});
+    tx.notes=newNotes;
     editingNoteJid=null;
     render();setStatus("Saved ✓");
   } catch(e){setStatus("Save failed: "+e.message,true);}
