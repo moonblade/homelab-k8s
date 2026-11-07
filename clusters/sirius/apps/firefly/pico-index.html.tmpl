@@ -167,9 +167,8 @@
         <span class="badge" id="uncatBadge" style="display:none"></span>
       </div>
       <div class="filter-bar">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="uncategorized">Uncategorized</button>
-        <button class="filter-btn" data-filter="ignored">Ignored</button>
+        <button class="filter-btn" data-filter="all">All</button>
+        <button class="filter-btn active" data-filter="spends">Spends</button>
         <button class="filter-btn" data-filter="received">Received</button>
       </div>
       <div class="tx-list" id="txList"><div class="empty">Loading…</div></div>
@@ -212,7 +211,7 @@ const COLORS = [
 ];
 
 let currentDate=new Date(), allTx=[], categories=[], categoryNames=[];
-let activeFilter="all", activeLegendCat=null, pieSlices=[];
+let activeFilter="spends", activeLegendCat=null, pieSlices=[];
 let editingNoteJid=null;
 
 function isExcluded(tx) { return tx.tags.some(t=>IGNORE_TAGS.includes(t)); }
@@ -361,14 +360,14 @@ function renderLegend() {
 function renderTxList() {
   const list=document.getElementById("txList");
   let filtered=[...allTx];
-  if(activeFilter==="ignored"){
-    filtered=filtered.filter(t=>isExcluded(t));
+  if(activeFilter==="all"){
+    // All: withdrawals + deposits, no excluded
+    filtered=filtered.filter(t=>!isExcluded(t));
   } else if(activeFilter==="received"){
     filtered=filtered.filter(t=>t.type==="deposit");
   } else {
-    // All and Uncategorized: only withdrawals, no excluded
+    // Spends: only withdrawals, no excluded
     filtered=filtered.filter(t=>t.type!=="deposit"&&!isExcluded(t));
-    if(activeFilter==="uncategorized")filtered=filtered.filter(t=>!t.category);
     if(activeLegendCat){const cf=activeLegendCat==="Uncategorized"?null:activeLegendCat;filtered=filtered.filter(t=>t.category===cf);}
   }
   if(!filtered.length){list.innerHTML='<div class="empty">No transactions</div>';return;}
