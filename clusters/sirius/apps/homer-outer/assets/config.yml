@@ -21,7 +21,7 @@ services:
         method: "HEAD"
         mode: "no-cors"
       - name: "Firefly Pico"
-        logo: "https://raw.githubusercontent.com/cioraneanu/firefly-pico/main/front/public/icon.png"
+        logo: "https://raw.githubusercontent.com/cioraneanu/firefly-pico/main/docs/images/logo.png"
         subtitle: "Quick Expense Entry"
         url: "https://pico.moonblade.work"
         type: Ping
@@ -32,7 +32,7 @@ services:
     icon: "fas fa-film"
     items:
       - name: "Stremio"
-        logo: "https://www.stremio.com/website/stremio-logo-small.png"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/stremio.webp"
         subtitle: "Streaming Server"
         url: "https://stremio.moonblade.work"
         type: Ping
@@ -57,7 +57,7 @@ services:
     icon: "fas fa-headphones"
     items:
       - name: "Audiobookshelf"
-        logo: "https://www.audiobookshelf.org/Logo.png"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/audiobookshelf.webp"
         subtitle: "Audiobook Library"
         url: "https://audiobook.moonblade.work"
         type: Ping
@@ -71,7 +71,7 @@ services:
         method: "HEAD"
         mode: "no-cors"
       - name: "Kokoro TTS"
-        logo: "https://raw.githubusercontent.com/remsky/Kokoro-FastAPI/refs/heads/master/tests/logo.jpg"
+        icon: "fas fa-microphone"
         subtitle: "EPUB to Audiobook Converter"
         url: "https://kokoro.moonblade.work"
         type: Ping
@@ -132,7 +132,7 @@ services:
         method: "HEAD"
         mode: "no-cors"
       - name: "Stirling PDF"
-        logo: "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-tools-icon.svg"
+        logo: "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/app/core/src/main/resources/static/favicon.svg"
         subtitle: "PDF Tools"
         url: "https://pdf.moonblade.work"
         type: Ping
