@@ -13,13 +13,15 @@ spec:
   hostnames:
     - expense.moonblade.work
   rules:
-    - matches:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            hostname: pico.moonblade.work
+            statusCode: 301
+      matches:
         - path:
             type: PathPrefix
             value: /
-      backendRefs:
-        - name: expensetracker
-          port: 9000
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint

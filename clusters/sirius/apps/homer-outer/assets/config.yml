@@ -10,37 +10,9 @@ defaults:
 theme: default
 
 services:
-  - name: "Sirius"
-    icon: "fas fa-star"
+  - name: "Finance"
+    icon: "fas fa-wallet"
     items:
-      - name: "Expense Tracker"
-        icon: "fas fa-wallet"
-        subtitle: "Manage expenses with ease"
-        url: "https://expense.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Transmission"
-        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Transmission_Icon.svg/120px-Transmission_Icon.svg.png"
-        subtitle: "Transmission Web Interface"
-        url: "https://transmission.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Feeder"
-        logo: "https://img.icons8.com/?size=100&id=qpuOQzhOVZ0a&format=png&color=000000"
-        subtitle: "Feeder"
-        url: "https://feeder.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "n8n"
-        logo: "https://avatars.githubusercontent.com/u/45487711?s=200&v=4"
-        subtitle: "Workflow Automation"
-        url: "https://n8n.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
       - name: "Firefly III"
         logo: "https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.github/assets/img/logo-small.png"
         subtitle: "Personal Finance Manager"
@@ -49,23 +21,91 @@ services:
         method: "HEAD"
         mode: "no-cors"
       - name: "Firefly Pico"
-        logo: "https://raw.githubusercontent.com/cioraneanu/firefly-pico/main/public/icon.png"
-        subtitle: "Firefly III Quick Entry"
+        logo: "https://raw.githubusercontent.com/cioraneanu/firefly-pico/main/front/public/icon.png"
+        subtitle: "Quick Expense Entry"
         url: "https://pico.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-      - name: "Seafile"
-        logo: "https://de.seafile.com/wp-content/themes/seafileger/img/svg/seafile_logo_proposed.svg"
-        subtitle: "File Sync and Share"
-        url: "https://drive.moonblade.work"
+
+  - name: "Media"
+    icon: "fas fa-film"
+    items:
+      - name: "Stremio"
+        logo: "https://www.stremio.com/website/stremio-logo-small.png"
+        subtitle: "Streaming Server"
+        url: "https://stremio.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Jackett"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/jackett.webp"
+        subtitle: "Torrent Indexer"
+        url: "https://jackett.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Transmission"
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Transmission_Icon.svg/120px-Transmission_Icon.svg.png"
+        subtitle: "Torrent Client"
+        url: "https://transmission.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
 
-  - name: "Admin"
-    icon: "fas fa-shield-alt"
+  - name: "Audiobooks"
+    icon: "fas fa-headphones"
     items:
+      - name: "Audiobookshelf"
+        logo: "https://www.audiobookshelf.org/Logo.png"
+        subtitle: "Audiobook Library"
+        url: "https://audiobook.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Audiobookbay"
+        logo: "https://audiobookbay.lu/images/audiobook.png"
+        subtitle: "Search & Download Audiobooks"
+        url: "https://abbsearch.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Kokoro TTS"
+        logo: "https://raw.githubusercontent.com/remsky/Kokoro-FastAPI/refs/heads/master/tests/logo.jpg"
+        subtitle: "EPUB to Audiobook Converter"
+        url: "https://kokoro.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+
+  - name: "Reading"
+    icon: "fas fa-book"
+    items:
+      - name: "Feeder"
+        logo: "https://img.icons8.com/?size=100&id=qpuOQzhOVZ0a&format=png&color=000000"
+        subtitle: "Web Novel to EPUB"
+        url: "https://feeder.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "MD Share"
+        icon: "fas fa-file-alt"
+        subtitle: "Public Markdown Sharing"
+        url: "https://read.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+
+  - name: "Automation"
+    icon: "fas fa-robot"
+    items:
+      - name: "n8n"
+        logo: "https://avatars.githubusercontent.com/u/45487711?s=200&v=4"
+        subtitle: "Workflow Automation"
+        url: "https://n8n.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Home Assistant"
         logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/home-assistant.webp"
         subtitle: "Home Automation"
@@ -73,17 +113,14 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-      - name: "Beszel"
-        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/beszel.webp"
-        subtitle: "Server Monitoring"
-        url: "https://beszel.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Uptime Kuma"
-        logo: "https://uptime.kuma.pet/img/icon.svg"
-        subtitle: "Service Status Monitoring"
-        url: "https://status.moonblade.work"
+
+  - name: "Files & Tools"
+    icon: "fas fa-tools"
+    items:
+      - name: "Seafile"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/seafile.webp"
+        subtitle: "File Sync and Share"
+        url: "https://drive.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
@@ -94,10 +131,28 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-      - name: "Weave GitOps"
-        logo: "https://avatars.githubusercontent.com/u/9976052?s=200&v=4"
-        subtitle: "GitOps Dashboard"
-        url: "https://weave.moonblade.work"
+      - name: "Stirling PDF"
+        logo: "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-tools-icon.svg"
+        subtitle: "PDF Tools"
+        url: "https://pdf.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+
+  - name: "Admin"
+    icon: "fas fa-shield-alt"
+    items:
+      - name: "Beszel"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/beszel.webp"
+        subtitle: "Server Monitoring"
+        url: "https://beszel.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Uptime Kuma"
+        logo: "https://uptime.kuma.pet/img/icon.svg"
+        subtitle: "Service Status"
+        url: "https://status.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
@@ -108,78 +163,10 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-
-  - name: "Search"
-    icon: "fas fa-search"
-    items:
-      - name: "Audiobookbay"
-        logo: "https://audiobookbay.lu/images/audiobook.png"
-        subtitle: "Search audiobookbay"
-        url: "https://abbsearch.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "YTS"
-        logo: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Logo-YTS.svg"
-        subtitle: "YTS search for movies"
-        url: "https://ytssearch.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-
-  - name: "Media"
-    icon: "fas fa-headphones"
-    items:
-      - name: "Audiobookshelf"
-        logo: "https://www.audiobookshelf.org/Logo.png"
-        subtitle: "Audiobookshelf"
-        url: "https://audiobook.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Jackett"
-        logo: "https://avatars.githubusercontent.com/u/15383019?s=48&v=4"
-        subtitle: "Manage indexers"
-        url: "https://jackett.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Stremio"
-        logo: "https://www.stremio.com/website/stremio-logo-small.png"
-        subtitle: "Streaming Server"
-        url: "https://stremio.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Kokoro TTS"
-        icon: "mdi-book-music"
-        subtitle: "EPUB to Audiobook"
-        url: "https://kokoro.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-
-  - name: "Misc"
-    icon: "fas fa-box"
-    items:
-      - name: "Stirling PDF"
-        logo: "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-tools-icon.svg"
-        subtitle: "PDF tools"
-        url: "https://pdf.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "MD Share (Public)"
-        icon: "fas fa-file-alt"
-        subtitle: "Public markdown sharing"
-        url: "https://read.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
-      - name: "Blog"
-        logo: "https://cdn.pixabay.com/photo/2022/01/16/16/44/blogger-logo-6942640_1280.png"
-        subtitle: "Blog on github"
-        url: "https://moonblade.github.io/blog"
+      - name: "Weave GitOps"
+        logo: "https://avatars.githubusercontent.com/u/9976052?s=200&v=4"
+        subtitle: "GitOps Dashboard"
+        url: "https://weave.moonblade.work"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
@@ -187,6 +174,13 @@ services:
         logo: "https://avatars.githubusercontent.com/u/2678585?s=200&v=4"
         subtitle: "Proxmox UI"
         url: "https://athena.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
+      - name: "Blog"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/ghost.webp"
+        subtitle: "Blog on GitHub"
+        url: "https://moonblade.github.io/blog"
         type: Ping
         method: "HEAD"
         mode: "no-cors"
