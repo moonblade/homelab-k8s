@@ -131,13 +131,6 @@ services:
         type: Ping
         method: "HEAD"
         mode: "no-cors"
-      - name: "Stirling PDF"
-        logo: "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/app/core/src/main/resources/static/favicon.svg"
-        subtitle: "PDF Tools"
-        url: "https://pdf.moonblade.work"
-        type: Ping
-        method: "HEAD"
-        mode: "no-cors"
 
   - name: "Admin"
     icon: "fas fa-shield-alt"

@@ -9,6 +9,7 @@ metadata:
   name: stirling-pdf
   namespace: stirling-pdf
 spec:
+  suspend: true
   path: clusters/sirius/apps/stirling-pdf
   interval: 15m
   prune: true
