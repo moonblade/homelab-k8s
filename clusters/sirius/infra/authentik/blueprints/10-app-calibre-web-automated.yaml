@@ -3,24 +3,34 @@ version: 1
 metadata:
   name: app-calibre-web-automated
   labels:
-    blueprints.goauthentik.io/description: "Calibre Web Automated proxy application"
+    blueprints.goauthentik.io/description: "Calibre Web Automated OIDC application"
 entries:
-  - model: authentik_providers_proxy.proxyprovider
+  - model: authentik_providers_oauth2.oauth2provider
     id: calibre-web-automated-provider
     state: present
     identifiers:
       name: Provider for Calibre Web Automated
     attrs:
       name: Provider for Calibre Web Automated
-      mode: proxy
-      external_host: https://books.moonblade.work
-      internal_host: http://calibre-web-automated.calibre-web-automated.svc.cluster.local:80
-      intercept_header_auth: true
-      access_token_validity: hours=24
+      client_id: calibre-web-automated-homelab-oidc
+      client_secret: !Env CALIBRE_WEB_AUTOMATED_CLIENT_SECRET
+      client_type: confidential
+      sub_mode: user_email
+      redirect_uris:
+        - url: https://books.moonblade.work/login/generic/authorized
+          matching_mode: strict
+        - url: https://books.sirius.moonblade.work/login/generic/authorized
+          matching_mode: strict
+      access_token_validity: minutes=5
       refresh_token_validity: days=30
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
       authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
-      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
 
   - model: authentik_core.application
     id: calibre-web-automated-app
@@ -46,24 +56,3 @@ entries:
       order: 0
       enabled: true
       timeout: 30
-
-  - model: authentik_outposts.outpost
-    id: calibre-web-automated-outpost
-    state: present
-    identifiers:
-      name: Calibre Web Automated
-    attrs:
-      name: Calibre Web Automated
-      type: proxy
-      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
-      providers:
-        - !KeyOf calibre-web-automated-provider
-      config:
-        authentik_host: https://login.moonblade.work/
-        kubernetes_namespace: authentik
-        kubernetes_replicas: 1
-        kubernetes_service_type: ClusterIP
-        kubernetes_disabled_components:
-          - Ingress
-        object_naming_template: ak-outpost-%(name)s
-        log_level: info

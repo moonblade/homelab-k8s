@@ -1,5 +1,5 @@
-# External: books.moonblade.work via Cloudflare tunnel → authentik outpost (handles auth)
-# Note: ReferenceGrant is in clusters/sirius/infra/authentik/referencegrants.yaml
+# External: books.moonblade.work via Cloudflare tunnel → calibre-web-automated (OIDC handled natively by CWA)
+# Auth: Authentik OIDC provider (no outpost needed)
 
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -19,9 +19,8 @@ spec:
         type: PathPrefix
         value: /
     backendRefs:
-    - name: ak-outpost-calibre-web-automated
-      namespace: authentik
-      port: 9000
+    - name: calibre-web-automated
+      port: 80
 ---
 apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
@@ -59,7 +58,7 @@ spec:
         scheme: https
         statusCode: 301
 ---
-# Internal: books.sirius.moonblade.work → calibre-web-automated service directly (no auth)
+# Internal: books.sirius.moonblade.work → calibre-web-automated service (no auth — for OPDS clients on LAN)
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:

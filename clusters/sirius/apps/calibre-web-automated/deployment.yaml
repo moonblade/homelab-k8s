@@ -32,6 +32,15 @@ spec:
               value: "true"
             - name: TRUSTED_PROXY_COUNT
               value: "1"
+            - name: OAUTH_CLIENT_ID
+              value: "calibre-web-automated-homelab-oidc"
+            - name: OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: calibre-web-automated-oidc
+                  key: client_secret
+            - name: OAUTH_SERVER_URL
+              value: "https://login.moonblade.work/application/o/calibre-web-automated/"
           livenessProbe:
             httpGet:
               path: /login
