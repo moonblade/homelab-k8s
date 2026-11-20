@@ -53,7 +53,6 @@ spec:
               mountPath: /calibre-library
             - name: ingest
               mountPath: /cwa-book-ingest
-              subPath: complete
               mountPropagation: HostToContainer
       volumes:
         - name: config
@@ -69,5 +68,5 @@ spec:
         - name: ingest
           nfs:
             server: nfs.sirius.local
-            path: /mnt/primary/root/downloads
+            path: /mnt/primary/root/feeder
             readOnly: false
