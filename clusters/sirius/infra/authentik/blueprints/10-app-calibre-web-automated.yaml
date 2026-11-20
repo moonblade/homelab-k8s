@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-calibre-web-automated
+  labels:
+    blueprints.goauthentik.io/description: "Calibre Web Automated OIDC application"
+entries:
+  - model: authentik_providers_oauth2.oauth2provider
+    id: calibre-web-automated-provider
+    state: present
+    identifiers:
+      name: Provider for Calibre Web Automated
+    attrs:
+      name: Provider for Calibre Web Automated
+      client_id: calibre-web-automated-homelab-oidc
+      client_secret: !Env CALIBRE_WEB_AUTOMATED_CLIENT_SECRET
+      client_type: confidential
+      sub_mode: user_email
+      redirect_uris:
+        - url: https://books.moonblade.work/login/generic/authorized
+          matching_mode: strict
+        - url: https://books.sirius.moonblade.work/login/generic/authorized
+          matching_mode: strict
+      access_token_validity: minutes=5
+      refresh_token_validity: days=30
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'openid'"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'email'"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [name, "authentik default OAuth Mapping: OpenID 'profile'"]]
+
+  - model: authentik_core.application
+    id: calibre-web-automated-app
+    state: present
+    identifiers:
+      slug: calibre-web-automated
+    attrs:
+      name: Calibre Web Automated
+      slug: calibre-web-automated
+      provider: !KeyOf calibre-web-automated-provider
+      policy_engine_mode: any
+      meta_launch_url: https://books.moonblade.work
+
+  - model: authentik_policies.policybinding
+    id: calibre-web-automated-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf calibre-web-automated-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"audiobook\""]]
+      target: !KeyOf calibre-web-automated-app
+      order: 0
+      enabled: true
+      timeout: 30

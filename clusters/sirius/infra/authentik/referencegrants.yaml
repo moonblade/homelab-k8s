@@ -350,3 +350,4 @@ spec:
     - group: ""
       kind: Service
       name: ak-outpost-home-assistant
+
