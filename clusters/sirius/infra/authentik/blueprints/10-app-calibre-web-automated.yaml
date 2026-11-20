@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-calibre-web-automated
+  labels:
+    blueprints.goauthentik.io/description: "Calibre Web Automated proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: calibre-web-automated-provider
+    state: present
+    identifiers:
+      name: Provider for Calibre Web Automated
+    attrs:
+      name: Provider for Calibre Web Automated
+      mode: proxy
+      external_host: https://books.moonblade.work
+      internal_host: http://calibre-web-automated.calibre-web-automated.svc.cluster.local:80
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: calibre-web-automated-app
+    state: present
+    identifiers:
+      slug: calibre-web-automated
+    attrs:
+      name: Calibre Web Automated
+      slug: calibre-web-automated
+      provider: !KeyOf calibre-web-automated-provider
+      policy_engine_mode: any
+      meta_launch_url: https://books.moonblade.work
+
+  - model: authentik_policies.policybinding
+    id: calibre-web-automated-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf calibre-web-automated-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"audiobook\""]]
+      target: !KeyOf calibre-web-automated-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: calibre-web-automated-outpost
+    state: present
+    identifiers:
+      name: Calibre Web Automated
+    attrs:
+      name: Calibre Web Automated
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf calibre-web-automated-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info

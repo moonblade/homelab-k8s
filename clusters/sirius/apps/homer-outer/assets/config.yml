@@ -81,6 +81,13 @@ services:
   - name: "Reading"
     icon: "fas fa-book"
     items:
+      - name: "Calibre Web"
+        logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/calibre-web.webp"
+        subtitle: "eBook Library"
+        url: "https://books.moonblade.work"
+        type: Ping
+        method: "HEAD"
+        mode: "no-cors"
       - name: "Feeder"
         logo: "https://img.icons8.com/?size=100&id=qpuOQzhOVZ0a&format=png&color=000000"
         subtitle: "Web Novel to EPUB"

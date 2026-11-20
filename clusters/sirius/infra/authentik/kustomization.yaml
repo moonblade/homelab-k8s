@@ -46,6 +46,7 @@ configMapGenerator:
       - ./blueprints/10-app-stirling-pdf.yaml
       - ./blueprints/10-app-home-assistant.yaml
       - ./blueprints/10-app-access-mgmt.yaml
+      - ./blueprints/10-app-calibre-web-automated.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml

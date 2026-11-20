@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calibre-web-automated
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: calibre-web-automated
+  template:
+    metadata:
+      labels:
+        app: calibre-web-automated
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: calibre-web-automated
+          image: crocodilestick/calibre-web-automated:latest
+          ports:
+            - containerPort: 8083
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Calcutta"
+            - name: NETWORK_SHARE_MODE
+              value: "true"
+            - name: TRUSTED_PROXY_COUNT
+              value: "1"
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: 8083
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 8083
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: library
+              mountPath: /calibre-library
+            - name: ingest
+              mountPath: /cwa-book-ingest
+              subPath: complete
+              mountPropagation: HostToContainer
+      volumes:
+        - name: config
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/config/calibre-web-automated
+            readOnly: false
+        - name: library
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/books
+            readOnly: false
+        - name: ingest
+          nfs:
+            server: nfs.sirius.local
+            path: /mnt/primary/root/downloads
+            readOnly: false
