@@ -16,11 +16,14 @@ spec:
         app: transmission
     spec:
       securityContext:
-        fsGroup: 0
+        fsGroup: 1000
       initContainers:
       - name: settings-editor
         image: alpine:3.22.0
         imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
         envFrom:
           - configMapRef:
               name: settings-override
