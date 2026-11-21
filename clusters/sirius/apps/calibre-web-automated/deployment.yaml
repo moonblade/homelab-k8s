@@ -35,12 +35,17 @@ spec:
             - name: SUPPORTED_EXT_REGEX
               value: "(epub)$"
           livenessProbe:
-            httpGet:
-              path: /login
-              port: 8083
+            exec:
+              command:
+              - curl
+              - -sf
+              - -u
+              - admin:admin123
+              - http://localhost:8083/opds/new
             initialDelaySeconds: 120
             periodSeconds: 30
-            failureThreshold: 5
+            failureThreshold: 3
+            timeoutSeconds: 10
           readinessProbe:
             httpGet:
               path: /login
