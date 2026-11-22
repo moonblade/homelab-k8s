@@ -35,7 +35,7 @@ homelab-k8s/
 | Bootstrap cluster | `make kuztomize-flux-sirius` | Applies `clusters/sirius/bootstrap/flux-system` |
 | Add new app | `clusters/sirius/apps/<app>/` | See existing app for template |
 | Add new infra | `base/infra/<component>/` + overlay in `clusters/sirius/infra/` | Base + overlay pattern |
-| Enable/disable app | `clusters/sirius/bootstrap/apps/*.yaml` | Rename to `.disabled` to disable |
+| Enable/disable app | `clusters/sirius/bootstrap/apps/*.yaml` | Rename to `.yaml.disabled` to disable — Flux ignores non-`.yaml` files, causing Flux to prune the app's resources. Rename back to `.yaml` to re-enable. Never use `suspend: true` |
 | Seal a secret | `cat secrets/secret.yaml \| kubeseal -o yaml` | Outputs SealedSecret |
 | Create kubeseal key | `make create-sealed-secret-key` | Uses keys in `secrets/` |
 
@@ -63,6 +63,7 @@ homelab-k8s/
 - **DO NOT use `image:latest`** - always pin to a specific version (semver or timestamp tags). The `latest` tag causes unnecessary image pulls and wastes bandwidth on a metered connection.
 - **ALWAYS set `imagePullPolicy: IfNotPresent`** - on all containers and initContainers in deployments, cronjobs, and any pod spec. Never omit this field.
 - **NEVER mix ingress controllers** without explicit IngressClass - both nginx-gateway-fabric and ingress-nginx exist
+- **DO NOT use `suspend: true`** to disable apps — rename the bootstrap file to `.yaml.disabled` instead. `suspend: true` leaves resources running; the rename causes Flux to prune them cleanly.
 
 ## UNIQUE STYLES
 
