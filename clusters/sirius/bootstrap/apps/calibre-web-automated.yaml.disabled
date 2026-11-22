@@ -9,7 +9,6 @@ metadata:
   name: calibre-web-automated
   namespace: calibre-web-automated
 spec:
-  suspend: true
   path: clusters/sirius/apps/calibre-web-automated
   interval: 15m
   prune: true
