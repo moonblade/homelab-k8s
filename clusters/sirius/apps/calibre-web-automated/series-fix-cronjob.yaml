@@ -1,0 +1,157 @@
+---
+# ConfigMap holding the series-fix script
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: series-fix-script
+  namespace: calibre-web-automated
+data:
+  fix_series.py: |
+    """
+    Fix series metadata for all Calibre books missing series info.
+    Reads calibre:series from embedded EPUB OPF (both property= and name= formats)
+    and applies via calibredb set_metadata.
+    Runs as a CronJob hourly - uses a checkpoint file to skip already-fixed books.
+    """
+    import sqlite3, zipfile, re, os, subprocess, json, sys
+
+    LIBRARY = '/calibre-library'
+    CHECKPOINT = '/config/fix_series_checkpoint.json'
+
+    db = sqlite3.connect(f'{LIBRARY}/metadata.db', timeout=30)
+    rows = db.execute("""
+        SELECT b.id, b.path, d.name
+        FROM books b
+        JOIN data d ON b.id = d.book AND d.format = 'EPUB'
+        LEFT JOIN books_series_link bsl ON b.id = bsl.book
+        WHERE bsl.series IS NULL
+        ORDER BY b.id
+    """).fetchall()
+    db.close()
+
+    if not rows:
+        print("No books missing series. Done.")
+        sys.exit(0)
+
+    print(f"Books missing series: {len(rows)}", flush=True)
+
+    done = set()
+    if os.path.exists(CHECKPOINT):
+        with open(CHECKPOINT) as f:
+            data = json.load(f)
+            done = set(data.get('done', []))
+        print(f"Resuming - {len(done)} already processed", flush=True)
+
+    errors = []
+    processed = 0
+    skipped_no_series = 0
+
+    for book_id, path, epub_name in rows:
+        if book_id in done:
+            continue
+
+        epub_path = f'{LIBRARY}/{path}/{epub_name}.epub'
+        if not os.path.exists(epub_path):
+            errors.append(f"MISSING: id={book_id}")
+            done.add(book_id)
+            continue
+
+        try:
+            with zipfile.ZipFile(epub_path) as z:
+                opf_name = next((n for n in z.namelist() if n.endswith('.opf')), None)
+                if not opf_name:
+                    done.add(book_id)
+                    continue
+                opf = z.read(opf_name).decode('utf-8', errors='replace')
+
+            # Support both OPF3 (property=) and OPF2 (name=) formats
+            series_m = (re.search(r'property="calibre:series"\s+content="([^"]+)"', opf) or
+                        re.search(r'name="calibre:series"\s+content="([^"]+)"', opf))
+            index_m  = (re.search(r'property="calibre:series_index"\s+content="([^"]+)"', opf) or
+                        re.search(r'name="calibre:series_index"\s+content="([^"]+)"', opf))
+
+            if not series_m:
+                skipped_no_series += 1
+                done.add(book_id)
+                continue
+
+            series = series_m.group(1)
+            index  = index_m.group(1) if index_m else "1"
+
+            result = subprocess.run(
+                ['/app/calibre/calibredb', 'set_metadata', str(book_id),
+                 '--field', f'series:{series}',
+                 '--field', f'series_index:{index}',
+                 '--library-path', LIBRARY],
+                capture_output=True, text=True, timeout=30
+            )
+
+            if result.returncode != 0:
+                errors.append(f"FAIL id={book_id}: {result.stderr[:100]}")
+
+            done.add(book_id)
+            processed += 1
+
+            if processed % 200 == 0:
+                print(f"Progress: {processed} fixed, {skipped_no_series} skipped (no series in EPUB), {len(errors)} errors", flush=True)
+                with open(CHECKPOINT, 'w') as f:
+                    json.dump({'done': list(done)}, f)
+
+        except Exception as e:
+            errors.append(f"ERROR id={book_id}: {e}")
+            done.add(book_id)
+
+    with open(CHECKPOINT, 'w') as f:
+        json.dump({'done': list(done)}, f)
+
+    print(f"Done! Fixed: {processed}, Skipped (no EPUB series): {skipped_no_series}, Errors: {len(errors)}", flush=True)
+    for e in errors[:20]:
+        print(e, flush=True)
+---
+# CronJob: runs hourly, fixes series metadata on books missing it
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: calibre-series-fix
+  namespace: calibre-web-automated
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 3600
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: series-fix
+              image: crocodilestick/calibre-web-automated:latest
+              command:
+                - python3
+                - /scripts/fix_series.py
+              env:
+                - name: TZ
+                  value: "Asia/Calcutta"
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                - name: config
+                  mountPath: /config
+                - name: library
+                  mountPath: /calibre-library
+          volumes:
+            - name: scripts
+              configMap:
+                name: series-fix-script
+            - name: config
+              nfs:
+                server: nfs.sirius.local
+                path: /mnt/primary/root/config/calibre-web-automated
+                readOnly: false
+            - name: library
+              nfs:
+                server: nfs.sirius.local
+                path: /mnt/primary/root/books
+                readOnly: false
