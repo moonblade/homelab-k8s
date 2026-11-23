@@ -21,7 +21,11 @@ spec:
   healthChecks:
     - apiVersion: apps/v1
       kind: Deployment
-      name: authentik
+      name: authentik-server
+      namespace: authentik
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: authentik-worker
       namespace: authentik
 
 
