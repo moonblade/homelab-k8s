@@ -75,5 +75,5 @@ spec:
         - name: ingest
           nfs:
             server: nfs.sirius.local
-            path: /mnt/primary/root/books-ingest
+            path: /mnt/primary/root/downloads/books
             readOnly: false
