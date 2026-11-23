@@ -1,0 +1,27 @@
+# Allow large book uploads (ebooks can be 50-100MB+)
+# Without this, nginx returns 413 Request Entity Too Large for files > 1MB (default)
+apiVersion: gateway.nginx.org/v1alpha1
+kind: ClientSettingsPolicy
+metadata:
+  name: calibre-web-automated-upload-internal
+  namespace: calibre-web-automated
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: calibre-web-automated-internal
+  body:
+    maxSize: "200m"
+---
+apiVersion: gateway.nginx.org/v1alpha1
+kind: ClientSettingsPolicy
+metadata:
+  name: calibre-web-automated-upload-external
+  namespace: calibre-web-automated
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: calibre-web-automated-external
+  body:
+    maxSize: "200m"
