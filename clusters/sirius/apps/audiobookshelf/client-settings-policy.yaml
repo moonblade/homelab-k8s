@@ -1,0 +1,27 @@
+# Allow large audiobook uploads (audiobooks can be several GB)
+# Without this, nginx returns 413 Request Entity Too Large for files > 1MB (default)
+apiVersion: gateway.nginx.org/v1alpha1
+kind: ClientSettingsPolicy
+metadata:
+  name: audiobookshelf-upload-external
+  namespace: audiobookshelf
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: audiobookshelf-external
+  body:
+    maxSize: "10g"
+---
+apiVersion: gateway.nginx.org/v1alpha1
+kind: ClientSettingsPolicy
+metadata:
+  name: audiobookshelf-upload-internal
+  namespace: audiobookshelf
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: audiobookshelf-internal
+  body:
+    maxSize: "10g"
