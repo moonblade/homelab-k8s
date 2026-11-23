@@ -207,7 +207,7 @@ spec:
                 execErrState: Error
                 for: 2m
                 annotations:
-                  summary: "$${values.A} 5xx errors in last 5 minutes on nginx gateway"
+                  summary: "High 5xx error rate on nginx gateway (check Grafana for count)"
                 labels:
                   severity: warning
                 isPaused: false
@@ -255,7 +255,7 @@ spec:
                 execErrState: Error
                 for: 1m
                 annotations:
-                  summary: "$${values.A} auth failures in last 5 minutes"
+                  summary: "Authentik auth failures spike detected (check Grafana for count)"
                 labels:
                   severity: warning
                 isPaused: false
