@@ -44,6 +44,13 @@ spec:
         persistence:
           enabled: true
           existingClaim: data-authentik-postgresql-0
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 100m
+          limits:
+            memory: 512Mi
+            cpu: 500m
     redis:
       enabled: false
 

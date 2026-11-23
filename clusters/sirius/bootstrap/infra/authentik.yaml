@@ -12,8 +12,8 @@ spec:
   path: clusters/sirius/infra/authentik
   interval: 15m
   prune: true
-  wait: true
-  timeout: 2m
+  wait: false
+  timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
