@@ -22,6 +22,7 @@ spec:
         namespace: authentik
   values:
     server:
+      replicas: 2
       ingress:
         enabled: false
       #   ingressClassName: nginx
