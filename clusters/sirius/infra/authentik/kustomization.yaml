@@ -47,6 +47,8 @@ configMapGenerator:
       - ./blueprints/10-app-home-assistant.yaml
       - ./blueprints/10-app-access-mgmt.yaml
       - ./blueprints/10-app-calibre-web-automated.yaml
+      - ./blueprints/10-app-transmission.yaml
+      - ./blueprints/10-app-uptime-kuma.yaml
 
 patchesStrategicMerge:
   - helm-release.yaml

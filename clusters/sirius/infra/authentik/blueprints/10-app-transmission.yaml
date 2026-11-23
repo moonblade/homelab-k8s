@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+version: 1
+metadata:
+  name: app-transmission
+  labels:
+    blueprints.goauthentik.io/description: "Transmission proxy application"
+entries:
+  - model: authentik_providers_proxy.proxyprovider
+    id: transmission-provider
+    state: present
+    identifiers:
+      name: Provider for Transmission
+    attrs:
+      name: Provider for Transmission
+      mode: proxy
+      external_host: https://transmission.moonblade.work
+      internal_host: http://transmission.transmission.svc.cluster.local:9091
+      intercept_header_auth: true
+      access_token_validity: hours=24
+      refresh_token_validity: days=30
+      authentication_flow: !Find [authentik_flows.flow, [slug, google-login]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-invalidation-flow]]
+
+  - model: authentik_core.application
+    id: transmission-app
+    state: present
+    identifiers:
+      slug: transmission
+    attrs:
+      name: Transmission
+      slug: transmission
+      provider: !KeyOf transmission-provider
+      policy_engine_mode: any
+      meta_launch_url: https://transmission.moonblade.work
+
+  - model: authentik_policies.policybinding
+    id: transmission-policy-binding
+    state: present
+    identifiers:
+      order: 0
+      target: !KeyOf transmission-app
+    attrs:
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "Has role \"admin\""]]
+      target: !KeyOf transmission-app
+      order: 0
+      enabled: true
+      timeout: 30
+
+  - model: authentik_outposts.outpost
+    id: transmission-outpost
+    state: present
+    identifiers:
+      name: Transmission
+    attrs:
+      name: Transmission
+      type: proxy
+      service_connection: !Find [authentik_outposts.kubernetesserviceconnection, [name, Local Kubernetes Cluster]]
+      providers:
+        - !KeyOf transmission-provider
+      config:
+        authentik_host: https://login.moonblade.work/
+        kubernetes_namespace: authentik
+        kubernetes_replicas: 1
+        kubernetes_service_type: ClusterIP
+        kubernetes_disabled_components:
+          - Ingress
+        object_naming_template: ak-outpost-%(name)s
+        log_level: info
