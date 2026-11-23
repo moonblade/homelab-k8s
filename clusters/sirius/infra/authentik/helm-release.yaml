@@ -69,11 +69,6 @@ spec:
             secretKeyRef:
               name: authentik-secrets
               key: immich.client_secret
-        - name: STIRLING_PDF_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: authentik-secrets
-              key: stirling-pdf.client_secret
         - name: CALIBRE_WEB_AUTOMATED_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
