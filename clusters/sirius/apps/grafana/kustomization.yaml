@@ -9,4 +9,5 @@ resources:
   - dashboard-network.yaml
   - dashboard-infra-logs.yaml
   - dashboard-app-logs.yaml
+  - dashboard-network-security.yaml
   - httproute.yaml

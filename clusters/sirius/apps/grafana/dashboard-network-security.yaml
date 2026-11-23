@@ -1,0 +1,152 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-network-security
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+data:
+  gateway-traffic.json: |
+    {
+      "title": "Gateway Traffic & Security",
+      "uid": "gateway-traffic",
+      "tags": ["security", "nginx", "gateway"],
+      "timezone": "browser",
+      "schemaVersion": 38,
+      "refresh": "1m",
+      "time": { "from": "now-1h", "to": "now" },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Request Rate (all)",
+          "type": "timeseries",
+          "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "targets": [
+            {
+              "expr": "sum(rate({namespace=\"nginx-gateway\", container=\"nginx\"} [2m]))",
+              "legendFormat": "req/s",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "5xx Errors",
+          "type": "timeseries",
+          "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "fieldConfig": {
+            "defaults": { "color": { "fixedColor": "red", "mode": "fixed" } }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate({namespace=\"nginx-gateway\", container=\"nginx\"} |~ \" [5][0-9][0-9] \" [2m]))",
+              "legendFormat": "5xx/s",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Status Code Breakdown",
+          "type": "timeseries",
+          "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "targets": [
+            {
+              "expr": "sum(rate({namespace=\"nginx-gateway\", container=\"nginx\"} |~ \" 2[0-9][0-9] \" [2m]))",
+              "legendFormat": "2xx",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(rate({namespace=\"nginx-gateway\", container=\"nginx\"} |~ \" 3[0-9][0-9] \" [2m]))",
+              "legendFormat": "3xx",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate({namespace=\"nginx-gateway\", container=\"nginx\"} |~ \" 4[0-9][0-9] \" [2m]))",
+              "legendFormat": "4xx",
+              "refId": "C"
+            },
+            {
+              "expr": "sum(rate({namespace=\"nginx-gateway\", container=\"nginx\"} |~ \" 5[0-9][0-9] \" [2m]))",
+              "legendFormat": "5xx",
+              "refId": "D"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Authentik Auth Failures",
+          "type": "timeseries",
+          "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "fieldConfig": {
+            "defaults": { "color": { "fixedColor": "orange", "mode": "fixed" } }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate({namespace=\"authentik\"} |~ \"Login failed|authentication failed|Invalid credentials\" [5m]))",
+              "legendFormat": "auth failures/s",
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Top Requested Paths (last 1h)",
+          "type": "table",
+          "gridPos": { "x": 0, "y": 16, "w": 12, "h": 10 },
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "targets": [
+            {
+              "expr": "topk(20, sum by (path) (count_over_time({namespace=\"nginx-gateway\", container=\"nginx\"} | pattern `<_> \"<method> <path> <_>\" <status> <_>` [1h])))",
+              "legendFormat": "{{path}}",
+              "refId": "A",
+              "queryType": "instant"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Top Source IPs (last 1h)",
+          "type": "table",
+          "gridPos": { "x": 12, "y": 16, "w": 12, "h": 10 },
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "targets": [
+            {
+              "expr": "topk(20, sum by (ip) (count_over_time({namespace=\"nginx-gateway\", container=\"nginx\"} | pattern `<ip> - ` [1h])))",
+              "legendFormat": "{{ip}}",
+              "refId": "A",
+              "queryType": "instant"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "title": "Raw Access Log",
+          "type": "logs",
+          "gridPos": { "x": 0, "y": 26, "w": 24, "h": 10 },
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "options": { "showLabels": false, "showTime": true, "sortOrder": "Descending" },
+          "targets": [
+            {
+              "expr": "{namespace=\"nginx-gateway\", container=\"nginx\"} |~ \"$filter\"",
+              "refId": "A"
+            }
+          ]
+        }
+      ],
+      "templating": {
+        "list": [
+          {
+            "name": "filter",
+            "type": "textbox",
+            "label": "Filter",
+            "current": { "value": "" },
+            "hide": 0
+          }
+        ]
+      }
+    }

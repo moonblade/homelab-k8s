@@ -45,6 +45,10 @@ spec:
     grafana.ini:
       server:
         root_url: https://grafana.moonblade.work
+      unified_alerting:
+        enabled: true
+      alerting:
+        enabled: false
       auth.generic_oauth:
         enabled: true
         name: Authentik
@@ -113,8 +117,145 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/app-logs
+          - name: network-security
+            orgId: 1
+            folder: "Security"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/network-security
 
     dashboardsConfigMaps:
       default: grafana-dashboards
       infra-logs: grafana-dashboard-infra-logs
       app-logs: grafana-dashboard-app-logs
+      network-security: grafana-dashboard-network-security
+
+    alerting:
+      contactpoints.yaml:
+        apiVersion: 1
+        contactPoints:
+          - orgId: 1
+            name: Telegram via n8n
+            receivers:
+              - uid: telegram-n8n
+                type: webhook
+                settings:
+                  url: http://n8n-main.n8n.svc.cluster.local:5678/webhook/grafana-alert
+                  httpMethod: POST
+                disableResolveMessage: false
+
+      policies.yaml:
+        apiVersion: 1
+        policies:
+          - orgId: 1
+            receiver: Telegram via n8n
+            group_by: [alertname, namespace]
+            group_wait: 30s
+            group_interval: 5m
+            repeat_interval: 4h
+
+      rules.yaml:
+        apiVersion: 1
+        groups:
+          - orgId: 1
+            name: gateway-alerts
+            folder: Security
+            interval: 2m
+            rules:
+              - uid: nginx-5xx-spike
+                title: High 5xx Error Rate
+                condition: C
+                data:
+                  - refId: A
+                    queryType: range
+                    relativeTimeRange:
+                      from: 300
+                      to: 0
+                    datasourceUid: "P8E80F9AEF21F6940"
+                    model:
+                      expr: 'sum(count_over_time({namespace="nginx-gateway", container="nginx"} |~ " [5][0-9][0-9] " [5m]))'
+                      queryType: range
+                      refId: A
+                      legendFormat: 5xx count
+                  - refId: C
+                    queryType: ""
+                    relativeTimeRange:
+                      from: 300
+                      to: 0
+                    datasourceUid: __expr__
+                    model:
+                      conditions:
+                        - evaluator:
+                            params: [10]
+                            type: gt
+                          operator:
+                            type: and
+                          query:
+                            params: [A]
+                          reducer:
+                            type: last
+                          type: query
+                      datasource:
+                        type: __expr__
+                        uid: __expr__
+                      expression: A
+                      refId: C
+                      type: threshold
+                noDataState: NoData
+                execErrState: Error
+                for: 2m
+                annotations:
+                  summary: "{{ $values.A }} 5xx errors in last 5 minutes on nginx gateway"
+                labels:
+                  severity: warning
+                isPaused: false
+
+              - uid: authentik-auth-failures
+                title: Authentik Auth Failures Spike
+                condition: C
+                data:
+                  - refId: A
+                    queryType: range
+                    relativeTimeRange:
+                      from: 300
+                      to: 0
+                    datasourceUid: "P8E80F9AEF21F6940"
+                    model:
+                      expr: 'sum(count_over_time({namespace="authentik"} |~ "Login failed|authentication failed|Invalid credentials" [5m]))'
+                      queryType: range
+                      refId: A
+                      legendFormat: auth failures
+                  - refId: C
+                    queryType: ""
+                    relativeTimeRange:
+                      from: 300
+                      to: 0
+                    datasourceUid: __expr__
+                    model:
+                      conditions:
+                        - evaluator:
+                            params: [5]
+                            type: gt
+                          operator:
+                            type: and
+                          query:
+                            params: [A]
+                          reducer:
+                            type: last
+                          type: query
+                      datasource:
+                        type: __expr__
+                        uid: __expr__
+                      expression: A
+                      refId: C
+                      type: threshold
+                noDataState: NoData
+                execErrState: Error
+                for: 1m
+                annotations:
+                  summary: "{{ $values.A }} auth failures in last 5 minutes"
+                labels:
+                  severity: warning
+                isPaused: false
