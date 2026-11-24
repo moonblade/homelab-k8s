@@ -210,7 +210,7 @@ spec:
                   summary: "High 5xx error rate on nginx gateway (check Grafana for count)"
                 labels:
                   severity: warning
-                isPaused: false
+                isPaused: true
 
               - uid: authentik-auth-failures
                 title: Authentik Auth Failures Spike
@@ -258,4 +258,4 @@ spec:
                   summary: "Authentik auth failures spike detected (check Grafana for count)"
                 labels:
                   severity: warning
-                isPaused: false
+                isPaused: true
