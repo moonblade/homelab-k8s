@@ -16,6 +16,7 @@ spec:
   chart:
     spec:
       chart: authentik
+      version: "2026.2.3"
       sourceRef:
         kind: HelmRepository
         name: authentik
@@ -54,6 +55,12 @@ spec:
             cpu: 500m
     redis:
       enabled: false
+
+    authentik:
+      # Required for 2026.8+: only trust X-Forwarded-* headers from these CIDRs
+      # Pod CIDR (10.42.0.0/16) covers nginx-gateway pods; 127.0.0.1 for local health checks
+      listen:
+        trusted_proxy_cidrs: "10.42.0.0/16,127.0.0.1/32"
 
     worker:
       env:
