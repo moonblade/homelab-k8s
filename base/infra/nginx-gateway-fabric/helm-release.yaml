@@ -10,6 +10,9 @@ spec:
     name: nginx-gateway-fabric
   values:
     nginxGateway:
+      # Disable leader election - single replica only, crashes loop without it
+      leaderElection:
+        enable: false
       # Configure the Gateway controller
       config:
         # Enable prometheus metrics
