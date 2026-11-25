@@ -16,7 +16,7 @@ spec:
         fsGroup: 0
       containers:
         - name: download
-          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1782389331
+          image: ghcr.io/moonblade/audiobookbay-downloader:ts_1782389331 # {"$imagepolicy": "audiobookbay-downloader:audiobookbay-downloader"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9000

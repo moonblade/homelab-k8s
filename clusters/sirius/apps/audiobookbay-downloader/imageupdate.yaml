@@ -42,5 +42,5 @@ spec:
     push:
       branch: main
   update:
-    path: ./clusters/sirius/apps/audiobookbay-downloader/deployment.yaml
+    path: ./clusters/sirius/apps
     strategy: Setters
