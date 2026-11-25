@@ -12,3 +12,6 @@ data:
   LABEL: audiobook
   AUTH_MODE: "authentik"
   GOODREADS_ENABLED: "true"
+  EBOOK_ENABLED: "true"
+  EBOOK_JACKETT_INDEXER: "ebookbay"
+  EBOOK_LABEL: "ebook"
