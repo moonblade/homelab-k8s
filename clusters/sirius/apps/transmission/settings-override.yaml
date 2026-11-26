@@ -8,5 +8,6 @@ data:
       "ratio-limit": 0,
       "ratio-limit-enabled": false,
       "idle-seeding-limit": 0,
-      "idle-seeding-limit-enabled": false
+      "idle-seeding-limit-enabled": false,
+      "cache-size-mb": 256
     }
