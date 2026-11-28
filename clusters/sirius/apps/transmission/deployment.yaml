@@ -66,13 +66,6 @@ spec:
             mkdir -p /downloads/incomplete
             chown -R 1000:1000 /downloads/complete /downloads/incomplete
             echo "Directories created and ownership set."
-
-            # Fix resume file ownership so transmission (uid 1000) can write them.
-            # Without this, files created by root survive restarts as root-owned
-            # and transmission loses piece state, causing the 0%-forever bug.
-            mkdir -p /config/resume
-            chown -R 1000:1000 /config/resume
-            echo "Resume file ownership fixed."
         volumeMounts:
           - name: config
             mountPath: /config
